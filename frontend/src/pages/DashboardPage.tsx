@@ -17,7 +17,6 @@ export function DashboardPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white rounded-lg shadow-sm p-6 mb-6"
       >
         <h1 className="text-2xl font-bold mb-4">Welcome back, {user?.name}!</h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -46,7 +45,6 @@ export function DashboardPage() {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-white rounded-lg shadow-sm p-6"
         >
           <h2 className="text-xl font-semibold mb-4">Continue Learning</h2>
           <Button asChild className="w-full">
@@ -57,7 +55,6 @@ export function DashboardPage() {
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="bg-white rounded-lg shadow-sm p-6"
         >
           <h2 className="text-xl font-semibold mb-4">Community</h2>
           <Button asChild className="w-full">

@@ -23,7 +23,10 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(express.json());
+// Add a higher limit for file uploads if needed
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
 app.use('/api', routes);
 
 // Socket.IO connection handling

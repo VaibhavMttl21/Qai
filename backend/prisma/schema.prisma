@@ -13,17 +13,18 @@ enum UserType {
 }
 
 model User {
-  id            String     @id @default(uuid())
-  email         String     @unique
+  id            String         @id @default(uuid())
+  email         String         @unique
   password      String
   name          String
   userType      UserType
-  isPaid        Boolean    @default(true)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  isPaid        Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   posts         Post[]
   replies       Reply[]
   videoProgress Progress[]
+  excelData     ExcelData[]    // Updated from excelFiles to match our model
 }
 
 model Video {
@@ -72,3 +73,15 @@ model Reply {
   user      User     @relation(fields: [userId], references: [id])
   post      Post     @relation(fields: [postId], references: [id])
 }
+
+// Add the ExcelData model to match our controller implementation
+model ExcelData {
+  id        String   @id @default(uuid())
+  name      String
+  data      Json     // This will store our structured Excel data
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+}
+

@@ -24,3 +24,10 @@ export const isPaidUser = (req: AuthRequest, res: Response, next: NextFunction) 
   }
   next();
 };
+
+export const isAdminUser = (req: AuthRequest, res: Response, next: NextFunction) => {
+  if (req.user?.userType !== 'SCHOOL') {
+    return res.status(403).json({ message: 'Admin access required' });
+  }
+  next();
+};

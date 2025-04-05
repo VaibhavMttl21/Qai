@@ -51,6 +51,16 @@ export const createPost = async (req: AuthRequest, res: Response) => {
             name: true,
           },
         },
+        replies: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
       },
     });
 

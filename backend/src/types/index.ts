@@ -36,3 +36,4 @@ export interface Reply {
   postId: string;
   createdAt: Date;
 }
+

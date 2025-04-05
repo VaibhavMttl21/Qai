@@ -41,7 +41,7 @@ export function Post({ post }: PostProps) {
       setReplyContent('');
     }
   };
-
+  console.log('Post:', post);
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex items-start space-x-4">
@@ -69,7 +69,7 @@ export function Post({ post }: PostProps) {
       </div>
 
       <div className="mt-6 space-y-4">
-        {post.replies.map((reply) => (
+        {post && post.replies.map((reply) => (
           <motion.div
             key={reply.id}
             initial={{ opacity: 0 }}

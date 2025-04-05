@@ -10,6 +10,7 @@ import { VideoPage } from '@/pages/VideoPage';
 import { CommunityPage } from '@/pages/CommunityPage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { PricingPage } from '@/pages/PricingPage';
+import { AdminUploadPage } from '@/pages/AdminUploadPage';
 import { useAuthStore } from '@/store/auth';
 
 function App() {
@@ -63,6 +64,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <PricingPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/upload"
+            element={
+              <ProtectedRoute>
+                <AdminUploadPage />
               </ProtectedRoute>
             }
           />
