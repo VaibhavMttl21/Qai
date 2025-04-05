@@ -13,18 +13,20 @@ enum UserType {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  email         String         @unique
-  password      String
-  name          String
-  userType      UserType
-  isPaid        Boolean        @default(true)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  posts         Post[]
-  replies       Reply[]
-  videoProgress Progress[]
-  excelData     ExcelData[]    // Updated from excelFiles to match our model
+  id             String         @id @default(uuid())
+  email          String         @unique
+  password       String
+  name           String
+  userType       UserType
+  isPaid         Boolean        @default(true)
+  firebaseUid    String?        // Add this field
+  profilePicture String?        // Add this field
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  posts          Post[]
+  replies        Reply[]
+  videoProgress  Progress[]
+  excelData      ExcelData[]    // Updated from excelFiles to match our model
 }
 
 model Video {

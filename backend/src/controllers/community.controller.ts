@@ -11,7 +11,7 @@ export const getPosts = async (req: Request, res: Response) => {
         user: {
           select: {
             id: true,
-            name: true,
+            name: true, 
           },
         },
         replies: {
