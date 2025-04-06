@@ -29,7 +29,7 @@ export function Sidebar() {
   
   // Determine which navigation items to show
   const navItems = [...navigation];
-  if (user?.userType === 'SCHOOL') {
+  if (user?.userType === 'ADMIN') {
     navItems.push(...adminNavigation);
   }
 

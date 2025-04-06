@@ -5,6 +5,8 @@ import csv from 'csv-parser';
 import * as xlsx from 'xlsx';
 import multer from 'multer';
 import { Readable } from 'stream';
+import bcrypt from 'bcryptjs';
+
 
 const prisma = new PrismaClient();
 
@@ -67,21 +69,79 @@ export const uploadFile = async (req: AuthRequest, res: Response) => {
 
     console.log('Parsed Data:', parsedData);
     
-    // Save data to database if needed
-    const excelData = await prisma.excelData.create({
-      data: {
-        name: name || fileName,
-        data: parsedData,
-        userId: req.user!.id,
-      }
-    });
+    // Save data to database
+    // const excelData = await prisma.excelData.create({
+    //   data: {
+    //     name: name || fileName,
+    //     data: parsedData,
+    //     userId: req.user!.id,
+    //   }
+    // });
+
+    // Extract specific fields and save to ExcelExtractedData table
+    let extractedDataPromises: Promise<any>[] = [];
+    if (Array.isArray(parsedData) && parsedData.length > 0) {
+      extractedDataPromises = parsedData.map(async (row: any) => {
+        // Check if the row has the required fields
+        if (row.NAME && row.DOB && row.MAIL) {
+          try {
+            const hashedPassword = await bcrypt.hash(String(row.DOB), 10);
+            // Create a record in User with school as it's type
+            const schooluser = await prisma.user.create({
+              data: {
+                name: row.NAME,
+                email: row.MAIL,
+                password: hashedPassword,
+                isPaid: true,
+                userType: 'SCHOOL', // Assuming 'STUDENT' is a valid user type
+              }
+            })
+          } catch (error) {
+            console.error('Error processing row:', row, error);
+            return null;
+          }
+        }
+        return null;
+      });
+    }
+
+    const insertedUsers = await Promise.all(extractedDataPromises);
 
     res.status(201).json({ 
       message: 'File processed successfully',
       data: parsedData,
+      insertedCount: insertedUsers.filter(Boolean).length,
+      users: insertedUsers.filter(Boolean),
     });
   } catch (error) {
     console.error('File processing error:', error);
     res.status(500).json({ message: 'Error processing file' });
+  }
+};
+
+export const addVideo = async (req: AuthRequest, res: Response) => {
+  try {
+    const { title, description, url, order } = req.body;
+
+    if (!title || !url) {
+      return res.status(400).json({ message: 'Title and URL are required' });
+    }
+
+    const video = await prisma.video.create({
+      data: {
+        title,
+        description,
+        url,
+        order: Number(order),
+      },
+    });
+
+    res.status(201).json({ 
+      message: 'Video added successfully',
+      video
+    });
+  } catch (error) {
+    console.error('Video add error:', error);
+    res.status(500).json({ message: 'Error adding video' });
   }
 };

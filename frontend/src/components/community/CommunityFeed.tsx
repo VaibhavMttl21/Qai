@@ -5,14 +5,40 @@ import { useAuthStore } from '@/store/auth';
 import { Button } from '@/components/ui/button';
 import { CreatePostDialog } from './CreatePostDialog';
 import { Post } from './Post';
+import { connectSocket, disconnectSocket } from '@/lib/socket';
+import { useToast } from '@/components/ui/toaster';
 
 export function CommunityFeed() {
   const { posts, fetchPosts } = useCommunityStore();
   const { user } = useAuthStore();
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchPosts();
-  }, [fetchPosts]);
+    
+    // Connect to socket when component mounts
+    connectSocket();
+    
+    // Set up toast notifications for real-time updates
+    const handleNewPost = () => {
+      toast('New post has been added!', 'info');
+    };
+    
+    const handleNewReply = () => {
+      toast('New reply has been added!', 'info');
+    };
+    
+    // Add event listeners to global window object
+    window.addEventListener('newPost', handleNewPost);
+    window.addEventListener('newReply', handleNewReply);
+    
+    // Clean up socket connection and event listeners when component unmounts
+    return () => {
+      disconnectSocket();
+      window.removeEventListener('newPost', handleNewPost);
+      window.removeEventListener('newReply', handleNewReply);
+    };
+  }, [fetchPosts, toast]);
 
   return (
     <div className="container mx-auto px-4 py-8">

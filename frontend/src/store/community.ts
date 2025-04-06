@@ -44,9 +44,9 @@ export const useCommunityStore = create<CommunityState>((set, get) => ({
   createPost: async (content, imageUrl) => {
     try {
       const response = await api.post('/api/community/posts', { content, imageUrl });
-      set((state) => ({
-        posts: [response.data, ...state.posts],
-      }));
+      // set((state) => ({
+      //   posts: [response.data, ...state.posts],
+      // }));
     } catch (error) {
       console.error('Failed to create post:', error);
     }
@@ -57,13 +57,13 @@ export const useCommunityStore = create<CommunityState>((set, get) => ({
         content,
         imageUrl,
       });
-      set((state) => ({
-        posts: state.posts.map((post) =>
-          post.id === postId
-            ? { ...post, replies: [...post.replies, response.data] }
-            : post
-        ),
-      }));
+      // set((state) => ({
+      //   posts: state.posts.map((post) =>
+      //     post.id === postId
+      //       ? { ...post, replies: [...post.replies, response.data] }
+      //       : post
+      //   ),
+      // }));
     } catch (error) {
       console.error('Failed to create reply:', error);
     }
@@ -75,6 +75,9 @@ socket.on('newPost', (post: Post) => {
   useCommunityStore.setState((state) => ({
     posts: [post, ...state.posts],
   }));
+  
+  // Dispatch an event to notify components about the new post
+  window.dispatchEvent(new CustomEvent('newPost', { detail: post }));
 });
 
 socket.on('newReply', ({ postId, reply }: { postId: string; reply: Reply }) => {
@@ -85,4 +88,7 @@ socket.on('newReply', ({ postId, reply }: { postId: string; reply: Reply }) => {
         : post
     ),
   }));
+  
+  // Dispatch an event to notify components about the new reply
+  window.dispatchEvent(new CustomEvent('newReply', { detail: { postId, reply } }));
 });

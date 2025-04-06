@@ -26,7 +26,7 @@ export const isPaidUser = (req: AuthRequest, res: Response, next: NextFunction) 
 };
 
 export const isAdminUser = (req: AuthRequest, res: Response, next: NextFunction) => {
-  if (req.user?.userType !== 'SCHOOL') {
+  if (req.user?.userType !== 'ADMIN') {
     return res.status(403).json({ message: 'Admin access required' });
   }
   next();

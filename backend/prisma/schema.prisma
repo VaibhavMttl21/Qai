@@ -10,6 +10,7 @@ datasource db {
 enum UserType {
   SCHOOL
   RANDOM
+  ADMIN
 }
 
 model User {
@@ -19,16 +20,14 @@ model User {
   name           String
   userType       UserType
   isPaid         Boolean        @default(true)
-  firebaseUid    String?        // Add this field
-  profilePicture String?        // Add this field
+  firebaseUid    String?        
+  profilePicture String?        
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
-  posts          Post[]
+  posts          Post[]         // Add this line to create bidirectional relation
   replies        Reply[]
   videoProgress  Progress[]
-  excelData      ExcelData[]    // Updated from excelFiles to match our model
 }
-
 model Video {
   id          String     @id @default(uuid())
   title       String
@@ -76,14 +75,5 @@ model Reply {
   post      Post     @relation(fields: [postId], references: [id])
 }
 
-// Add the ExcelData model to match our controller implementation
-model ExcelData {
-  id        String   @id @default(uuid())
-  name      String
-  data      Json     // This will store our structured Excel data
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
-}
+
 
