@@ -37,6 +37,8 @@ model Video {
   description String
   url         String
   order       Int        @unique
+  encoded     Boolean    @default(false)
+  hlsUrls     Json?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   progress    Progress[]
