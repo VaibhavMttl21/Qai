@@ -29,6 +29,7 @@ export function LoginForm() {
         const excelEpoch = new Date(1899, 11, 30);
         const diffInMs = date.getTime() - excelEpoch.getTime();
         const formattedDob = Math.floor(diffInMs / (1000 * 60 * 60 * 24))+1;
+        
         await login(email, formattedDob.toString(), formattedDob.toString()); // Pass original DOB as password, formatted DOB as date
 
       } else {

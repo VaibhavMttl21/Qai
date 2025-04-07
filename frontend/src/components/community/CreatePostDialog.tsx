@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCommunityStore } from '@/store/community';
+import { useAuthStore } from '@/store/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -15,12 +16,21 @@ export function CreatePostDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const { createPost } = useCommunityStore();
+  const { createPost, createAdminPost } = useCommunityStore();
+  const { user } = useAuthStore();
+  
+  const isAdmin = user?.userType === 'ADMIN';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (content.trim()) {
-      await createPost(content, imageUrl);
+      if (isAdmin) {
+        // Use admin post endpoint for admin users
+        await createAdminPost(content, imageUrl);
+      } else {
+        // Use regular post endpoint for non-admin users
+        await createPost(content, imageUrl);
+      }
       setContent('');
       setImageUrl('');
       setIsOpen(false);
@@ -34,7 +44,7 @@ export function CreatePostDialog() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create a New Post</DialogTitle>
+          <DialogTitle>Create a New {isAdmin ? 'Admin ' : ''}Post</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -54,6 +64,7 @@ export function CreatePostDialog() {
               placeholder="Image URL (optional)"
             />
           </div>
+          
           <div className="flex justify-end space-x-2">
             <Button
               type="button"

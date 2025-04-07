@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { AuthRequest } from '../types';
+import  prisma  from '../lib/prismaclient';
 
 export const auth = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
@@ -30,4 +31,24 @@ export const isAdminUser = (req: AuthRequest, res: Response, next: NextFunction)
     return res.status(403).json({ message: 'Admin access required' });
   }
   next();
+};
+
+export const isAdmin = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.id },
+    });
+
+    if (!user || user.userType !== 'ADMIN') {
+      return res.status(403).json({ message: 'Admin access required' });
+    }
+
+    next();
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
 };

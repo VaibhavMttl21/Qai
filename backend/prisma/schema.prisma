@@ -24,10 +24,13 @@ model User {
   profilePicture String?        
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
-  posts          Post[]         // Add this line to create bidirectional relation
+  posts          Post[]
   replies        Reply[]
   videoProgress  Progress[]
+  adminPosts     AdminPost[]
+  adminReplies   AdminReply[]
 }
+
 model Video {
   id          String     @id @default(uuid())
   title       String
@@ -73,6 +76,31 @@ model Reply {
   updatedAt DateTime @updatedAt
   user      User     @relation(fields: [userId], references: [id])
   post      Post     @relation(fields: [postId], references: [id])
+}
+
+model AdminPost {
+  id        String      @id @default(uuid())
+  content   String
+  imageUrl  String?
+  userId    String
+  priority  Int         @default(10)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  user      User        @relation(fields: [userId], references: [id])
+  replies   AdminReply[]
+}
+
+model AdminReply {
+  id          String    @id @default(uuid())
+  content     String
+  imageUrl    String?
+  userId      String
+  adminPostId String
+  priority    Int       @default(10)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id])
+  adminPost   AdminPost @relation(fields: [adminPostId], references: [id])
 }
 
 
