@@ -123,6 +123,7 @@ export const getPosts = async (req: Request, res: Response) => {
 
 export const createPost = async (req: AuthRequest, res: Response) => {
   try {
+    console.log("request reached");
     const { content, imageUrl } = req.body;
     console.log('Creating post:', content, imageUrl);
     const post = await prisma.post.create({
@@ -317,6 +318,388 @@ export const createAdminReply = async (req: AuthRequest, res: Response) => {
     res.status(201).json(formattedReply);
   } catch (error) {
     console.error('Error creating admin reply:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const updatePost = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { content } = req.body;
+
+    // Check if user owns the post or is admin
+    const post = await prisma.post.findUnique({
+      where: { id },
+      include: { user: true }
+    });
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    // Verify ownership
+    if (post.userId !== req.user!.id && req.user!.userType !== 'ADMIN') {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    // Update the post
+    const updatedPost = await prisma.post.update({
+      where: { id },
+      data: { content },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        replies: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // Format the response
+    const formattedPost = {
+      ...updatedPost,
+      isAdmin: false,
+      replies: updatedPost.replies.map(reply => ({
+        ...reply,
+        isAdmin: false,
+        createdAt: reply.createdAt.toISOString(),
+      })),
+      createdAt: updatedPost.createdAt.toISOString(),
+    };
+
+    // Emit socket event for real-time updates
+    req.app.get('io').emit('updatePost', formattedPost);
+
+    res.json(formattedPost);
+  } catch (error) {
+    console.error('Error updating post:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const updateReply = async (req: AuthRequest, res: Response) => {
+  try {
+    const { postId, replyId } = req.params;
+    const { content } = req.body;
+
+    // Check if reply exists and belongs to user or user is admin
+    const reply = await prisma.reply.findUnique({
+      where: { id: replyId },
+      include: { user: true }
+    });
+
+    if (!reply) {
+      return res.status(404).json({ message: 'Reply not found' });
+    }
+
+    if (reply.userId !== req.user!.id && req.user!.userType !== 'ADMIN') {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    // Update the reply
+    const updatedReply = await prisma.reply.update({
+      where: { id: replyId },
+      data: { content },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    // Format the response with isAdmin flag (which is false for regular replies)
+    const formattedReply = {
+      ...updatedReply,
+      isAdmin: false,
+      createdAt: updatedReply.createdAt.toISOString(),
+    };
+
+    // Emit socket event for real-time updates
+    req.app.get('io').emit('updateReply', { postId, reply: formattedReply });
+
+    res.json(formattedReply);
+  } catch (error) {
+    console.error('Error updating reply:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const deletePost = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    // Check if post exists and belongs to user or user is admin
+    const post = await prisma.post.findUnique({
+      where: { id },
+      include: { user: true }
+    });
+
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    if (post.userId !== req.user!.id && req.user!.userType !== 'ADMIN') {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    // Delete all replies first (database constraint)
+    await prisma.reply.deleteMany({
+      where: { postId: id }
+    });
+
+    // Delete the post
+    await prisma.post.delete({
+      where: { id }
+    });
+
+    // Emit socket event for real-time updates
+    req.app.get('io').emit('deletePost', { id });
+
+    res.json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const deleteReply = async (req: AuthRequest, res: Response) => {
+  try {
+    const { postId, replyId } = req.params;
+
+    // Check if reply exists and belongs to user or user is admin
+    const reply = await prisma.reply.findUnique({
+      where: { id: replyId },
+      include: { user: true }
+    });
+
+    if (!reply) {
+      return res.status(404).json({ message: 'Reply not found' });
+    }
+
+    if (reply.userId !== req.user!.id && req.user!.userType !== 'ADMIN') {
+      return res.status(403).json({ message: 'Unauthorized' });
+    }
+
+    // Delete the reply
+    await prisma.reply.delete({
+      where: { id: replyId }
+    });
+
+    // Emit socket event for real-time updates
+    req.app.get('io').emit('deleteReply', { postId, replyId });
+
+    res.json({ message: 'Reply deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting reply:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const updateAdminPost = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { content } = req.body;
+
+    // Verify user is admin
+    if (req.user!.userType !== 'ADMIN') {
+      return res.status(403).json({ message: 'Unauthorized: Admin access required' });
+    }
+
+    // Check if post exists
+    const adminPost = await prisma.adminPost.findUnique({
+      where: { id }
+    });
+
+    if (!adminPost) {
+      return res.status(404).json({ message: 'Admin post not found' });
+    }
+
+    // Update the admin post
+    const updatedAdminPost = await prisma.adminPost.update({
+      where: { id },
+      data: { content },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        replies: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // Format the response
+    const formattedPost = {
+      id: updatedAdminPost.id,
+      content: updatedAdminPost.content,
+      imageUrl: updatedAdminPost.imageUrl,
+      user: updatedAdminPost.user,
+      replies: updatedAdminPost.replies.map(reply => ({
+        id: reply.id,
+        content: reply.content,
+        imageUrl: reply.imageUrl,
+        user: reply.user,
+        createdAt: reply.createdAt.toISOString(),
+        isAdmin: true
+      })),
+      createdAt: updatedAdminPost.createdAt.toISOString(),
+      isAdmin: true
+    };
+
+    // Emit socket event for real-time updates
+    req.app.get('io').emit('updateAdminPost', formattedPost);
+
+    res.json(formattedPost);
+  } catch (error) {
+    console.error('Error updating admin post:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const updateAdminReply = async (req: AuthRequest, res: Response) => {
+  try {
+    const { postId, replyId } = req.params;
+    const { content } = req.body;
+
+    // Verify user is admin
+    if (req.user!.userType !== 'ADMIN') {
+      return res.status(403).json({ message: 'Unauthorized: Admin access required' });
+    }
+
+    // Check if admin reply exists
+    const adminReply = await prisma.adminReply.findUnique({
+      where: { id: replyId }
+    });
+
+    if (!adminReply) {
+      return res.status(404).json({ message: 'Admin reply not found' });
+    }
+
+    // Update the admin reply
+    const updatedAdminReply = await prisma.adminReply.update({
+      where: { id: replyId },
+      data: { content },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    // Format the response
+    const formattedReply = {
+      id: updatedAdminReply.id,
+      content: updatedAdminReply.content,
+      imageUrl: updatedAdminReply.imageUrl,
+      user: updatedAdminReply.user,
+      createdAt: updatedAdminReply.createdAt.toISOString(),
+      isAdmin: true
+    };
+
+    // Emit socket event for real-time updates
+    req.app.get('io').emit('updateAdminReply', { postId, reply: formattedReply });
+
+    res.json(formattedReply);
+  } catch (error) {
+    console.error('Error updating admin reply:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const deleteAdminPost = async (req: AuthRequest, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    // Verify user is admin
+    if (req.user!.userType !== 'ADMIN') {
+      return res.status(403).json({ message: 'Unauthorized: Admin access required' });
+    }
+
+    // Check if admin post exists
+    const adminPost = await prisma.adminPost.findUnique({
+      where: { id }
+    });
+
+    if (!adminPost) {
+      return res.status(404).json({ message: 'Admin post not found' });
+    }
+
+    // Delete all admin replies first (database constraint)
+    await prisma.adminReply.deleteMany({
+      where: { adminPostId: id }
+    });
+
+    // Delete the admin post
+    await prisma.adminPost.delete({
+      where: { id }
+    });
+
+    // Emit socket event for real-time updates
+    req.app.get('io').emit('deleteAdminPost', { id });
+
+    res.json({ message: 'Admin post deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting admin post:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+export const deleteAdminReply = async (req: AuthRequest, res: Response) => {
+  try {
+    const { postId, replyId } = req.params;
+
+    // Verify user is admin
+    if (req.user!.userType !== 'ADMIN') {
+      return res.status(403).json({ message: 'Unauthorized: Admin access required' });
+    }
+
+    // Check if admin reply exists
+    const adminReply = await prisma.adminReply.findUnique({
+      where: { id: replyId }
+    });
+
+    if (!adminReply) {
+      return res.status(404).json({ message: 'Admin reply not found' });
+    }
+
+    // Delete the admin reply
+    await prisma.adminReply.delete({
+      where: { id: replyId }
+    });
+
+    // Emit socket event for real-time updates
+    req.app.get('io').emit('deleteAdminReply', { postId, replyId });
+
+    res.json({ message: 'Admin reply deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting admin reply:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };

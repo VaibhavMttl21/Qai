@@ -34,6 +34,10 @@ interface CommunityState {
   createReply: (postId: string, content: string, imageUrl?: string) => Promise<void>;
   createAdminPost: (content: string, imageUrl?: string) => Promise<void>;
   createAdminReply: (postId: string, content: string, imageUrl?: string) => Promise<void>;
+  editPost: (postId: string, content: string) => Promise<void>;
+  editReply: (postId: string, replyId: string, content: string) => Promise<void>;
+  deletePost: (postId: string) => Promise<void>;
+  deleteReply: (postId: string, replyId: string) => Promise<void>;
 }
 
 export const useCommunityStore = create<CommunityState>((set, get) => ({
@@ -129,6 +133,150 @@ export const useCommunityStore = create<CommunityState>((set, get) => ({
       console.error('Failed to create admin reply:', error);
     }
   },
+  editPost: async (postId, content) => {
+    try {
+      const user = useAuthStore.getState().user;
+      
+      if (user?.userType === 'ADMIN') {
+        // Check if it's an admin post
+        const posts = get().posts;
+        const post = posts.find(p => p.id === postId);
+        
+        if (post?.isAdmin) {
+          // Use admin endpoint for admin posts
+          const response = await api.put(`/api/community/admin/posts/${postId}`, { content });
+          
+          // Update local state
+          useCommunityStore.setState((state) => ({
+            posts: state.posts.map(p => p.id === postId ? { ...p, content } : p)
+          }));
+          
+          return response.data;
+        }
+      }
+      
+      // Regular endpoint for regular posts
+      const response = await api.put(`/api/community/posts/${postId}`, { content });
+      
+      // Update local state
+      useCommunityStore.setState((state) => ({
+        posts: state.posts.map(p => p.id === postId ? { ...p, content } : p)
+      }));
+      
+      return response.data;
+    } catch (error) {
+      console.error('Failed to edit post:', error);
+    }
+  },
+  editReply: async (postId, replyId, content) => {
+    try {
+      const user = useAuthStore.getState().user;
+      
+      // Check if it's an admin post
+      const posts = get().posts;
+      const post = posts.find(p => p.id === postId);
+      
+      if (post?.isAdmin && user?.userType === 'ADMIN') {
+        // Use admin endpoint for admin posts
+        const response = await api.put(`/api/community/admin/posts/${postId}/replies/${replyId}`, { 
+          content 
+        });
+        
+        // Update local state
+        useCommunityStore.setState((state) => ({
+          posts: state.posts.map(p => {
+            if (p.id === postId) {
+              return {
+                ...p,
+                replies: p.replies.map(r => r.id === replyId ? { ...r, content } : r)
+              };
+            }
+            return p;
+          })
+        }));
+        
+        return response.data;
+      }
+      
+      // Regular endpoint for regular posts
+      const response = await api.put(`/api/community/posts/${postId}/replies/${replyId}`, { 
+        content 
+      });
+      
+      // Update local state
+      useCommunityStore.setState((state) => ({
+        posts: state.posts.map(p => {
+          if (p.id === postId) {
+            return {
+              ...p,
+              replies: p.replies.map(r => r.id === replyId ? { ...r, content } : r)
+            };
+          }
+          return p;
+        })
+      }));
+      
+      return response.data;
+    } catch (error) {
+      console.error('Failed to edit reply:', error);
+    }
+  },
+  deletePost: async (postId) => {
+    try {
+      const user = useAuthStore.getState().user;
+      
+      // Check if it's an admin post
+      const posts = get().posts;
+      const post = posts.find(p => p.id === postId);
+      
+      if (post?.isAdmin && user?.userType === 'ADMIN') {
+        // Use admin endpoint for admin posts
+        await api.delete(`/api/community/admin/posts/${postId}`);
+      } else {
+        // Regular endpoint for regular posts
+        await api.delete(`/api/community/posts/${postId}`);
+      }
+      
+      // Update local state
+      useCommunityStore.setState((state) => ({
+        posts: state.posts.filter(p => p.id !== postId)
+      }));
+    } catch (error) {
+      console.error('Failed to delete post:', error);
+    }
+  },
+  deleteReply: async (postId, replyId) => {
+    try {
+      const user = useAuthStore.getState().user;
+      
+      // Check if it's an admin post
+      const posts = get().posts;
+      const post = posts.find(p => p.id === postId);
+      
+      if (post?.isAdmin && user?.userType === 'ADMIN') {
+        // Use admin endpoint for admin posts
+        await api.delete(`/api/community/admin/posts/${postId}/replies/${replyId}`);
+      } else {
+        // Regular endpoint for regular posts
+        await api.delete(`/api/community/posts/${postId}/replies/${replyId}`);
+      }
+      
+      // Update local state
+      useCommunityStore.setState((state) => ({
+        posts: state.posts.map(p => {
+          if (p.id === postId) {
+            return {
+              ...p,
+              replies: p.replies.filter(r => r.id !== replyId)
+            };
+          }
+          return p;
+        })
+      }));
+    } catch (error) {
+      console.error('Failed to delete reply:', error);
+    }
+  },
 }));
 
 // Setup Socket.IO listeners
@@ -213,4 +361,86 @@ socket.on('newAdminReply', ({ postId, reply }: { postId: string; reply: Reply })
   }));
   
   window.dispatchEvent(new CustomEvent('newAdminReply', { detail: { postId, reply } }));
+});
+
+// Add these socket listeners at the bottom where other socket events are handled
+
+socket.on('updatePost', (post: Post) => {
+  useCommunityStore.setState((state) => ({
+    posts: state.posts.map(p => p.id === post.id ? post : p)
+  }));
+});
+
+socket.on('updateReply', ({ postId, reply }: { postId: string; reply: Reply }) => {
+  useCommunityStore.setState((state) => ({
+    posts: state.posts.map((post) => {
+      if (post.id === postId) {
+        return {
+          ...post,
+          replies: post.replies.map(r => r.id === reply.id ? reply : r)
+        };
+      }
+      return post;
+    })
+  }));
+});
+
+socket.on('deletePost', ({ id }: { id: string }) => {
+  useCommunityStore.setState((state) => ({
+    posts: state.posts.filter(p => p.id !== id)
+  }));
+});
+
+socket.on('deleteReply', ({ postId, replyId }: { postId: string; replyId: string }) => {
+  useCommunityStore.setState((state) => ({
+    posts: state.posts.map((post) => {
+      if (post.id === postId) {
+        return {
+          ...post,
+          replies: post.replies.filter(r => r.id !== replyId)
+        };
+      }
+      return post;
+    })
+  }));
+});
+
+socket.on('updateAdminPost', (post: Post) => {
+  useCommunityStore.setState((state) => ({
+    posts: state.posts.map(p => p.id === post.id ? post : p)
+  }));
+});
+
+socket.on('updateAdminReply', ({ postId, reply }: { postId: string; reply: Reply }) => {
+  useCommunityStore.setState((state) => ({
+    posts: state.posts.map((post) => {
+      if (post.id === postId) {
+        return {
+          ...post,
+          replies: post.replies.map(r => r.id === reply.id ? reply : r)
+        };
+      }
+      return post;
+    })
+  }));
+});
+
+socket.on('deleteAdminPost', ({ id }: { id: string }) => {
+  useCommunityStore.setState((state) => ({
+    posts: state.posts.filter(p => p.id !== id)
+  }));
+});
+
+socket.on('deleteAdminReply', ({ postId, replyId }: { postId: string; replyId: string }) => {
+  useCommunityStore.setState((state) => ({
+    posts: state.posts.map((post) => {
+      if (post.id === postId) {
+        return {
+          ...post,
+          replies: post.replies.filter(r => r.id !== replyId)
+        };
+      }
+      return post;
+    })
+  }));
 });
