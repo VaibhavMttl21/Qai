@@ -195,7 +195,9 @@ export function Post({ post, viewMode = 'prioritized' }: PostProps) {
               <textarea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                className="w-full p-2 border rounded-md"
+                className="w-full p-2 border rounded-md font-mono whitespace-pre overflow-auto"
+                style={{ whiteSpace: 'pre', tabSize: 2 }}
+                spellCheck="false"
                 rows={3}
               />
               <div className="flex justify-between items-center">
@@ -226,7 +228,7 @@ export function Post({ post, viewMode = 'prioritized' }: PostProps) {
             </div>
           ) : (
             <>
-              <p className="mt-2">{post.content}</p>
+              <pre className="mt-2 font-sans whitespace-pre-wrap break-words overflow-y-auto overflow-x-auto max-h-[300px]">{post.content}</pre>
               {post.imageUrl && (
                 <img
                   src={post.imageUrl}
@@ -239,109 +241,114 @@ export function Post({ post, viewMode = 'prioritized' }: PostProps) {
         </div>
       </div>
 
-      <div className="mt-6 space-y-4">
-        {sortedReplies.map((reply) => {
-          const canModifyReply = user && (user.id === reply.user.id || user.userType === 'ADMIN');
-          
-          return (
-            <motion.div
-              key={reply.id}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className={`ml-12 ${reply.isAdmin && viewMode === 'prioritized' ? 'bg-blue-50' : 'bg-gray-50'} rounded-lg p-4`}
-            >
-              <div className="flex items-start space-x-4">
-                <Avatar>
-                  <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                    {reply.user.name[0]}
-                  </div>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <span className="font-medium">{reply.user.name}</span>
-                      {reply.isAdmin && (
-                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                          Admin
+      {/* Add a scrollable container for replies when there are many */}
+      <div className={`mt-6 ${sortedReplies.length > 2 ? 'max-h-[300px] overflow-y-auto pr-2' : ''}`}>
+        <div className="space-y-4">
+          {sortedReplies.map((reply) => {
+            const canModifyReply = user && (user.id === reply.user.id || user.userType === 'ADMIN');
+            
+            return (
+              <motion.div
+                key={reply.id}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className={`ml-12 ${reply.isAdmin && viewMode === 'prioritized' ? 'bg-blue-50' : 'bg-gray-50'} rounded-lg p-4`}
+              >
+                <div className="flex items-start space-x-4">
+                  <Avatar>
+                    <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                      {reply.user.name[0]}
+                    </div>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <span className="font-medium">{reply.user.name}</span>
+                        {reply.isAdmin && (
+                          <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                            Admin
+                          </span>
+                        )}
+                        <span className="text-gray-500 text-sm">
+                          {new Date(reply.createdAt).toLocaleDateString()}
                         </span>
+                      </div>
+                      
+                      {canModifyReply && (
+                        <div className="flex space-x-2">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => startEditing(reply.id, reply.content, 'reply')}
+                          >
+                            <Edit size={16} />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="text-red-500"
+                            onClick={() => confirmDelete(reply.id, 'reply', post.id)}
+                          >
+                            <Trash size={16} />
+                          </Button>
+                        </div>
                       )}
-                      <span className="text-gray-500 text-sm">
-                        {new Date(reply.createdAt).toLocaleDateString()}
-                      </span>
                     </div>
                     
-                    {canModifyReply && (
-                      <div className="flex space-x-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          onClick={() => startEditing(reply.id, reply.content, 'reply')}
-                        >
-                          <Edit size={16} />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="text-red-500"
-                          onClick={() => confirmDelete(reply.id, 'reply', post.id)}
-                        >
-                          <Trash size={16} />
-                        </Button>
+                    {editingReplyId === reply.id ? (
+                      <div className="mt-2 space-y-2">
+                        <textarea
+                          value={editContent}
+                          onChange={(e) => setEditContent(e.target.value)}
+                          className="w-full p-2 border rounded-md font-mono whitespace-pre overflow-auto"
+                          style={{ whiteSpace: 'pre', tabSize: 2 }}
+                          spellCheck="false"
+                          rows={2}
+                        />
+                        <div className="flex justify-between items-center">
+                          <div className="relative">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                            >
+                              <Smile size={16} />
+                            </Button>
+                            {showEmojiPicker && (
+                              <div className="absolute top-8 z-10">
+                                <EmojiPicker onEmojiClick={addEmoji} />
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex space-x-2">
+                            <Button variant="outline" size="sm" onClick={cancelEditing}>
+                              Cancel
+                            </Button>
+                            <Button size="sm" onClick={handleEditSubmit}>
+                              Save
+                            </Button>
+                          </div>
+                        </div>
                       </div>
+                    ) : (
+                      <>
+                        <pre className="mt-1 font-sans whitespace-pre-wrap break-words overflow-y-auto overflow-x-auto max-h-[200px]">{reply.content}</pre>
+                        {reply.imageUrl && (
+                          <img
+                            src={reply.imageUrl}
+                            alt="Reply attachment"
+                            className="mt-2 rounded-lg max-h-60 object-cover"
+                          />
+                        )}
+                      </>
                     )}
                   </div>
-                  
-                  {editingReplyId === reply.id ? (
-                    <div className="mt-2 space-y-2">
-                      <textarea
-                        value={editContent}
-                        onChange={(e) => setEditContent(e.target.value)}
-                        className="w-full p-2 border rounded-md"
-                        rows={2}
-                      />
-                      <div className="flex justify-between items-center">
-                        <div className="relative">
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                          >
-                            <Smile size={16} />
-                          </Button>
-                          {showEmojiPicker && (
-                            <div className="absolute top-8 z-10">
-                              <EmojiPicker onEmojiClick={addEmoji} />
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button variant="outline" size="sm" onClick={cancelEditing}>
-                            Cancel
-                          </Button>
-                          <Button size="sm" onClick={handleEditSubmit}>
-                            Save
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      <p className="mt-1">{reply.content}</p>
-                      {reply.imageUrl && (
-                        <img
-                          src={reply.imageUrl}
-                          alt="Reply attachment"
-                          className="mt-2 rounded-lg max-h-60 object-cover"
-                        />
-                      )}
-                    </>
-                  )}
                 </div>
-              </div>
-            </motion.div>
-          );
-        })}
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
 
       {user?.isPaid && (

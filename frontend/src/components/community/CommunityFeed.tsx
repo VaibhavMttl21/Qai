@@ -77,12 +77,14 @@ export function CommunityFeed() {
           <div className="flex items-center space-x-2">
             <Switch 
               id="view-mode" 
+              className='bg-slate-300'
               checked={viewMode === 'prioritized'}
               onCheckedChange={(checked) => 
                 setViewMode(checked ? 'prioritized' : 'chronological')
               }
             />
-            <Label htmlFor="view-mode">
+            <Label htmlFor="view-mode"  className="text-sm font-medium text-gray-700">
+             
               {viewMode === 'prioritized' ? 'Admin Posts Prioritized' : 'Chronological View'}
             </Label>
           </div>

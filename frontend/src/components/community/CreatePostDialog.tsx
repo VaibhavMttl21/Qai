@@ -60,7 +60,9 @@ export function CreatePostDialog() {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="What's on your mind?"
-              className="w-full h-32 p-2 border rounded-md"
+              className="w-full h-32 p-2 border rounded-md font-mono whitespace-pre overflow-auto"
+              style={{ whiteSpace: 'pre', tabSize: 2 }}
+              spellCheck="false"
               required
             />
           </div>

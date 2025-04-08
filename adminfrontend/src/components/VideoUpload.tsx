@@ -77,7 +77,9 @@ export function VideoUpload() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter video description"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 font-mono whitespace-pre overflow-auto"
+            style={{ whiteSpace: 'pre', tabSize: 2 }}
+            spellCheck="false"
             rows={4}
           ></textarea>
         </div>
