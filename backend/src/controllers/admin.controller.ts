@@ -119,13 +119,60 @@ export const uploadFile = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const addVideo = async (req: AuthRequest, res: Response) => {
-  try {
-    const { title, description, url, order } = req.body;
 
-    if (!title || !url) {
-      return res.status(400).json({ message: 'Title and URL are required' });
+import path from 'path';
+import fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
+import { createReadStream } from 'fs';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { r2 } from '../utils/r2';
+import { PubSub } from '@google-cloud/pubsub';
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, '/tmp');
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `${Date.now()}-${file.fieldname}${ext}`);
+  },
+});
+
+export const videoUpload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('video/')) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      cb(new Error('Only video files are allowed'));
     }
+  },
+  limits: { fileSize: 8 * 1024 * 1024 * 1024 }, // 8GB max
+});
+
+const pubsub = new PubSub();
+
+export const addVideo = async (req: AuthRequest, res: Response) => {
+  const { title, description, url, order } = req.body;
+  const file = req.file;
+  
+  if (!file) return res.status(400).json({ error: 'No file uploaded' });
+  if (!title || !url) return res.status(400).json({ message: 'Title and URL are required' });
+  
+  try {
+    const id = uuidv4();
+    const key = `raw/${id}.mp4`;
+    const stream = createReadStream(file.path);
+
+    await r2.send(new PutObjectCommand({
+      Bucket: process.env.R2_BUCKET!,
+      Key: key,
+      Body: stream,
+      ContentType: 'video/mp4',
+    }));
+
+    fs.unlinkSync(file.path);
 
     const video = await prisma.video.create({
       data: {
@@ -134,6 +181,12 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
         url,
         order: Number(order),
       },
+    });
+
+
+    const topic = pubsub.topic(process.env.PUBSUB_TOPIC!);
+    await topic.publishMessage({
+      json: { videoId: id, rawKey: key },
     });
 
     res.status(201).json({ 
