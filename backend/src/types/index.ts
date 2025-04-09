@@ -4,7 +4,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  userType: 'SCHOOL' | 'RANDOM';
+  userType: 'SCHOOL' | 'RANDOM' | 'ADMIN';
   isPaid: boolean;
 }
 

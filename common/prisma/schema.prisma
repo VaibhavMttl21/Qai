@@ -10,6 +10,7 @@ datasource db {
 enum UserType {
   SCHOOL
   RANDOM
+  ADMIN
 }
 
 model User {
@@ -19,14 +20,15 @@ model User {
   name           String
   userType       UserType
   isPaid         Boolean        @default(true)
-  firebaseUid    String?        // Add this field
-  profilePicture String?        // Add this field
+  firebaseUid    String?        
+  profilePicture String?        
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   posts          Post[]
   replies        Reply[]
   videoProgress  Progress[]
-  excelData      ExcelData[]    // Updated from excelFiles to match our model
+  adminPosts     AdminPost[]
+  adminReplies   AdminReply[]
 }
 
 model Video {
@@ -35,6 +37,8 @@ model Video {
   description String
   url         String
   order       Int        @unique
+  encoded     Boolean    @default(false)
+  hlsUrls     Json?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   progress    Progress[]
@@ -76,14 +80,30 @@ model Reply {
   post      Post     @relation(fields: [postId], references: [id])
 }
 
-// Add the ExcelData model to match our controller implementation
-model ExcelData {
-  id        String   @id @default(uuid())
-  name      String
-  data      Json     // This will store our structured Excel data
+model AdminPost {
+  id        String      @id @default(uuid())
+  content   String
+  imageUrl  String?
   userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
+  priority  Int         @default(10)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  user      User        @relation(fields: [userId], references: [id])
+  replies   AdminReply[]
 }
+
+model AdminReply {
+  id          String    @id @default(uuid())
+  content     String
+  imageUrl    String?
+  userId      String
+  adminPostId String
+  priority    Int       @default(10)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id])
+  adminPost   AdminPost @relation(fields: [adminPostId], references: [id])
+}
+
+
 

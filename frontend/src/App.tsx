@@ -11,15 +11,22 @@ import { VideoPage } from '@/pages/VideoPage';
 import { CommunityPage } from '@/pages/CommunityPage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { PricingPage } from '@/pages/PricingPage';
-import { AdminUploadPage } from '@/pages/AdminUploadPage';
+// import { AdminUploadPage } from '@/pages/AdminUploadPage';
 import { useAuthStore } from '@/store/auth';
+import { connectSocket } from '@/lib/socket';
 
 function App() {
   const initAuth = useAuthStore(state => state.initAuth);
+  const token = useAuthStore(state => state.token);
   
   useEffect(() => {
     initAuth();
-  }, [initAuth]);
+    
+    // If the user has a token, connect to the socket
+    if (token) {
+      connectSocket();
+    }
+  }, [initAuth, token]);
 
   return (
     <Router>
@@ -79,15 +86,19 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/admin/upload"
             element={
               <ProtectedRoute>
                 <AdminUploadPage />
               </ProtectedRoute>
             }
+<<<<<<< HEAD
           />
           
+=======
+          /> */}
+>>>>>>> 1215d77b95ea018308928d288b815b69b04129fa
         </Route>
         
       </Routes>

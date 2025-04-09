@@ -20,18 +20,18 @@ const navigation = [
 ];
 
 // Admin-only navigation items
-const adminNavigation = [
-  { name: 'Upload Data', href: '/admin/upload', icon: Upload },
-];
+// const adminNavigation = [
+//   { name: 'Upload Data', href: '/admin/upload', icon: Upload },
+// ];
 
 export function Sidebar() {
   const { user } = useAuthStore();
   
   // Determine which navigation items to show
   const navItems = [...navigation];
-  if (user?.userType === 'SCHOOL') {
-    navItems.push(...adminNavigation);
-  }
+  // if (user?.userType === 'ADMIN') {
+  //   navItems.push(...adminNavigation);
+  // }
 
   return (
     <div className="w-64 bg-white shadow-sm h-[calc(100vh-4rem)]">

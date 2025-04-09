@@ -49,15 +49,26 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
-
+    const { email, password, dob } = req.body;
+    
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
+    let isValidCredential = false;
+
+    // If it's a SCHOOL user and DOB is provided, validate with DOB
+    if (user.userType === 'SCHOOL') {
+      // Since DOB is stored as a hashed password (from admin upload)
+      isValidCredential = await bcrypt.compare(String(dob), user.password);
+      console.log('Comparing DOB:', dob, 'with hashed password:', user.password);
+    } else {
+      // For regular users, validate with password
+      isValidCredential = await bcrypt.compare(password, user.password);
+    }
+
+    if (!isValidCredential) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
