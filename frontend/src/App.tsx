@@ -5,6 +5,7 @@ import { Layout } from '@/components/layout/Layout';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
+import { LandingPage } from './pages/LandingPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { VideoPage } from '@/pages/VideoPage';
 import { CommunityPage } from '@/pages/CommunityPage';
@@ -23,16 +24,27 @@ function App() {
   return (
     <Router>
       <Routes>
+      <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <LandingPage />
+              </ProtectedRoute>
+            }
+          />
+      </Routes>
+      <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route element={<Layout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
+          
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              // <ProtectedRoute>
                 <DashboardPage />
-              </ProtectedRoute>
+              // </ProtectedRoute>
             }
           />
           <Route
@@ -75,7 +87,9 @@ function App() {
               </ProtectedRoute>
             }
           />
+          
         </Route>
+        
       </Routes>
       <Toaster />
     </Router>
