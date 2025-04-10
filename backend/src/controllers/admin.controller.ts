@@ -169,13 +169,14 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
       Bucket: process.env.R2_BUCKET!,
       Key: key,
       Body: stream,
-      ContentType: 'video/mp4',
+      ContentType: file.mimetype,
     }));
 
     fs.unlinkSync(file.path);
 
     const video = await prisma.video.create({
       data: {
+        id,
         title,
         description,
         url,

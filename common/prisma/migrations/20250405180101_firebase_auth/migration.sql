@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "User" ADD COLUMN     "firebaseUid" TEXT,
-ADD COLUMN     "profilePicture" TEXT;
