@@ -1,9 +1,11 @@
 import DecryptedText from "./decryptText";
 
 
+
+  
 export function PreHeading() {
     return (
-        <div className="relative w-screen h-screen bg-[url('/topbg.png')] bg-cover bg-center">
+        <div className="relative w-screen h-screen bg-[url('/topbg.png')] bg-cover bg-center z-50">
 
         
 
@@ -42,16 +44,11 @@ export function PreHeading() {
 
             {/* Right Component (Spline Viewer) */}
             <div className="absolute right-0 top-0 h-full w-1/2 max-w-[1000px] max-h-[800px] md:w-[45%] sm:w-[60%] xs:w-[90%]">
-  <spline-viewer
-    url="https://prod.spline.design/m-8d-MxC0lhpf3BE/scene.splinecode"
-    style={{
-      width: '100%',
-      height: '100%',
-    }}
-  />
-</div>
-
-
+            <spline-viewer
+  url="https://prod.spline.design/m-8d-MxC0lhpf3BE/scene.splinecode"
+  hideSplineLogo="true"
+/>
+            </div>
         </div>
     );
 }

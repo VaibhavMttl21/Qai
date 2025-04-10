@@ -12,7 +12,8 @@ import {
   updateAdminPost,
   deleteAdminPost,
   updateAdminReply,
-  deleteAdminReply
+  deleteAdminReply,
+  getUserPosts
 } from '../controllers/community.controller';
 import { auth, isPaidUser, isAdmin } from '../middleware/auth';
 
@@ -20,6 +21,7 @@ const router = Router();
 
 // Regular user routes
 router.get('/posts', auth, getPosts);
+router.get('/users/:userId/posts', auth, getUserPosts); // New endpoint for user posts
 router.post('/posts', auth, isPaidUser, createPost);
 router.post('/posts/:postId/replies', auth, isPaidUser, createReply);
 router.put('/posts/:id', auth, updatePost);

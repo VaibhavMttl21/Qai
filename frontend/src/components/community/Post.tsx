@@ -42,9 +42,10 @@ interface PostProps {
     isAdmin?: boolean;
   };
   viewMode?: 'prioritized' | 'chronological';
+  disableActions?: boolean; // Add this line
 }
 
-export function Post({ post, viewMode = 'prioritized' }: PostProps) {
+export function Post({ post, viewMode = 'prioritized', disableActions }: PostProps) {
   const [replyContent, setReplyContent] = useState('');
   const [editContent, setEditContent] = useState('');
   const [editingPostId, setEditingPostId] = useState<string | null>(null);
@@ -169,7 +170,7 @@ export function Post({ post, viewMode = 'prioritized' }: PostProps) {
               </span>
             </div>
             
-            {canModifyPost && (
+            {canModifyPost && !disableActions &&(
               <div className="flex space-x-2">
                 <Button 
                   variant="ghost" 
@@ -351,7 +352,7 @@ export function Post({ post, viewMode = 'prioritized' }: PostProps) {
         </div>
       </div>
 
-      {user?.isPaid && (
+      {user?.isPaid && !disableActions && (
         <form onSubmit={handleReply} className="mt-6 ml-12">
           <div className="flex flex-col space-y-2">
             <div className="flex space-x-2">

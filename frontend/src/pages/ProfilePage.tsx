@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/toaster';
+import { UserPosts } from '@/components/profile/UserPosts';
 import api from '@/lib/api';
 
 export function ProfilePage() {
@@ -40,7 +41,7 @@ export function ProfilePage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        {...{ className: "bg-white rounded-lg shadow-sm p-6 mb-6" }}
+        className="bg-white rounded-lg shadow-sm p-6 mb-6"
       >
         <h1 className="text-2xl font-bold mb-6">Your Profile</h1>
 
@@ -104,12 +105,23 @@ export function ProfilePage() {
         </form>
       </motion.div>
 
+      {user && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="bg-white rounded-lg shadow-sm p-6"
+        >
+          <UserPosts userId={user.id} />
+        </motion.div>
+      )}
+
       {!user?.isPaid && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          style={{ background: 'white', borderRadius: '0.5rem', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)', padding: '1.5rem' }}
+          className="bg-white rounded-lg shadow-sm p-6 mt-6"
         >
           <h2 className="text-xl font-semibold mb-4">Upgrade to Premium</h2>
           <p className="text-gray-600 mb-4">

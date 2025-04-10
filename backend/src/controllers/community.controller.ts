@@ -703,3 +703,102 @@ export const deleteAdminReply = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+export const getUserPosts = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+
+    // Get regular posts by the user
+    const regularPosts = await prisma.post.findMany({
+      where: {
+        userId: userId
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        replies: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    
+    // Get admin posts by the user
+    const adminPosts = await prisma.adminPost.findMany({
+      where: {
+        userId: userId
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        replies: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    
+    // Format admin posts similar to regular posts
+    const formattedAdminPosts = adminPosts.map(adminPost => ({
+      id: adminPost.id,
+      content: adminPost.content,
+      imageUrl: adminPost.imageUrl,
+      user: adminPost.user,
+      replies: adminPost.replies.map(reply => ({
+        id: reply.id,
+        content: reply.content,
+        imageUrl: reply.imageUrl,
+        user: reply.user,
+        createdAt: reply.createdAt.toISOString(),
+        isAdmin: true
+      })),
+      createdAt: adminPost.createdAt.toISOString(),
+      isAdmin: true
+    }));
+    
+    // Format regular posts
+    const formattedRegularPosts = regularPosts.map(post => ({
+      ...post,
+      isAdmin: false,
+      replies: post.replies.map(reply => ({
+        ...reply,
+        isAdmin: false,
+        createdAt: reply.createdAt.toISOString(),
+      })),
+      createdAt: post.createdAt.toISOString(),
+    }));
+    
+    // Combine and sort all posts chronologically
+    const allUserPosts = [...formattedAdminPosts, ...formattedRegularPosts];
+    allUserPosts.sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+    
+    res.json(allUserPosts);
+  } catch (error) {
+    console.error('Error fetching user posts:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

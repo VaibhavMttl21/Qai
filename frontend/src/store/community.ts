@@ -29,7 +29,9 @@ interface Reply {
 
 interface CommunityState {
   posts: Post[];
+  userPosts: Post[];
   fetchPosts: () => Promise<void>;
+  fetchUserPosts: (userId: string) => Promise<void>;
   createPost: (content: string, imageUrl?: string) => Promise<void>;
   createReply: (postId: string, content: string, imageUrl?: string) => Promise<void>;
   createAdminPost: (content: string, imageUrl?: string) => Promise<void>;
@@ -42,6 +44,7 @@ interface CommunityState {
 
 export const useCommunityStore = create<CommunityState>((set, get) => ({
   posts: [],
+  userPosts: [],
   fetchPosts: async () => {
     try {
       const response = await api.get('/api/community/posts');
@@ -57,6 +60,15 @@ export const useCommunityStore = create<CommunityState>((set, get) => ({
       set({ posts: sortedPosts });
     } catch (error) {
       console.error('Failed to fetch posts:', error);
+    }
+  },
+  fetchUserPosts: async (userId) => {
+    try {
+      const response = await api.get(`/api/community/users/${userId}/posts`);
+      console.log("reponse",response)
+      set({ userPosts: response.data });
+    } catch (error) {
+      console.error('Failed to fetch user posts:', error);
     }
   },
   createPost: async (content, imageUrl) => {
