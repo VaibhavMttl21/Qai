@@ -27,6 +27,7 @@ function App() {
       connectSocket();
     }
   }, [initAuth, token]);
+  
 
   return (
     <Router>
@@ -34,13 +35,9 @@ function App() {
       <Route
             path="/home"
             element={
-              <ProtectedRoute>
                 <LandingPage />
-              </ProtectedRoute>
             }
           />
-      </Routes>
-      <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route element={<Layout />}>
@@ -49,7 +46,7 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              // <ProtectedRoute>
+              <ProtectedRoute>
                 <DashboardPage />
               // </ProtectedRoute>
             }
@@ -93,13 +90,9 @@ function App() {
                 <AdminUploadPage />
               </ProtectedRoute>
             }
-<<<<<<< HEAD
           />
           
-=======
           /> */}
-
-{/* >>>>>>> 1215d77b95ea018308928d288b815b69b04129fa */}
         </Route>
         
       </Routes>
