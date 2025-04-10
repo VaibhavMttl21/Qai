@@ -1,20 +1,10 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { motion } from "framer-motion";
-import { IconType } from "react-icons";
 import {
-  SiAtlassian,
   SiDribbble,
-  SiGrubhub,
-  SiKaggle,
-  SiSlack,
-  SiNike,
-  Si1001Tracklists,
-  Si1Dot1Dot1Dot1,
-  SiAndroid,
-  SiBraintree,
-  SiAirtable,
   SiMovistar,
-  SiHomeadvisor,
+  SiAirtable,
+  SiAndroid,
   SiHomeassistant,
   SiGoogleassistant,
 } from "react-icons/si";
@@ -23,8 +13,35 @@ const StackedCardTestimonials = () => {
   const [selected, setSelected] = useState(0);
 
   return (
-    <section className="bg-white py-24 px-4 lg:px-8 grid items-center grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-4 overflow-hidden">
-      <div className="p-4">
+    <section className="relative bg-white py-24 px-4 lg:px-8 grid items-center grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-4 overflow-hidden">
+      {/* 🌪 Top-Left Rotating */}
+      <motion.img
+        src="/two.png"
+        alt="Rotating Decorative"
+        className="absolute top-4 left-4 w-20 lg:w-60 opacity-60 pointer-events-none z-0"
+        animate={{ rotate: 360 }}
+        transition={{
+          repeat: Infinity,
+          duration: 20,
+          ease: "linear",
+        }}
+      />
+
+      {/* 🪄 Bottom-Right Floating */}
+      <motion.img
+        src="/one.png"
+        alt="Floating Decorative"
+        className="absolute bottom-4 right-4 w-20 lg:w-40 opacity-70 pointer-events-none z-0"
+        animate={{ y: [0, -15, 0] }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+
+      {/* 💬 Text Content */}
+      <div className="p-4 z-10">
         <h3 className="text-5xl font-semibold">What our Students think</h3>
         <p className="text-slate-500 my-4">
           Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus
@@ -37,6 +54,8 @@ const StackedCardTestimonials = () => {
           selected={selected}
         />
       </div>
+
+      {/* 📇 Testimonial Cards */}
       <Cards
         testimonials={testimonials}
         setSelected={setSelected}
@@ -46,6 +65,7 @@ const StackedCardTestimonials = () => {
   );
 };
 
+// Pagination dots
 const SelectBtns = ({ numTracks, setSelected, selected }) => {
   return (
     <div className="flex gap-1 mt-8">
@@ -59,15 +79,9 @@ const SelectBtns = ({ numTracks, setSelected, selected }) => {
             {selected === n ? (
               <motion.span
                 className="absolute top-0 left-0 bottom-0 bg-slate-950"
-                initial={{
-                  width: "0%",
-                }}
-                animate={{
-                  width: "100%",
-                }}
-                transition={{
-                  duration: 5,
-                }}
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ duration: 5 }}
                 onAnimationComplete={() => {
                   setSelected(selected === numTracks - 1 ? 0 : selected + 1);
                 }}
@@ -87,9 +101,10 @@ const SelectBtns = ({ numTracks, setSelected, selected }) => {
   );
 };
 
+// Card Stack
 const Cards = ({ testimonials, selected, setSelected }) => {
   return (
-    <div className="p-4 relative h-[450px] lg:h-[500px] shadow-xl">
+    <div className="p-4 relative h-[450px] lg:h-[500px] shadow-xl z-10">
       {testimonials.map((t, i) => {
         return (
           <Card
@@ -105,6 +120,7 @@ const Cards = ({ testimonials, selected, setSelected }) => {
   );
 };
 
+// Individual Card
 const Card = ({
   Icon,
   description,
@@ -156,47 +172,42 @@ const Card = ({
 
 export default StackedCardTestimonials;
 
+// Testimonial Data
 const testimonials = [
   {
     Icon: SiHomeassistant,
     description:
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita sequi cupiditate harum repellendus ipsum dignissimos? Officiis ipsam dolorum magnam assumenda.",
     name: "Jane Dodson",
-    
   },
   {
     Icon: SiGoogleassistant,
     description:
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita sequi cupiditate harum repellendus ipsum dignissimos? Officiis ipsam dolorum magnam assumenda.",
     name: "Johnathan Rodriguez",
-    
   },
   {
     Icon: SiDribbble,
     description:
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita sequi cupiditate harum repellendus ipsum dignissimos? Officiis ipsam dolorum magnam assumenda.",
     name: "Phil Heath",
-  
   },
   {
     Icon: SiMovistar,
     description:
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita sequi cupiditate harum repellendus ipsum dignissimos? Officiis ipsam dolorum magnam assumenda.",
     name: "Andrea Beck",
-   
   },
   {
     Icon: SiAirtable,
     description:
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita sequi cupiditate harum repellendus ipsum dignissimos? Officiis ipsam dolorum magnam assumenda.",
     name: "Daniel Henderson",
-    
   },
   {
     Icon: SiAndroid,
     description:
       "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Expedita sequi cupiditate harum repellendus ipsum dignissimos? Officiis ipsam dolorum magnam assumenda.",
     name: "Anderson Lima",
-    
   },
 ];

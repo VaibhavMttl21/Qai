@@ -5,8 +5,18 @@ import useMeasure from "react-use-measure";
 
 const BasicFAQ = () => {
   return (
-    <div className="px-4 py-12">
-      <div className="mx-auto max-w-3xl">
+    <div className="relative px-4 py-12 overflow-hidden">
+      {/* Floating PNG */}
+      <motion.img
+        src="/purplesphere.png" // image path from public folder
+        alt="FAQ Float"
+        initial={{ y: 0 }}
+        animate={{ y: [0, -20, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute left-0 top-10 w-58 opacity-60 pointer-events-none z-0"
+      />
+
+      <div className="relative z-10 mx-auto max-w-3xl">
         <h3 className="mb-4 text-center text-3xl font-semibold">
           Frequently asked questions
         </h3>

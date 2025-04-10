@@ -85,7 +85,7 @@ export function RegisterForm() {
             required
           />
         </div>
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full border-2 border-white hover:border-slate-400 hover:text-slate-400 mt-2">
           Register
         </Button>
       </form>
@@ -99,7 +99,7 @@ export function RegisterForm() {
       <Button 
         type="button" 
         variant="outline" 
-        className="w-full flex items-center justify-center gap-2"
+        className="w-full flex items-center justify-center gap-2 hover:border-slate-400 hover:text-slate-400"
         onClick={handleGoogleSignIn}
         disabled={isLoading}
       >

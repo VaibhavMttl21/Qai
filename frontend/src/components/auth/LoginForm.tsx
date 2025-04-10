@@ -109,7 +109,7 @@ export function LoginForm() {
         </div>
       )}
       
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full border-white hover:border-slate-400 hover:text-slate-400 mb-5 border-2 mt-2 ">
         Login
       </Button>
     </form>
