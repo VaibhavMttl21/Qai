@@ -72,3 +72,4 @@ model Reply {
   user      User     @relation(fields: [userId], references: [id])
   post      Post     @relation(fields: [postId], references: [id])
 }
+

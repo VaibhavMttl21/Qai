@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { createCheckoutSession, handleWebhook } from '../controllers/payment.controller';
+import { createOrder, verifyPayment } from '../controllers/payment.controller.js';
 import { auth } from '../middleware/auth';
 
 const router = Router();
 
-router.post('/create-checkout-session', auth, createCheckoutSession);
-router.post('/webhook', handleWebhook);
+router.post('/order', createOrder);
+router.post('/verify', verifyPayment);
 
 export default router;
