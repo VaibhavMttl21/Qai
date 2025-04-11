@@ -2,10 +2,12 @@
 import { Request, Response } from 'express';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
-import prisma from '../prisma';
-import { CreateOrderRequest, VerifyPaymentRequest } from '../types/payment';
+import { PrismaClient } from '@prisma/client';
+import { CreateOrderRequest, VerifyPaymentRequest } from '../types';
 import dotenv from 'dotenv';
 dotenv.config();
+
+const prisma = new PrismaClient();
 
 const razorpayInstance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID!,

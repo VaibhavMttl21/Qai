@@ -36,3 +36,17 @@ export interface Reply {
   postId: string;
   createdAt: Date;
 }
+
+export interface CreateOrderRequest extends Request {
+  body: {
+    amount: number;
+  };
+}
+
+export interface VerifyPaymentRequest extends Request {
+  body: {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+  };
+}

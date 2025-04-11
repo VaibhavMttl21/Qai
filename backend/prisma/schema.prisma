@@ -73,3 +73,12 @@ model Reply {
   post      Post     @relation(fields: [postId], references: [id])
 }
 
+model Payment {
+  id                 String   @id @default(uuid())
+  razorpay_order_id  String
+  razorpay_payment_id String
+  razorpay_signature String
+  createdAt          DateTime @default(now())
+}
+
+
