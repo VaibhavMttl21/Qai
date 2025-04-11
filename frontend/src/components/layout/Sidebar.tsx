@@ -7,6 +7,8 @@ import {
   Users,
   User,
   CreditCard,
+  FileSpreadsheet,
+  Upload,
 } from 'lucide-react';
 
 const navigation = [
@@ -17,14 +19,25 @@ const navigation = [
   { name: 'Pricing', href: '/pricing', icon: CreditCard },
 ];
 
+// Admin-only navigation items
+// const adminNavigation = [
+//   { name: 'Upload Data', href: '/admin/upload', icon: Upload },
+// ];
+
 export function Sidebar() {
   const { user } = useAuthStore();
+  
+  // Determine which navigation items to show
+  const navItems = [...navigation];
+  // if (user?.userType === 'ADMIN') {
+  //   navItems.push(...adminNavigation);
+  // }
 
   return (
     <div className="w-64 bg-white shadow-sm h-[calc(100vh-4rem)]">
       <nav className="mt-5 px-2">
         <div className="space-y-1">
-          {navigation.map((item) => (
+          {navItems.map((item) => (
             <NavLink
               key={item.name}
               to={item.href}

@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -7,23 +8,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Your existing schema models go here
+
 enum UserType {
   SCHOOL
   RANDOM
+  ADMIN
 }
 
 model User {
-  id            String     @id @default(uuid())
-  email         String     @unique
-  password      String
-  name          String
-  userType      UserType
-  isPaid        Boolean    @default(true)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  posts         Post[]
-  replies       Reply[]
-  videoProgress Progress[]
+  id             String         @id @default(uuid())
+  email          String         @unique
+  password       String
+  name           String
+  userType       UserType
+  isPaid         Boolean        @default(true)
+  firebaseUid    String?        
+  profilePicture String?        
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  posts          Post[]
+  replies        Reply[]
+  videoProgress  Progress[]
+  adminPosts     AdminPost[]
+  adminReplies   AdminReply[]
 }
 
 model Video {
@@ -32,6 +40,8 @@ model Video {
   description String
   url         String
   order       Int        @unique
+  encoded     Boolean    @default(false)
+  hlsUrls     Json?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   progress    Progress[]
@@ -80,5 +90,34 @@ model Payment {
   razorpay_signature String
   createdAt          DateTime @default(now())
 }
+
+
+
+
+model AdminPost {
+  id        String      @id @default(uuid())
+  content   String
+  imageUrl  String?
+  userId    String
+  priority  Int         @default(10)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  user      User        @relation(fields: [userId], references: [id])
+  replies   AdminReply[]
+}
+
+model AdminReply {
+  id          String    @id @default(uuid())
+  content     String
+  imageUrl    String?
+  userId      String
+  adminPostId String
+  priority    Int       @default(10)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id])
+  adminPost   AdminPost @relation(fields: [adminPostId], references: [id])
+}
+
 
 

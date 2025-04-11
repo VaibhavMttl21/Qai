@@ -42,7 +42,7 @@ export function PricingPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-12"
+        {...{ className: "text-center mb-12" }}
       >
         <h1 className="text-3xl font-bold mb-4">Choose Your Plan</h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
@@ -56,7 +56,7 @@ export function PricingPage() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-lg shadow-sm p-6 border border-gray-200"
+          {...{ className: "bg-white rounded-lg shadow-sm p-6 border border-gray-200" }}
         >
           <div className="text-center mb-6">
             <h2 className="text-xl font-semibold">Free Plan</h2>
@@ -94,7 +94,7 @@ export function PricingPage() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-lg shadow-sm p-6 border-2 border-blue-500 relative"
+          {...{ className: "bg-white rounded-lg shadow-sm p-6 border-2 border-blue-500 relative" }}
         >
           <div className="absolute top-0 right-0 bg-blue-500 text-white px-3 py-1 text-sm font-semibold transform translate-y-[-50%]">
             Popular
@@ -133,7 +133,7 @@ export function PricingPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="mt-12 text-center"
+        {...{ className: "mt-12 text-center" }}
       >
         <h3 className="text-lg font-semibold mb-2">Money Back Guarantee</h3>
         <p className="text-gray-600">
