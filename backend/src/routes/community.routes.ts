@@ -16,6 +16,7 @@ import {
   getUserPosts
 } from '../controllers/community.controller';
 import { auth, isPaidUser, isAdmin } from '../middleware/auth';
+import { getNews } from '../controllers/news.controller';
 
 const router = Router();
 
@@ -28,6 +29,7 @@ router.put('/posts/:id', auth, updatePost);
 router.delete('/posts/:id', auth, deletePost);
 router.put('/posts/:postId/replies/:replyId', auth, updateReply);
 router.delete('/posts/:postId/replies/:replyId', auth, deleteReply);
+
 
 // Admin routes
 router.post('/admin/posts', auth, isAdmin, createAdminPost);
