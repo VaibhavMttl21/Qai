@@ -48,7 +48,7 @@ export const verifyPayment = async (req: VerifyPaymentRequest, res: Response) =>
       .digest('hex');
 
     if (expectedSign === razorpay_signature) {
-      await prisma.Payment.create({
+      await prisma.payment.create({
         data: {
           razorpay_order_id,
           razorpay_payment_id,
