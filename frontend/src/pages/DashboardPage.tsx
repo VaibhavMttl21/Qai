@@ -4,6 +4,7 @@ import { useVideoStore } from '@/store/video';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
+
 export function DashboardPage() {
   const { user } = useAuthStore();
   const { videos, progress } = useVideoStore();
@@ -13,6 +14,7 @@ export function DashboardPage() {
   const progressPercentage = totalVideos > 0 ? (completedVideos / totalVideos) * 100 : 0;
 
   return (
+    <>
     <div className="max-w-7xl mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -63,5 +65,8 @@ export function DashboardPage() {
         </motion.div>
       </div>
     </div>
+    
+    </>
+    
   );
 }

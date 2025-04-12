@@ -1,0 +1,26 @@
+@font-face {
+    font-family: 'Satoshi';
+    src: url('../assets/fonts/Satoshi-Black.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'Satoshi';
+    src: url('../assets/fonts/Satoshi-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Satoshi';
+    src: url('../assets/fonts/Satoshi-light.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Satoshi';
+    src: url('../assets/fonts/Satoshi-Regular.woff') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+  }
+  

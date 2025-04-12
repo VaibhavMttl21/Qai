@@ -1,9 +1,10 @@
 import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { FiDollarSign, FiEye, FiPlay, FiSearch } from "react-icons/fi";
+import '../../styles/fonts.css';
 const Explain = () => {
   return (
-    <div className="bg-gradient-to-b from-[#b65fcf] to-white"> 
+    <div className="bg-gradient-to-b from-[#e3e3e3] to-white"> 
 
      
         <SwapColumnFeatures />
@@ -87,7 +88,7 @@ const Content = ({ setFeatureInView, featureInView }) => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
-          <span className="rounded-full bg-[#800080] px-2 py-1.5 text-xs font-medium text-white"> 
+          <span className="rounded-full bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-2 py-1.5 text-xs font-medium text-white"> 
           {/* indigo-600 */}
             {featureInView.callout}
           </span>
@@ -98,7 +99,7 @@ const Content = ({ setFeatureInView, featureInView }) => {
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="mt-8 block md:hidden"
+          className="mt-8 block md:hidden font-satoshi font-bold"
         >
           <ExplainFeature featureInView={featureInView} />
         </motion.div>

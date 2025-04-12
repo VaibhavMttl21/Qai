@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { motion } from "framer-motion";
 import useMeasure from "react-use-measure";
+import '../../styles/fonts.css';
 
 const BasicFAQ = () => {
   return (
@@ -17,11 +18,11 @@ const BasicFAQ = () => {
       />
 
       <div className="relative z-10 mx-auto max-w-3xl">
-        <h3 className="mb-4 text-center text-3xl font-semibold">
+        <h3 className="mb-4 text-center text-3xl font-satoshi font-bold">
           Frequently asked questions
         </h3>
         <Question title="Why is the sky blue?" defaultOpen>
-          <p>
+          <p className="font-satoshi font-regular">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque
             laboriosam neque reprehenderit saepe eius dolorum vel consequuntur
             perspiciatis ad vero.
@@ -60,7 +61,7 @@ const Question = ({ title, children, defaultOpen = false }) => {
   return (
     <motion.div
       animate={open ? "open" : "closed"}
-      className="border-b-[1px] border-b-slate-300"
+      className="border-b-[1px] border-b-slate-300 font-satoshi font-regular"
     >
       <button
         onClick={() => setOpen((pv) => !pv)}

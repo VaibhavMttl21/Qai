@@ -1,54 +1,99 @@
-import DecryptedText from "./decryptText";
+// import { motion } from "framer-motion";
 
 
+// export function PreHeading() {
+//   return (
+//     <div className="relative w-screen h-screen bg-[#e3e3e3] bg-cover bg-center z-40">
 
-  
+// {/* url('/topbg.png') */}
+//       {/* Left Floating Image */}
+//       <div className="absolute left-0 top-1/2 transform -translate-y-1/2 h-auto w-1/2 max-w-[700px] max-h-[900px] md:w-[55%] sm:w-[60%] xs:w-[90%]">
+//         <motion.img
+//           src="/blob.png"
+//           alt="Left side illustration"
+//           className="w-full h-auto object-contain opacity-70"
+//           animate={{ y: [0, -30, 0] }}
+//           transition={{
+//             duration: 6,
+//             repeat: Infinity,
+//             ease: "easeInOut",
+//           }}
+//         />
+//       </div>
+
+//       {/* Right Spline Viewer */}
+//       <div className="absolute right-0 top-0 h-full w-1/2 max-w-[1000px] max-h-[800px] md:w-[45%] sm:w-[60%] xs:w-[90%]">
+//         <spline-viewer
+//           url="https://prod.spline.design/m-8d-MxC0lhpf3BE/scene.splinecode"
+//           hideSplineLogo="true"
+//         />
+//       </div>
+//     </div>
+//   );
+// }
+import { motion } from "framer-motion";
+import BlurText from "./text";
+import Button from "./buttonpre";
+import { Link } from "react-router-dom";
+import '../../styles/fonts.css';
+
+const handleAnimationComplete = () => {
+  console.log('Animation completed!');
+};
+
 export function PreHeading() {
-    return (
-        <div className="relative w-screen h-screen bg-[url('/topbg.png')] bg-cover bg-center z-50">
+  return (
+    <div className="relative w-screen h-screen bg-[#e3e3e3] bg-cover bg-center z-40 overflow-hidden">
+      {/* Left Floating Image */}
+      <div className="absolute left-0 top-1/2 transform -translate-y-1/2 h-auto w-1/2 max-w-[700px] max-h-[900px] md:w-[55%] sm:w-[60%] xs:w-[90%] z-10">
+        <motion.img
+          src="/blob.png"
+          alt="Left side illustration"
+          className="w-full h-auto object-contain opacity-70"
+          animate={{ y: [0, -30, 0] }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </div>
 
-        
-
-         
-            {/* <div className="absolute left-0 top-1/2 transform -translate-y-1/2"
-            style={{ fontSize: '3rem' }}>
-           
-                
-                <DecryptedText text="Hover me!" />
-
-               
-                <DecryptedText
-                    text="Customize me"
-                    speed={100}
-                    maxIterations={20}
-                    characters="ABCD1234!?"
-                    className="revealed"
-                    parentClassName="all-letters"
-                    encryptedClassName="encrypted"
-                    style={{ fontSize: '3rem' }}
-                />
-
-              
-                <div style={{ marginTop: '4rem' }}>
-                    <DecryptedText
-                        text="This text animates when in view"
-                        animateOn="view"
-                        revealDirection="center"
-                        style={{ fontSize: '3rem' }}
-                    />
-                </div>
-            </div> */}
-     
-  
-
-
-            {/* Right Component (Spline Viewer) */}
-            <div className="absolute right-0 top-0 h-full w-1/2 max-w-[1000px] max-h-[800px] md:w-[45%] sm:w-[60%] xs:w-[90%]">
-            <spline-viewer
-  url="https://prod.spline.design/m-8d-MxC0lhpf3BE/scene.splinecode"
-  hideSplineLogo="true"
-/>
+      {/* Text Content */}
+      <div className="absolute mt-20 left-0 top-1/4 transform -translate-y-1/4 max-w-[90%] sm:max-w-[80%] md:max-w-[50%] px-4 sm:px-6 md:px-12 z-20">
+        <BlurText
+          text="Smarter Learning, Future Thinking!"
+          delay={150}
+          animateBy="words"
+          direction="top"
+          onAnimationComplete={handleAnimationComplete}
+          className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl mt-6 sm:mt-12 mb-4 sm:mb-6 ml-2 sm:ml-6 font-satoshi font-bold text-black/80"
+        />
+        <motion.p
+          className="text-xs sm:text-sm md:text-base lg:text-lg text-black opacity-0 mt-2 sm:mt-4 text-left ml-2 sm:ml-6 mb-4 font-satoshi font-regular"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 2 }}
+        >
+          Step into the future with QAI — a powerful AI course designed for Indian school students. Learn to study smarter, understand Artificial Intelligence, and build skills that matter.
+          <br />
+          <Link to="/login">
+            <div className="mt-4 sm:mt-6">
+              <Button />
             </div>
-        </div>
-    );
+          </Link>
+        </motion.p>
+      </div>
+
+      {/* Right Spline Viewer */}
+      <div className="absolute right-0 top-0 h-full w-1/2 max-w-[1000px] max-h-[800px] 
+              md:w-[45%] sm:w-[60%] xs:w-[80%] 
+              z-0">
+        <spline-viewer
+          url="https://prod.spline.design/m-8d-MxC0lhpf3BE/scene.splinecode"
+          hideSplineLogo="true"
+        />
+      </div>
+    </div>
+  );
 }

@@ -18,7 +18,7 @@ const StackedCardTestimonials = () => {
       <motion.img
         src="/two.png"
         alt="Rotating Decorative"
-        className="absolute top-4 left-4 w-20 lg:w-60 opacity-60 pointer-events-none z-0"
+        className="absolute top-8 left-4 w-20 lg:w-80 opacity-40 pointer-events-none z-0"
         animate={{ rotate: 360 }}
         transition={{
           repeat: Infinity,

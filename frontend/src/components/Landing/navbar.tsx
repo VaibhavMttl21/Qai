@@ -57,7 +57,7 @@ const isNavElement = element.classList.contains("glass-nav");
       style={{
         cursor: hovered ? "none" : "auto",
       }}
-      className="glass-nav fixed left-0 right-0 top-0 z-10 mx-auto max-w-6xl overflow-hidden border-[1px] border-black/10 bg-gradient-to-br from-black/50 to-black/20  md:left-6 md:right-6 md:top-6 md:rounded-2xl" //backdrop-blur
+      className="glass-nav  fixed left-0 right-0 top-0 z-50 mx-auto max-w-6xl overflow-hidden border-[1px] border-black/5 bg-gradient-to-br from-black/80 to-black/70  md:left-6 md:right-6 md:top-6 md:rounded-2xl" //backdrop-blur
     >
       <div className="glass-nav flex items-center justify-between px-5 py-5">
         <Cursor hovered={hovered} scope={scope} />
@@ -89,7 +89,7 @@ const Cursor: FC<CursorProps> = ({ hovered, scope }) => {
       }}
       transition={{ duration: 0.15 }}
       ref={scope}
-      className="pointer-events-none absolute z-0 grid h-[50px] w-[50px] origin-[0px_0px] place-content-center rounded-full bg-gradient-to-br from-indigo-600 from-40% to-indigo-400 text-2xl"
+      className="pointer-events-none absolute z-0 grid h-[50px] w-[50px] origin-[0px_0px] place-content-center rounded-full bg-gradient-to-br from-purple-400 from-40% to-indigo-400 text-2xl"
     >
       <FiArrowUpRight className="text-white" />
     </motion.span>
@@ -98,7 +98,7 @@ const Cursor: FC<CursorProps> = ({ hovered, scope }) => {
 
 const Logo: FC = () => (
   <span className="pointer-events-none relative left-0 top-[50%] z-10 text-4xl font-black text-white mix-blend-overlay md:absolute md:left-[50%] md:-translate-x-[50%] md:-translate-y-[50%]">
-    logo.
+    QAI.
   </span>
 );
 
@@ -150,7 +150,7 @@ const Buttons: FC<ButtonsProps> = ({ setMenuOpen }) => (
       <SignInButton />
     </div>
 
-    <button className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-indigo-600 from-40% to-indigo-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95">
+    <button className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95">
       Try free
     </button>
 
