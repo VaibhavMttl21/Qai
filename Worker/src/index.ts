@@ -13,18 +13,19 @@ const prisma = new PrismaClient();
 
 const s3 = new S3Client({
   region: 'auto',
-  endpoint: 'https://<your-account-id>.r2.cloudflarestorage.com', // Replace with your R2 endpoint
+  endpoint: process.env.R2_ENDPOINT!, // Replace with your R2 endpoint
   credentials: {
     accessKeyId: process.env.R2_ACCESS_KEY!,
     secretAccessKey: process.env.R2_SECRET_KEY!,
   },
 });
 
-const BUCKET = process.env.R2_BUCKET!;
+const SOURCE_BUCKET = process.env.R2_SOURCE_BUCKET!;
+const TARGET_BUCKET = process.env.R2_TARGET_BUCKET!;
 const CDN_DOMAIN = process.env.R2_CDN_DOMAIN!;
 
 async function downloadFromR2(key: string, outPath: string) {
-  const command = new GetObjectCommand({ Bucket: BUCKET, Key: key });
+  const command = new GetObjectCommand({ Bucket: SOURCE_BUCKET, Key: key });
   const response = await s3.send(command);
   const stream = response.Body as Readable;
   const writeStream = fs.createWriteStream(outPath);
@@ -46,7 +47,7 @@ async function uploadFolderToR2(folderPath: string, prefix: string) {
       const fileBuffer = await fs.readFile(fullPath);
       const key = `${prefix}/${file}`;
       const command = new PutObjectCommand({
-        Bucket: BUCKET,
+        Bucket: TARGET_BUCKET,
         Key: key,
         Body: fileBuffer,
       });
@@ -125,13 +126,46 @@ subscription.on('message', async (message) => {
   try {
     const data = JSON.parse(message.data.toString());
     const { videoId, rawKey } = data;
-
-    console.log(`🎥 Processing video ${videoId}`);
+    
+    // Get retry count from attributes or set to 0
+    const retryCount = parseInt(message.attributes.retryCount || '0', 10);
+    
+    if (retryCount > 3) {
+      // Send to dead letter topic after 3 retries
+      await pubsub.topic('failed-video-encodings').publish(
+        Buffer.from(JSON.stringify({
+          videoId,
+          rawKey,
+          error: 'Max retries exceeded'
+        }))
+      );
+      
+      // Update DB to mark video as failed
+      await prisma.video.update({
+        where: { id: videoId },
+        data: { encodingFailed: true }
+      });
+      
+      message.ack(); // Don't retry again
+      return;
+    }
+    
+    console.log(`🎥 Processing video ${videoId} (Attempt: ${retryCount + 1})`);
     await handleMessage(videoId, rawKey);
 
     message.ack();
   } catch (err) {
     console.error('❌ Error processing message:', err);
-    message.nack();
+    
+
+    const data = JSON.parse(message.data.toString());
+    const retryCount = parseInt(message.attributes.retryCount || '0', 10);
+    
+    await pubsub.topic('video-encoding-topic').publish(
+      Buffer.from(message.data.toString()),
+      { retryCount: (retryCount + 1).toString() }
+    );
+    
+    message.ack(); 
   }
 });

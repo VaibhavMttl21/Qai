@@ -1,64 +1,66 @@
+// src/controllers/paymentController.ts
 import { Request, Response } from 'express';
-import Stripe from 'stripe';
+import Razorpay from 'razorpay';
+import crypto from 'crypto';
 import { PrismaClient } from '@prisma/client';
-import { AuthRequest } from '../types';
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',
-});
+import { CreateOrderRequest, VerifyPaymentRequest } from '../types';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const prisma = new PrismaClient();
 
-export const createCheckoutSession = async (req: AuthRequest, res: Response) => {
-  try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: 'Course Access',
-              description: 'Full access to all course videos and community features',
-            },
-            unit_amount: 4900, // $49.00
-          },
-          quantity: 1,
-        },
-      ],
-      mode: 'payment',
-      success_url: `${process.env.FRONTEND_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.FRONTEND_URL}/payment/cancel`,
-      customer_email: req.user?.email,
-    });
+const razorpayInstance = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID!,
+  key_secret: process.env.RAZORPAY_SECRET!,
+});
 
-    res.json({ url: session.url });
+export const createOrder = async (req: CreateOrderRequest, res: Response) => {
+  const { amount } = req.body;
+
+  try {
+    const options = {
+      amount: Number(amount) * 100,
+      currency: 'INR',
+      receipt: crypto.randomBytes(10).toString('hex'),
+    };
+
+    razorpayInstance.orders.create(options, (error: any, order: any) => {
+      if (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Something went wrong!' });
+        return;
+      }
+      res.status(200).json({ data: order });
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Error creating checkout session' });
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
-export const handleWebhook = async (req: Request, res: Response) => {
-  const sig = req.headers['stripe-signature']!;
+export const verifyPayment = async (req: VerifyPaymentRequest, res: Response) => {
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
   try {
-    const event = stripe.webhooks.constructEvent(
-      req.body,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    );
+    const sign = `${razorpay_order_id}|${razorpay_payment_id}`;
+    const expectedSign = crypto
+      .createHmac('sha256', process.env.RAZORPAY_SECRET!)
+      .update(sign)
+      .digest('hex');
 
-    if (event.type === 'checkout.session.completed') {
-      const session = event.data.object as Stripe.Checkout.Session;
-      
-      await prisma.user.update({
-        where: { email: session.customer_email! },
-        data: { isPaid: true },
+    if (expectedSign === razorpay_signature) {
+      await prisma.payment.create({
+        data: {
+          razorpay_order_id,
+          razorpay_payment_id,
+          razorpay_signature,
+        },
       });
-    }
 
-    res.json({ received: true });
+      res.json({ message: 'Payment Successful' });
+    } else {
+      res.status(400).json({ message: 'Invalid signature' });
+    }
   } catch (error) {
-    res.status(400).json({ message: 'Webhook error' });
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
