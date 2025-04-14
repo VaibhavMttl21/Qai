@@ -17,21 +17,22 @@ enum UserType {
 }
 
 model User {
-  id             String         @id @default(uuid())
-  email          String         @unique
-  password       String
-  name           String
-  userType       UserType
-  isPaid         Boolean        @default(true)
-  firebaseUid    String?        
-  profilePicture String?        
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  posts          Post[]
-  replies        Reply[]
-  videoProgress  Progress[]
-  adminPosts     AdminPost[]
-  adminReplies   AdminReply[]
+  id               String         @id @default(uuid())
+  email            String         @unique
+  password         String
+  name             String
+  userType         UserType
+  isPaid           Boolean        @default(true)
+  firebaseUid      String?        
+  profilePicture   String?        
+  hasCustomPassword Boolean       @default(false)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  posts            Post[]
+  replies          Reply[]
+  videoProgress    Progress[]
+  adminPosts       AdminPost[]
+  adminReplies     AdminReply[]
 }
 
 model Video {

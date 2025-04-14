@@ -189,12 +189,18 @@ export const login = async (req: Request, res: Response) => {
     }
 
     let isValidCredential = false;
-
-    // If it's a SCHOOL user and DOB is provided, validate with DOB
+    
+    // If it's a SCHOOL user
     if (user.userType === 'SCHOOL') {
-      // Since DOB is stored as a hashed password (from admin upload)
-      isValidCredential = await bcrypt.compare(String(dob), user.password);
-      console.log('Comparing DOB:', dob, 'with hashed password:', user.password);
+      // If the user has a custom password, validate with that
+      if (user.hasCustomPassword) {
+        isValidCredential = await bcrypt.compare(password, user.password);
+      } 
+      // Otherwise, validate with DOB (the original behavior)
+      else {
+        isValidCredential = await bcrypt.compare(String(dob), user.password);
+        console.log('Comparing DOB:', dob, 'with hashed password:', user.password);
+      }
     } else {
       // For regular users, validate with password
       isValidCredential = await bcrypt.compare(password, user.password);
@@ -350,11 +356,21 @@ export const resetPassword = async (req: Request, res: Response) => {
     // Hash the new password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Update user's password
-    await prisma.user.update({
-      where: { id: user.id },
-      data: { password: hashedPassword },
-    });
+    // Update user's password and set hasCustomPassword to true if it's a SCHOOL user
+    if (user.userType === 'SCHOOL') {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { 
+          password: hashedPassword,
+          hasCustomPassword: true 
+        },
+      });
+    } else {
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { password: hashedPassword },
+      });
+    }
 
     res.status(200).json({ message: 'Password updated successfully' });
   } catch (error) {
