@@ -138,8 +138,8 @@ export function Sidebar() {
             className={({ isActive }) => {
               const baseClasses = "block rounded-md text-sm font-medium transition-all py-2 w-full";
               const activeClasses = isActive
-                ? "bg-indigo-100 text-indigo-800"
-                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900";
+                ? "bg-gradient-to-br from-purple-400 from-40% to-indigo-400 text-white"
+                : "text-gray-600 hover:bg-gray-100 hover:text-white-900";
               
               return `${baseClasses} ${activeClasses}`;
             }}

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import '../../styles/fonts.css';
+
 export const DrawCircleText = () => {
   return (
     <div className="relative flex justify-center items-center px-4 py-24 lg:py-60 text-black overflow-hidden">
@@ -70,10 +71,14 @@ export const DrawCircleText = () => {
         }}
       />
 
-
-
-      {/* Main Text with animated underline */}
-      <h1 className="relative z-20 max-w-2xl text-center text-5xl leading-snug font-satoshi font-regular">
+      {/* Main Text with fade-in + blur animation (repeats on scroll) */}
+      <motion.h1
+        initial={{ y: 100, opacity: 0, filter: "blur(8px)" }}
+        whileInView={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+        viewport={{ once: false, amount: 0.6 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        className="relative z-20 max-w-3xl px-4 text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-snug font-satoshi font-regular"
+      >
         To get ready for the{" "}
         <span className="relative inline-block">
           future of AI
@@ -96,7 +101,7 @@ export const DrawCircleText = () => {
           </svg>
         </span>{" "}
         and give knowledge to kids about AI
-      </h1>
+      </motion.h1>
     </div>
   );
 };

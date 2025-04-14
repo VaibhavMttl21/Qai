@@ -1,5 +1,6 @@
 
 import { motion } from "framer-motion";
+import "../../styles/fonts.css"
 
 
 const Button = () => {
@@ -19,7 +20,7 @@ const MarqueeButton = ({ children }: { children: string }) => {
       whileTap={{
         scale: 0.95,
       }}
-      className="relative overflow-hidden rounded-full bg-gradient-to-br from-purple-400 from-40% to-indigo-400 p-4 text-xl font-black uppercase text-black mt-10"
+      className="relative overflow-hidden rounded-full bg-gradient-to-br from-purple-400 from-40% to-indigo-400 p-4 text-xl uppercase text-black mt-10 font-satoshi font-bold"
     >
       <motion.span
         className="block"

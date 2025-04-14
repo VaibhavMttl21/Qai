@@ -210,7 +210,7 @@ export function LoginForm({ bgColor }: { bgColor: string }) {
 
       <Button
         type="submit"
-        className="w-full mb-5 mt-2 text-white bg-purple-400 hover:bg-purple-500"
+        className="w-full mb-5 mt-2 text-white bg-gradient-to-br from-purple-400 from-40% to-indigo-400 hover:bg-purple-700 cursor-pointer"
         // style={{
         //   backgroundColor: ,
         //   borderColor: 'white',

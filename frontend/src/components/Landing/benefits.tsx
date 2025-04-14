@@ -211,7 +211,7 @@ const BenefitsSection: React.FC = () => {
   const pieOptions = {
     animation: {
       animateRotate: true,
-      duration: 3000,
+      duration: 1000,
       easing: "easeOutQuad"
     },
     responsive: true,

@@ -202,7 +202,7 @@ export function RegisterForm({ bgColor }: { bgColor: string }) {
         </div>
         <Button
           type="submit"
-          className="w-full mt-2 text-white bg-purple-400 hover:bg-purple-500"
+          className="w-full mt-2 text-white bg-gradient-to-br from-purple-400 from-40% to-indigo-400 hover:bg-purple-500 cursor-pointer"
           // style={{ backgroundColor: bgColor, borderColor: 'white', color: 'white' }}
         >
           Register
@@ -218,7 +218,7 @@ export function RegisterForm({ bgColor }: { bgColor: string }) {
       <Button 
         type="button" 
         variant="outline" 
-        className="w-full flex items-center justify-center gap-2 text-white bg-purple-400 hover:bg-purple-500"
+        className="w-full flex items-center justify-center gap-2 text-white bg-gradient-to-br from-purple-400 from-40% to-indigo-400 hover:bg-purple-500 cursor-pointer"
         onClick={handleGoogleSignIn}
         disabled={isLoading}
         style={{ borderColor: bgColor, color: bgColor }}
