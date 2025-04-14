@@ -53,13 +53,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // For school users, we expect dob instead of password
     const payload: any = { email };
     
-    // If it's a school login attempt, use DOB as password
+    // Always send password field - it will be used appropriately on the backend
+    payload.password = password;
+    
+    // If DOB is provided, include it as well for school users
     if (dob) {
-      payload.password = dob;
-      console.log('Using DOB for school login:', dob);
       payload.dob = dob;
-    } else {
-      payload.password = password;
     }
     
     const response = await api.post('/api/auth/login', payload);

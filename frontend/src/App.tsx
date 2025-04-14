@@ -5,6 +5,9 @@ import { Layout } from '@/components/layout/Layout';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
+import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage';
+import { VerifyOTPPage } from '@/pages/auth/VerifyOTPPage';
+import { ResetPasswordPage } from '@/pages/auth/ResetPasswordPage';
 import { LandingPage } from './pages/LandingPage';
 import { DashboardPage } from '@/pages/DashboardPage';
 import { VideoPage } from '@/pages/VideoPage';
@@ -32,14 +35,17 @@ function App() {
   return (
     <Router>
       <Routes>
-      <Route
-            path="/home"
-            element={
-                <LandingPage />
-            }
-          />
+        <Route
+          path="/home"
+          element={
+            <LandingPage />
+          }
+        />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/verify-otp" element={<VerifyOTPPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route element={<Layout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           
