@@ -50,16 +50,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
   
   login: async (email, password, dob) => {
-    // For school users, we expect dob instead of password
-    const payload: any = { email };
+    // Create the payload for login
+    const payload: any = { email, password };
     
-    // If it's a school login attempt, use DOB as password
+    // If DOB is provided for school users, include it
     if (dob) {
-      payload.password = dob;
-      console.log('Using DOB for school login:', dob);
       payload.dob = dob;
-    } else {
-      payload.password = password;
     }
     
     const response = await api.post('/api/auth/login', payload);

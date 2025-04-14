@@ -3,8 +3,10 @@
 /* Target by ID */
 /* Override inline styles */
 
+/* Add these rules to your index.css file */
+
 #logo {
- 
+  display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
@@ -12,12 +14,7 @@
   width: 0 !important;
   height: 0 !important;
   overflow: hidden !important;
+  background: #FFF !important;
+  z-index: -1 !important;
 }
 
-.spline-wrapper iframe {
-    pointer-events: none;
-  }
-  
-  .spline-wrapper canvas + div {
-    display: none !important;
-  }
