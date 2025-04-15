@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-// import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/toaster';
 import  api  from '@/lib/api';
 
 export function VerifyOTPPage() {
@@ -13,7 +13,7 @@ export function VerifyOTPPage() {
   const [countdown, setCountdown] = useState(60);
   const [canResend, setCanResend] = useState(false);
   
-  // const { toast } = useToast();
+  const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email;
@@ -43,11 +43,7 @@ export function VerifyOTPPage() {
     e.preventDefault();
     
     if (!otp) {
-      // toast({
-      //   title: "Error",
-      //   description: "Please enter the verification code",
-      //   variant: "destructive",
-      // });
+      toast("Error: Please enter the verification code");
       return;
     }
     
@@ -56,19 +52,12 @@ export function VerifyOTPPage() {
     try {
       const response = await api.post('/api/auth/verify-otp', { email, otp });
       
-      // toast({
-      //   title: "Success",
-      //   description: "Verification successful",
-      // });
+      toast("Success: Verification successful");
       
       // Navigate to reset password page
       navigate('/reset-password', { state: { email, token: response.data.token } });
     } catch (error) {
-      // toast({
-      //   title: "Error",
-      //   description: "Invalid verification code. Please try again.",
-      //   variant: "destructive",
-      // });
+      toast("Error: Invalid verification code. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -80,19 +69,12 @@ export function VerifyOTPPage() {
     try {
       await api.post('/auth/forgot-password', { email });
       
-      // toast({
-      //   title: "OTP Sent",
-      //   description: "A new verification code has been sent to your email",
-      // });
+      toast("OTP Sent: A new verification code has been sent to your email");
       
       setCountdown(60);
       setCanResend(false);
     } catch (error) {
-      // toast({
-      //   title: "Error",
-      //   description: "Failed to send verification code. Please try again.",
-      //   variant: "destructive",
-      // });
+      toast("Error: Failed to send verification code. Please try again.");
     } finally {
       setIsLoading(false);
     }

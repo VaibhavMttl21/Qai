@@ -4,15 +4,15 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-// import { useToast } from '@/components/ui/use-toast';
-import  api  from '@/lib/api';
+import { useToast } from '@/components/ui/toaster';
+import api from '@/lib/api';
 
 export function ResetPasswordPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  // const { toast } = useToast();
+  const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
   const { email, token } = location.state || {};
@@ -32,20 +32,12 @@ export function ResetPasswordPage() {
     e.preventDefault();
     
     if (password !== confirmPassword) {
-      // toast({
-      //   title: "Error",
-      //   description: "Passwords do not match",
-      //   variant: "destructive",
-      // });
+      toast('Passwords do not match', 'error');
       return;
     }
     
     if (password.length < 8) {
-      // toast({
-      //   title: "Error",
-      //   description: "Password must be at least 8 characters long",
-      //   variant: "destructive",
-      // });
+      toast('Password must be at least 8 characters long', 'error');
       return;
     }
     
@@ -54,18 +46,11 @@ export function ResetPasswordPage() {
     try {
       await api.post('/api/auth/reset-password', { email, token, password });
       
-      // toast({
-      //   title: "Success",
-      //   description: "Your password has been reset successfully",
-      // });
+      toast('Your password has been reset successfully', 'success');
       
       navigate('/login');
     } catch (error) {
-      // toast({
-      //   title: "Error",
-      //   description: "Failed to reset password. Please try again.",
-      //   variant: "destructive",
-      // });
+      toast('Failed to reset password. Please try again.', 'error');
     } finally {
       setIsLoading(false);
     }

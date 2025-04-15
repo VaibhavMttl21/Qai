@@ -57,7 +57,7 @@ export function RegisterPage() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-5xl mx-auto shadow-2xl rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 items-stretch relative z-20"
+        {...{ className: "w-full max-w-5xl mx-auto shadow-2xl rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 items-stretch relative z-20" }}
       >
         {/* Left Side: Now Empty */}
         <div className="bg-white/90 backdrop-blur-md rounded-l-2xl p-6 sm:p-8 md:p-10 flex flex-col justify-center">
@@ -65,7 +65,7 @@ export function RegisterPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="max-w-md w-full space-y-8"
+              {...{ className: "max-w-md w-full space-y-8" }}
             >
               <div className="text-center">
                 <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
