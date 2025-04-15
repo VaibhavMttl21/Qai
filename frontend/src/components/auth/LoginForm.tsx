@@ -62,7 +62,7 @@ export function LoginForm({ bgColor }: { bgColor: string }) {
           checked={loginType === 'school'}
           onCheckedChange={(checked) => setLoginType(checked ? 'school' : 'regular')}
         />
-        <Label htmlFor="school-login">I am a school student</Label>
+        <Label htmlFor="school-login"> school student</Label>
       </div>
 
       {loginType === 'school' ? (
@@ -101,10 +101,10 @@ export function LoginForm({ bgColor }: { bgColor: string }) {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <div className="text-xs text-gray-500 mt-1">
+          <div className="text-xs text-gray-500 mt-6">
             <a 
               href="/forgot-password" 
-              className="text-purple-500 hover:text-purple-600 hover:underline"
+              className="text-purple-500 hover:text-purple-600 hover:underline "
             >
               Forgot Password?
             </a>

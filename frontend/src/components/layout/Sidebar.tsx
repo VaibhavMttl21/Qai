@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/store/auth';
 import {
@@ -33,6 +33,7 @@ const adminItems = [{ name: 'Upload Data', href: '/admin/upload', icon: Upload }
 export function Sidebar() {
   const { user, logout } = useAuthStore();
   const [open, setOpen] = useState(true);
+  const navigate = useNavigate();
   const [isAnimating, setIsAnimating] = useState(false);
   const isAdmin = user?.userType === 'ADMIN';
   const links = isAdmin ? [...navItems, ...adminItems] : navItems;
@@ -57,6 +58,12 @@ export function Sidebar() {
     ease: "easeInOut",
     onStart: handleAnimationStart,
     onComplete: handleAnimationComplete
+  };
+
+  const handleLogout = () => {
+    console.log('Logging out...');
+    logout();
+    navigate('/login'); // Navigate to signin page after logout
   };
 
   // Use inline styles for predictable content positioning
@@ -119,12 +126,16 @@ export function Sidebar() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" side="right" className="w-48">
-            <DropdownMenuItem asChild>
+            {/* <DropdownMenuItem asChild>
               <Link to="/profile" className="w-full">
                 Profile
               </Link>
+            </DropdownMenuItem> */}
+            <DropdownMenuItem >
+              <button onClick={handleLogout} className="w-full text-left px-2 py-1">
+                  Logout
+              </button>
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
