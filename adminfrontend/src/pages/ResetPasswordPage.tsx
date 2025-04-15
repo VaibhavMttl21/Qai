@@ -1,50 +1,71 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+// import { Button } from '@/components/ui/button';
+// import { Input } from '@/components/ui/input';
+// import { Label } from '@/components/ui/label';
 // import { useToast } from '@/components/ui/use-toast';
-// import { Toaster } from '@/components/ui/toaster';
-import api  from '@/lib/api';
+import  api  from '../lib/api';
+import { Input } from '../components/ui/Input';
+import { Button } from '../components/ui/Button';
 
-export function ForgotPasswordPage() {
-  const [email, setEmail] = useState('');
+export function ResetPasswordPage() {
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  
   // const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { email, token } = location.state || {};
+  
   const encodedSVG = encodeURIComponent(
     `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='#989898 ' stroke-width='1.5'><path d='M0 0H32V32'/></svg>`
   );
 
+  // Redirect if no email or token in state
+  // useEffect(() => {
+  //   if (!email || !token) {
+  //     navigate('/forgot-password');
+  //   }
+  // }, [email, token, navigate]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // if (!email) {
-    //   Toaster({
-    //     title: "Error",
-    //     description: "Please enter your email address",
-    //     variant: "destructive",
-    //   });
-    //   return;
-    // }
+    if (password !== confirmPassword) {
+      // toast({
+      //   title: "Error",
+      //   description: "Passwords do not match",
+      //   variant: "destructive",
+      // });
+      return;
+    }
+    
+    if (password.length < 8) {
+      // toast({
+      //   title: "Error",
+      //   description: "Password must be at least 8 characters long",
+      //   variant: "destructive",
+      // });
+      return;
+    }
     
     setIsLoading(true);
     
     try {
-      const response = await api.post('/api/auth/forgot-password', { email});
+      await api.post('/api/auth/reset-password', { email, token, password });
       
       // toast({
-      //   title: "OTP Sent",
-      //   description: "A verification code has been sent to your email",
+      //   title: "Success",
+      //   description: "Your password has been reset successfully",
       // });
       
-      // Navigate to OTP verification page, passing email as state
-      navigate('/verify-otp', { state: { email } });
+      navigate('/login');
     } catch (error) {
       // toast({
       //   title: "Error",
-      //   description: "Failed to send verification code. Please try again.",
+      //   description: "Failed to reset password. Please try again.",
       //   variant: "destructive",
       // });
     } finally {
@@ -73,21 +94,33 @@ export function ForgotPasswordPage() {
         className="w-full max-w-md p-8 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl relative z-20"
       >
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-extrabold text-gray-900">Forgot Password</h2>
+          <h2 className="text-3xl font-extrabold text-gray-900">Reset Password</h2>
           <p className="mt-2 text-sm text-gray-600">
-            Enter your email to receive a verification code
+            Create a new password for your account
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="email">Email address</Label>
+            <label htmlFor="password">New Password</label>
             <Input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="password"
+              type="password"
+              placeholder="Enter new password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <Input
+              id="confirmPassword"
+              type="password"
+              placeholder="Confirm new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
           </div>
@@ -97,7 +130,7 @@ export function ForgotPasswordPage() {
             className="w-full bg-purple-500 hover:bg-purple-600 text-white"
             disabled={isLoading}
           >
-            {isLoading ? "Sending..." : "Send Verification Code"}
+            {isLoading ? "Updating..." : "Reset Password"}
           </Button>
         </form>
 

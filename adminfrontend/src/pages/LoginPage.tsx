@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAdminAuthStore } from '../store/admin-auth';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
@@ -53,6 +53,12 @@ export function LoginPage() {
             required
             placeholder="••••••••"
           />
+          
+          <div className="flex justify-end">
+            <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-800">
+              Forgot password?
+            </Link>
+          </div>
           
           <Button
             type="submit"
