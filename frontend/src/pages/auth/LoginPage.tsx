@@ -70,22 +70,22 @@ export function LoginPage() {
                 <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
                   Sign in to your account
                 </h2>
-                <p className="mt-2 text-sm text-gray-600">
+                {/* <p className="mt-6 mb-5 text-sm text-gray-600">
                   Or{' '}
                   <Link to="/register" className="font-medium text-purple-400 hover:text-purple-500">
                     create a new account
                   </Link>
-                </p>
-                <p className="mt-2 text-sm text-gray-600">
+                </p> */}
+                <p className="mt-4 mb-5 text-sm text-gray-600">
                   Don't have an account?{' '}
                   <Link to="/register" className="font-medium text-purple-400 hover:text-purple-500">
                     Sign up
                   </Link>
                 </p>
                 <p className="mt-1 text-sm text-gray-600">
-                  <Link to="/forgot-password" className="font-medium text-purple-400 hover:text-purple-500">
+                  {/* <Link to="/forgot-password" className="font-medium text-purple-400 hover:text-purple-500">
                     Forgot your password?
-                  </Link>
+                  </Link> */}
                 </p>
               </div>
               {/* Pass bgColor to LoginForm as a prop */}

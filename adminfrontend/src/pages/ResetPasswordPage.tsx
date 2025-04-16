@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useToast } from '@/components/ui/toaster';
-import api from '@/lib/api';
+// import { Button } from '@/components/ui/button';
+// import { Input } from '@/components/ui/input';
+// import { Label } from '@/components/ui/label';
+// import { useToast } from '@/components/ui/use-toast';
+import  api  from '../lib/api';
+import { Input } from '../components/ui/Input';
+import { Button } from '../components/ui/Button';
 
 export function ResetPasswordPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  const { toast } = useToast();
+  // const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
   const { email, token } = location.state || {};
@@ -22,22 +24,30 @@ export function ResetPasswordPage() {
   );
 
   // Redirect if no email or token in state
-  useEffect(() => {
-    if (!email || !token) {
-      navigate('/forgot-password');
-    }
-  }, [email, token, navigate]);
+  // useEffect(() => {
+  //   if (!email || !token) {
+  //     navigate('/forgot-password');
+  //   }
+  // }, [email, token, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (password !== confirmPassword) {
-      toast('Passwords do not match', 'error');
+      // toast({
+      //   title: "Error",
+      //   description: "Passwords do not match",
+      //   variant: "destructive",
+      // });
       return;
     }
     
     if (password.length < 8) {
-      toast('Password must be at least 8 characters long', 'error');
+      // toast({
+      //   title: "Error",
+      //   description: "Password must be at least 8 characters long",
+      //   variant: "destructive",
+      // });
       return;
     }
     
@@ -46,11 +56,18 @@ export function ResetPasswordPage() {
     try {
       await api.post('/api/auth/reset-password', { email, token, password });
       
-      toast('Your password has been reset successfully', 'success');
+      // toast({
+      //   title: "Success",
+      //   description: "Your password has been reset successfully",
+      // });
       
       navigate('/login');
     } catch (error) {
-      toast('Failed to reset password. Please try again.', 'error');
+      // toast({
+      //   title: "Error",
+      //   description: "Failed to reset password. Please try again.",
+      //   variant: "destructive",
+      // });
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +102,7 @@ export function ResetPasswordPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="password">New Password</Label>
+            <label htmlFor="password">New Password</label>
             <Input
               id="password"
               type="password"
@@ -97,7 +114,7 @@ export function ResetPasswordPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm Password</Label>
+            <label htmlFor="confirmPassword">Confirm Password</label>
             <Input
               id="confirmPassword"
               type="password"

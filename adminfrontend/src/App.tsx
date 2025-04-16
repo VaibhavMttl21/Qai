@@ -4,6 +4,9 @@ import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { useAdminAuthStore } from './store/admin-auth';
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
+import { ResetPasswordPage } from './pages/ResetPasswordPage';
+import { VerifyOTPPage } from './pages/verifyOtp';
 
 function App() {
   const { checkAuth } = useAdminAuthStore();
@@ -22,6 +25,9 @@ function App() {
         />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/verify-otp" element={<VerifyOTPPage />} />
       </Routes>
     </BrowserRouter>
   );

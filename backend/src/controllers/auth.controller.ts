@@ -160,7 +160,8 @@ export const verifyOTP = async (req: Request, res: Response) => {
     // Generate token
     const token = jwt.sign(
       { id: user.id, email: user.email, userType: user.userType, isPaid: user.isPaid, name: user.name },
-      process.env.JWT_SECRET!
+      process.env.JWT_SECRET!,
+      { expiresIn: '7d' } // Expire in 7 days
     );
 
     res.status(201).json({ token });
@@ -212,10 +213,12 @@ export const login = async (req: Request, res: Response) => {
 
     const token = jwt.sign(
       { id: user.id, email: user.email, userType: user.userType, isPaid: user.isPaid, name: user.name },
-      process.env.JWT_SECRET!
+      process.env.JWT_SECRET!,
+      { expiresIn: '7d' } // Expire in 7 days
     );
 
     res.json({ token });
+    
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
@@ -335,7 +338,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
 export const resetPassword = async (req: Request, res: Response) => {
   try {
     const { email, token, password } = req.body;
-    
+    console.log('Reset password request:', { email, token, password });
     if (!email || !token || !password) {
       return res.status(400).json({ message: 'Email, token, and password are required' });
     }
