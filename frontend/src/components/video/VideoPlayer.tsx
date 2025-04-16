@@ -1,60 +1,121 @@
-import { useEffect } from 'react';
-import ReactPlayer from 'react-player';
+import { useEffect, useRef, useState } from 'react';
+import videojs from 'video.js';
+import 'video.js/dist/video-js.css';
 import { useVideoStore } from '@/store/video';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
 export function VideoPlayer() {
-  const { currentVideo, videos, progress, fetchVideos, setCurrentVideo, updateProgress } = useVideoStore();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const playerRef = useRef<ReturnType<typeof videojs> | null>(null);
+  const [quality, setQuality] = useState<'480p' | '720p' | '1080p'>('720p');
+
+  const {
+    currentVideo,
+    videos,
+    progress,
+    fetchVideos,
+    setCurrentVideo,
+    updateProgress,
+  } = useVideoStore();
 
   useEffect(() => {
     fetchVideos();
   }, [fetchVideos]);
 
-  const handleVideoEnd = () => {
-    if (currentVideo) {
-      updateProgress(currentVideo.id, true);
+  useEffect(() => {
+    if (!currentVideo || !videoRef.current || !currentVideo.hlsUrls) return;
+
+    const token = localStorage.getItem('token');
+    const rawUrl = currentVideo.hlsUrls[quality];
+    const secureUrl = token ? `${rawUrl}?token=${token}` : rawUrl;
+
+    // Dispose previous player if it exists
+    if (playerRef.current) {
+      playerRef.current.dispose();
+      playerRef.current = null;
     }
-  };
+
+    const player = videojs(videoRef.current, {
+      controls: true,
+      autoplay: false,
+      preload: 'auto',
+      responsive: true,
+      fluid: true,
+      sources: [{ src: secureUrl, type: 'application/x-mpegURL' }],
+    });
+
+    player.on('ended', () => {
+      updateProgress(currentVideo.id, true);
+    });
+
+    playerRef.current = player;
+
+    return () => {
+      if (playerRef.current) {
+        playerRef.current.dispose();
+        playerRef.current = null;
+      }
+    };
+  }, [currentVideo, quality,updateProgress]);
 
   const handleVideoSelect = (video: typeof currentVideo) => {
     if (video) {
       setCurrentVideo(video);
+      setQuality('720p');
     }
   };
 
-  if (!currentVideo) return <div>Loading...</div>;
+  if (!currentVideo || !currentVideo.hlsUrls) {
+    return <div className="text-center py-10">Loading...</div>;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="aspect-w-16 aspect-h-9 mb-8">
-        <ReactPlayer
-          url={currentVideo.url}
-          width="100%"
-          height="100%"
+      <div className="mb-4">
+        <label className="mr-2 font-semibold">Quality:</label>
+        <select
+          value={quality}
+          onChange={(e) =>
+            setQuality(e.target.value as '480p' | '720p' | '1080p')
+          }
+          className="border rounded px-2 py-1"
+        >
+          {Object.keys(currentVideo.hlsUrls).map((res) => (
+            <option key={res} value={res}>
+              {res}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="relative w-full" style={{ aspectRatio: '16 / 9' }}>
+        <video
+          ref={videoRef}
+          className="video-js vjs-default-skin w-full h-full"
           controls
-          onEnded={handleVideoEnd}
         />
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+        className="mt-6"
       >
         <h2 className="text-2xl font-bold mb-2">{currentVideo.title}</h2>
         <p className="text-gray-600">{currentVideo.description}</p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
         {videos.map((video) => (
           <motion.div
             key={video.id}
             whileHover={{ scale: 1.02 }}
-            {...{
-              className: `p-4 rounded-lg border ${
-                currentVideo.id === video.id ? 'border-primary' : 'border-gray-200'
-              }`,
-            }}
+            className={`p-4 rounded-lg border ${
+              currentVideo.id === video.id
+                ? 'border-primary'
+                : 'border-gray-200'
+            }`}
           >
             <Button
               variant="ghost"

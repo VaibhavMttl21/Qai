@@ -6,13 +6,20 @@ interface Video {
   title: string;
   description: string;
   url: string;
+  hlsUrls: HLSUrls;
   order: number;
 }
 
-interface VideoProgress {
-  videoId: string;
-  completed: boolean;
+interface HLSUrls {
+   '1080p': string;
+   '720p': string;
+   '480p': string;
 }
+
+// interface VideoProgress {
+//   videoId: string;
+//   completed: boolean;
+// }
 
 interface VideoState {
   videos: Video[];

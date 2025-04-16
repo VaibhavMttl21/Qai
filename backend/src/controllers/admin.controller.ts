@@ -192,7 +192,6 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
 
     res.status(201).json({ 
       message: 'Video added successfully',
-      video
     });
   } catch (error) {
     console.error('Video add error:', error);

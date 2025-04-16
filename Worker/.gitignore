@@ -1,2 +1,4 @@
 node_modules
 .env
+pubsub-key.json
+gcp-service-account.json

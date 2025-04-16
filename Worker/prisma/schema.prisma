@@ -1,15 +1,106 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model AdminPost {
+  id         String       @id
+  content    String
+  imageUrl   String?
+  userId     String
+  priority   Int          @default(10)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime
+  User       User         @relation(fields: [userId], references: [id])
+  AdminReply AdminReply[]
+}
+
+model AdminReply {
+  id          String    @id
+  content     String
+  imageUrl    String?
+  userId      String
+  adminPostId String
+  priority    Int       @default(10)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+  AdminPost   AdminPost @relation(fields: [adminPostId], references: [id])
+  User        User      @relation(fields: [userId], references: [id])
+}
+
+model Post {
+  id        String   @id
+  content   String
+  imageUrl  String?
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  User      User     @relation(fields: [userId], references: [id])
+  Reply     Reply[]
+}
+
+model Progress {
+  id        String   @id
+  userId    String
+  videoId   String
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  User      User     @relation(fields: [userId], references: [id])
+  Video     Video    @relation(fields: [videoId], references: [id])
+
+  @@unique([userId, videoId])
+}
+
+model Reply {
+  id        String   @id
+  content   String
+  imageUrl  String?
+  userId    String
+  postId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  Post      Post     @relation(fields: [postId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model User {
+  id             String       @id
+  email          String       @unique
+  password       String
+  name           String
+  userType       UserType
+  isPaid         Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime
+  firebaseUid    String?
+  profilePicture String?
+  AdminPost      AdminPost[]
+  AdminReply     AdminReply[]
+  Post           Post[]
+  Progress       Progress[]
+  Reply          Reply[]
+}
+
+model Video {
+  id          String     @id
+  title       String
+  description String
+  url         String
+  order       Int        @unique
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
+  encoded     Boolean    @default(false)
+  hlsUrls     Json?
+  Progress    Progress[]
+}
+
+enum UserType {
+  SCHOOL
+  RANDOM
+  ADMIN
 }

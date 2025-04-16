@@ -19,17 +19,29 @@ export default {
         return new Response("Forbidden: Not a paid user", { status: 403 })
       }
 
-      const key = url.pathname.slice(1)
+      // Handle the HLS video requests
+      const key = url.pathname.slice(1) // Strip out '/videos/' to get the key
       const object = await env.VIDEOS_BUCKET.get(key)
 
       if (!object) {
         return new Response("File not found", { status: 404 })
       }
 
+      const contentType = key.endsWith(".m3u8")
+        ? "application/vnd.apple.mpegurl"
+        : key.endsWith(".ts")
+        ? "video/mp2t"
+        : "application/octet-stream"
+
+      // Return the video segment or playlist file with appropriate headers
       return new Response(object.body, {
         headers: {
-          "Content-Type": object.httpMetadata?.contentType || "application/octet-stream",
-          "Cache-Control": "public, max-age=3600"
+          "Content-Type": contentType,
+          "Cache-Control": "public, max-age=3600",
+          "Access-Control-Allow-Origin": "", // You can specify your frontend domain here
+          "Access-Control-Allow-Methods": "GET, OPTIONS",
+          "Access-Control-Allow-Headers": "Authorization, Content-Type",
+          "Access-Control-Max-Age": "86400",
         }
       })
     } catch (err) {
@@ -38,6 +50,7 @@ export default {
   }
 }
 
+// Function to extract token from either the Authorization header or the query parameter
 function extractToken(req: Request, url: URL): string | null {
   const authHeader = req.headers.get("Authorization")
   if (authHeader?.startsWith("Bearer ")) {

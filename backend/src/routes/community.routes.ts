@@ -15,7 +15,7 @@ import {
   deleteAdminReply,
   getUserPosts
 } from '../controllers/community.controller';
-import { auth, isPaidUser, isAdmin } from '../middleware/auth';
+import { auth, isPaidUser, isAdminUser } from '../middleware/auth';
 import { getNews } from '../controllers/news.controller';
 
 const router = Router();
@@ -32,8 +32,8 @@ router.delete('/posts/:postId/replies/:replyId', auth, deleteReply);
 
 
 // Admin routes
-router.post('/admin/posts', auth, isAdmin, createAdminPost);
-router.post('/admin/posts/:postId/replies', auth, isAdmin, createAdminReply);
+router.post('/admin/posts', auth, isAdminUser, createAdminPost);
+router.post('/admin/posts/:postId/replies', auth, isAdminUser, createAdminReply);
 router.put('/admin/posts/:id', auth, updateAdminPost);
 router.delete('/admin/posts/:id', auth, deleteAdminPost);
 router.put('/admin/posts/:postId/replies/:replyId', auth, updateAdminReply);
