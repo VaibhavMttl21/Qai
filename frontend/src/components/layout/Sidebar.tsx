@@ -84,7 +84,7 @@ export function Sidebar() {
   return (
     <motion.nav
       ref={animationRef}
-      className="sticky top-0 h-screen border-r border-gray-200 bg-white p-3 shadow-sm z-10 flex flex-col overflow-hidden"
+      className="sticky top-0 h-screen border-r border-gray-200 bg-[#e3e3e3] p-3 shadow-sm z-10 flex flex-col overflow-hidden"
       style={{ width: open ? '220px' : '64px' }}
       animate={{ width: open ? '220px' : '64px' }}
       transition={transition}
