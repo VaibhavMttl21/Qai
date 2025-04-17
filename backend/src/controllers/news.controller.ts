@@ -204,3 +204,11 @@ export const getNews = async (req: Request, res: Response) => {
     });
   }
 };
+function shuffleArray(articlesToUse: any[]) {
+  for (let i = articlesToUse.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [articlesToUse[i], articlesToUse[j]] = [articlesToUse[j], articlesToUse[i]];
+  }
+  return articlesToUse;
+}
+
