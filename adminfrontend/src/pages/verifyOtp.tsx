@@ -45,6 +45,7 @@ export function VerifyOTPPage() {
     e.preventDefault();
     
     if (!otp) {
+      alert("Please enter the verification code");
       // toast({
       //   title: "Error",
       //   description: "Please enter the verification code",
@@ -57,8 +58,8 @@ export function VerifyOTPPage() {
     
     try {
       const response = await api.post('/api/auth/verify-otp', { email, otp });
-      
-      // toast({
+      alert("Verification successful");
+      // toast({d
       //   title: "Success",
       //   description: "Verification successful",
       // });
@@ -66,6 +67,7 @@ export function VerifyOTPPage() {
       // Navigate to reset password page
       navigate('/reset-password', { state: { email, token: response.data.token } });
     } catch (error) {
+      alert("Invalid verification code. Please try again.");
       // toast({
       //   title: "Error",
       //   description: "Invalid verification code. Please try again.",

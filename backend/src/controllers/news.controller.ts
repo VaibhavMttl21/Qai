@@ -3,6 +3,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { z } from 'zod';
 // const path = require('path');
 
 const __filename = fileURLToPath(import.meta.url);
@@ -39,6 +40,28 @@ const MOCK_NEWS = [
     source: { name: "Data Science Weekly" }
   }
 ];
+
+// Define the article schema for validation and type safety
+const articleSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  url: z.string().url(),
+  image: z.string().url().optional(),
+  publishedAt: z.string().datetime(),
+  source: z.object({
+    name: z.string()
+  })
+});
+
+// Define the response schema
+const newsResponseSchema = z.object({
+  articles: z.array(articleSchema),
+  cached: z.boolean().optional(),
+  error: z.string().optional(),
+  isMock: z.boolean().optional()
+});
+
+type NewsResponse = z.infer<typeof newsResponseSchema>;
 
 // Ensure cache directory exists
 async function ensureCacheDir() {
@@ -110,7 +133,12 @@ export const getNews = async (req: Request, res: Response) => {
         
       if (isSameDay) {
         console.log("Using today's cached news data");
-        return res.json({ articles: cache.articles, cached: true });
+        // Validate the cached data against our schema
+        const validatedCache = newsResponseSchema.parse({ 
+          articles: cache.articles, 
+          cached: true 
+        });
+        return res.json(validatedCache);
       }
     }
     
@@ -138,12 +166,19 @@ export const getNews = async (req: Request, res: Response) => {
       'AI technology'
     ];
 
-    // Pick 3 random topics
+    // Extract query params if they exist
+    const topicQuery = req.query.topic as string | undefined;
+    
+    // Pick 3 random topics or use the provided topic
     const randomTopics = [];
-    for (let i = 0; i < 3; i++) {
-      const randomIndex = Math.floor(Math.random() * topics.length);
-      randomTopics.push(topics[randomIndex]);
-      topics.splice(randomIndex, 1); // Remove to avoid duplicates
+    if (topicQuery) {
+      randomTopics.push(topicQuery);
+    } else {
+      for (let i = 0; i < 3; i++) {
+        const randomIndex = Math.floor(Math.random() * topics.length);
+        randomTopics.push(topics[randomIndex]);
+        topics.splice(randomIndex, 1); // Remove to avoid duplicates
+      }
     }
 
     // Create a query with the random topics
@@ -179,7 +214,9 @@ export const getNews = async (req: Request, res: Response) => {
     await saveNewsCache(mappedArticles, now);
     console.log("Fetched fresh news, saved to disk cache");
 
-    res.json({ articles: mappedArticles });
+    // Validate the response data
+    const validatedResponse = newsResponseSchema.parse({ articles: mappedArticles });
+    res.json(validatedResponse);
   } catch (error: any) {
     console.error('News API error:', error);
 
@@ -187,23 +224,36 @@ export const getNews = async (req: Request, res: Response) => {
       const cache = await readNewsCache();
       if (cache && cache.articles.length > 0) {
         console.log("Returning old cache due to API error");
-        return res.json({
+        // Validate the cached data
+        const validatedCache = newsResponseSchema.parse({
           articles: cache.articles,
           cached: true,
           error: error.message
         });
+        return res.json(validatedCache);
       }
     } catch (cacheError) {
       console.error("Failed to read cache:", cacheError);
     }
 
-    res.status(500).json({
-      error: error.message,
-      articles: MOCK_NEWS,
-      isMock: true
-    });
+    // Validate mock data
+    try {
+      const validatedMockData = newsResponseSchema.parse({
+        articles: MOCK_NEWS,
+        isMock: true,
+        error: error.message
+      });
+      res.status(500).json(validatedMockData);
+    } catch (validationError) {
+      // If even our mock data is invalid, this is a serious issue
+      console.error("Mock data validation failed:", validationError);
+      res.status(500).json({
+        error: "Internal server error: Unable to provide valid news data"
+      });
+    }
   }
 };
+
 function shuffleArray(articlesToUse: any[]) {
   for (let i = articlesToUse.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
