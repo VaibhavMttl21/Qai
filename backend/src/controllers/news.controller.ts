@@ -3,8 +3,8 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+// const path = require('path');
 
-// Fix __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -44,8 +44,7 @@ const MOCK_NEWS = [
 async function ensureCacheDir() {
   try {
     await fs.access(CACHE_DIR);
-  } catch (error) {
-    // Directory doesn't exist, create it
+  } catch {
     await fs.mkdir(CACHE_DIR, { recursive: true });
   }
 }
@@ -70,8 +69,7 @@ async function readNewsCache() {
       articles: cache.articles,
       timestamp: new Date(cache.timestamp)
     };
-  } catch (error) {
-    // File doesn't exist or is invalid
+  } catch {
     return null;
   }
 }
@@ -80,7 +78,7 @@ async function readNewsCache() {
 const fetchWithTimeout = async (url: string, options = {}, timeout = 10000) => {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
-  
+
   try {
     const response = await fetch(url, {
       ...options,
@@ -98,66 +96,79 @@ export const getNews = async (req: Request, res: Response) => {
   try {
     console.log("Request received for news");
     const now = new Date();
-    
-    // Try to read cache from disk
-    const cache = await readNewsCache();
-    
-    // Check if cache exists and is from today
-    if (cache) {
-      const cacheDate = cache.timestamp;
-      const isToday = cacheDate.getDate() === now.getDate() && 
-                     cacheDate.getMonth() === now.getMonth() &&
-                     cacheDate.getFullYear() === now.getFullYear();
-      
-      // Check if cache is from today AND was created after 9 AM
-      if (isToday && cacheDate.getHours() >= 9) {
-        console.log("Using cached news from disk, cached today after 9 AM");
-        return res.json({ articles: cache.articles });
-      }
-      
-      // If it's before 9 AM and we have yesterday's cache after 9 AM, still use it
-      if (now.getHours() < 9 && cacheDate.getHours() >= 9) {
-        console.log("Using cached news from disk, it's before 9 AM");
-        return res.json({ articles: cache.articles });
-      }
-    }
-    
-    // If we reach here, we need to fetch new data
-    const apiKey = process.env.NEWS_API_KEY; 
+
+    // Always fetch fresh news - don't use cache for content refreshing
+    const apiKey = process.env.NEWS_API_KEY;
     if (!apiKey) {
       throw new Error('NEWS_API_KEY environment variable is not set');
     }
+
+    // Calculate yesterday's date for the "from" parameter
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const fromDate = yesterday.toISOString().split('T')[0];
+
+    // Array of AI-related topics to randomly rotate through
+    const topics = [
+      'artificial intelligence',
+      'machine learning',
+      'AI applications',
+      'generative AI',
+      'neural networks',
+      'deep learning',
+      'AI technology'
+    ];
+
+    // Pick 3 random topics
+    const randomTopics = [];
+    for (let i = 0; i < 3; i++) {
+      const randomIndex = Math.floor(Math.random() * topics.length);
+      randomTopics.push(topics[randomIndex]);
+      topics.splice(randomIndex, 1); // Remove to avoid duplicates
+    }
+
+    // Create a query with the random topics
+    const query = randomTopics.join(' OR ');
     
-    console.log("Fetching fresh news data from API");
+    // Add a random sorting parameter (publishedAt or relevance)
+    const sortBy = Math.random() > 0.5 ? 'publishedAt' : 'relevance';
+
+    console.log(`Fetching fresh news data from API with query: ${query}`);
+    console.log(`Using sort: ${sortBy}, from date: ${fromDate}`);
+
     const response = await fetchWithTimeout(
-      `https://gnews.io/api/v4/search?q=artificial intelligence OR machine learning OR generative AI OR AI technology&token=${apiKey}&max=5&lang=en`,
+      `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&token=${apiKey}&max=10&lang=en&from=${fromDate}&sortby=${sortBy}`,
       {},
-      5000 // 5 second timeout
+      5000
     );
-    
+
     if (!response.ok) throw new Error(`Failed to fetch news: ${response.status}`);
     const data = await response.json();
-    
-    // Map the API response to include image property if it's imageUrl in the API
-    const mappedArticles = data.articles.map((article: any) => ({
+
+    // If we got more than 5 articles, randomly select 5
+    let articlesToUse = data.articles;
+    if (articlesToUse.length > 5) {
+      articlesToUse = shuffleArray(articlesToUse).slice(0, 5);
+    }
+
+    const mappedArticles = articlesToUse.map((article: any) => ({
       ...article,
       image: article.image || article.imageUrl || article.urlToImage
     }));
-    
-    // Cache articles to disk
+
+    // Still save to cache for fallback, but always fetch fresh first
     await saveNewsCache(mappedArticles, now);
     console.log("Fetched fresh news, saved to disk cache");
-    
+
     res.json({ articles: mappedArticles });
   } catch (error: any) {
     console.error('News API error:', error);
-    
-    // Try to return cached data as fallback, even if it's old
+
     try {
       const cache = await readNewsCache();
       if (cache && cache.articles.length > 0) {
         console.log("Returning old cache due to API error");
-        return res.json({ 
+        return res.json({
           articles: cache.articles,
           cached: true,
           error: error.message
@@ -166,12 +177,21 @@ export const getNews = async (req: Request, res: Response) => {
     } catch (cacheError) {
       console.error("Failed to read cache:", cacheError);
     }
-    
-    // If all else fails, return mock data with error
-    res.status(500).json({ 
+
+    res.status(500).json({
       error: error.message,
       articles: MOCK_NEWS,
       isMock: true
     });
   }
 };
+
+// Add this helper function to shuffle an array randomly
+function shuffleArray(array: any[]) {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+}
