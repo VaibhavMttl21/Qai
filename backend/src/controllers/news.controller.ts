@@ -96,8 +96,27 @@ export const getNews = async (req: Request, res: Response) => {
   try {
     console.log("Request received for news");
     const now = new Date();
-
-    // Always fetch fresh news - don't use cache for content refreshing
+    
+    // Check for valid cache from today
+    const cache = await readNewsCache();
+    
+    // If we have cache from today, use it
+    if (cache) {
+      const cacheDate = new Date(cache.timestamp);
+      const isSameDay = 
+        cacheDate.getDate() === now.getDate() &&
+        cacheDate.getMonth() === now.getMonth() &&
+        cacheDate.getFullYear() === now.getFullYear();
+        
+      if (isSameDay) {
+        console.log("Using today's cached news data");
+        return res.json({ articles: cache.articles, cached: true });
+      }
+    }
+    
+    // If we got here, we need to fetch fresh news
+    console.log("No valid cache found for today, fetching fresh news");
+    
     const apiKey = process.env.NEWS_API_KEY;
     if (!apiKey) {
       throw new Error('NEWS_API_KEY environment variable is not set');
@@ -156,7 +175,7 @@ export const getNews = async (req: Request, res: Response) => {
       image: article.image || article.imageUrl || article.urlToImage
     }));
 
-    // Still save to cache for fallback, but always fetch fresh first
+    // Save the fresh news to cache with the current timestamp
     await saveNewsCache(mappedArticles, now);
     console.log("Fetched fresh news, saved to disk cache");
 
@@ -185,13 +204,3 @@ export const getNews = async (req: Request, res: Response) => {
     });
   }
 };
-
-// Add this helper function to shuffle an array randomly
-function shuffleArray(array: any[]) {
-  const newArray = [...array];
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-  }
-  return newArray;
-}
