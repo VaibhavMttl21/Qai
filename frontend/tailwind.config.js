@@ -7,6 +7,9 @@ const config: Config = {
       fontFamily: {
         satoshi: ['Satoshi', 'sans-serif'],
       },
+      animation: {
+        'spin-slow': 'spin 10s linear infinite', // Slow spinning animation
+      },
     },
   },
   plugins: [],

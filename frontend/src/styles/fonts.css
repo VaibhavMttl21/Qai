@@ -23,4 +23,11 @@
     font-weight: 700;
     font-style: normal;
   }
+  @font-face {
+    font-family: 'Satoshi';
+    src: url('../assets/fonts/Satoshi-Medium.woff') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+  }
+  
   

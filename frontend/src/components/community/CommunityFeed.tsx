@@ -72,7 +72,7 @@ export function CommunityFeed() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col space-y-4 sm:flex-row sm:justify-between sm:items-center mb-8">
-        <h2 className="text-2xl font-bold">Community Discussion</h2>
+        <h2 className="text-2xl font-bold text-white">Community Discussion</h2>
         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="flex items-center space-x-2">
             <Switch 
@@ -170,3 +170,4 @@ export function CommunityFeed() {
     </div>
   );
 }
+
