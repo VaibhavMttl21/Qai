@@ -1,65 +1,65 @@
 {
   "articles": [
     {
-      "title": "AI made its way to vineyards. Here's how the technology is helping make your wine",
-      "description": "LOS ANGELES (AP) — When artificial intelligence-backed tractors became available to vineyards, Tom Gamble wanted to be an early adopter. He knew there would be a learning curve, but Gamble",
-      "content": "Country\nUnited States of America US Virgin Islands United States Minor Outlying Islands Canada Mexico, United Mexican States Bahamas, Commonwealth of the Cuba, Republic of Dominican Republic Haiti, Republic of Jamaica Afghanistan Albania, People's So... [4996 chars]",
-      "url": "https://www.thestar.com/news/world/united-states/ai-made-its-way-to-vineyards-heres-how-the-technology-is-helping-make-your-wine/article_f8682105-ac6f-5c38-aadd-261fe9e0a000.html",
-      "image": "https://bloximages.chicago2.vip.townnews.com/thestar.com/content/tncms/assets/v3/editorial/f/27/f27ef2f4-8756-51b2-a04b-e2830621f4a5/67cebf2ee3a26.image.jpg?crop=1620%2C851%2C0%2C114&resize=1200%2C630&order=crop%2Cresize",
-      "publishedAt": "2025-03-10T10:28:14Z",
+      "title": "Nobel winner Geoffrey Hinton is the ‘godfather of AI’. Here’s an offer he shouldn’t refuse…",
+      "description": "The computer scientist’s dogged belief in the potential of neural networks helped unlock machine learning. But he’d be wise to remember the experience of a fellow laureate",
+      "content": "Way back in 2011 Marc Andreessen, a venture capitalist with aspirations to be a public intellectual, published an essay entitled “Why Software Is Eating the World”, predicting that computer code would take over large swaths of the economy. Thirteen y... [4722 chars]",
+      "url": "https://www.theguardian.com/commentisfree/2024/oct/12/nobel-winner-geoffrey-hinton-is-the-godfather-of-ai-heres-an-offer-he-shouldnt-refuse",
+      "image": "https://i.guim.co.uk/img/media/3be35852b19fecd99d988105ac57bedd2d8f34c2/0_69_5198_3119/master/5198.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdG8tb3BpbmlvbnMucG5n&enable=upscale&s=2f111ca7b88dd0fcd7f649b31f1c63a1",
+      "publishedAt": "2024-10-12T15:00:27Z",
       "source": {
-        "name": "Toronto Star",
-        "url": "https://www.thestar.com"
+        "name": "The Guardian",
+        "url": "https://www.theguardian.com"
       }
     },
     {
-      "title": "Generative AI's environmental impact in figures",
-      "description": "Paris, France — The surge in generative artificial intelligence (AI) is being met with growing fears about the technology's ecological footprint, one of",
-      "content": "Paris, France — The surge in generative artificial intelligence (AI) is being met with growing fears about the technology’s ecological footprint, one of the top questions up for discussion at a global summit in Paris on February 10 to 11.\nHere are so... [3660 chars]",
-      "url": "https://manilastandard.net/news/world-news/314553056/generative-ais-environmental-impact-in-figures.html",
-      "image": "https://cdn.manilastandard.net/wp-content/uploads/2024/09/2nd-story-sa-G3.jpg",
-      "publishedAt": "2025-02-01T09:13:16Z",
+      "title": "Scalable AI-Driven 3D Model Reconstruction from Smartphone Images for Industry 4.0",
+      "description": "Researchers from Wideverse and SisInfLab at Politecnico di Bari developed a scalable cloud-native pipeline for 3D model reconstruction using smartphone images, leveraging AI and machine learning for efficient and customizable models. The system integrates low-end hardware with high-end cloud resources, enhancing industrial applications like Digital Twins and augmented reality.",
+      "content": "Researchers from Wideverse and SisInfLab at Politecnico di Bari have developed a novel cloud-native pipeline to efficiently reconstruct 3D models using 2D images captured by smartphone cameras. The project addresses the growing need for scalable and ... [6180 chars]",
+      "url": "https://www.devdiscourse.com/article/technology/3110321-scalable-ai-driven-3d-model-reconstruction-from-smartphone-images-for-industry-40",
+      "image": "https://www.devdiscourse.com/remote.axd?https://devdiscourse.blob.core.windows.net/devnews/04_10_2024_13_22_26_0769789.webp?width=920&format=jpeg",
+      "publishedAt": "2024-10-04T14:07:46Z",
       "source": {
-        "name": "manilastandard.net",
-        "url": "https://manilastandard.net"
+        "name": "Devdiscourse",
+        "url": "https://www.devdiscourse.com"
       }
     },
     {
-      "title": "IBM beats profit estimates as software business surges, shares rise",
-      "description": "The company's software segment recorded its biggest revenue jump in five years, as customers prioritized spending on cloud infrastructure amid a rush to adopt the data-intensive generative artificial intelligence technology. \"DeepSeek was an initiation that open (source) AI can play a role in the overall GenAI space,\" IBM Chief Financial Officer James Kavanaugh told Reuters in an interview.",
-      "content": "(Reuters) - IBM (IBM) surpassed analysts' estimates for fourth-quarter profit on Wednesday, driven by demand in its high-margin software unit as businesses ramped up IT spending, sending its shares soaring about 10% in extended trading.\nThe company's... [2170 chars]",
-      "url": "https://finance.yahoo.com/news/ibm-beats-profit-estimates-software-211226639.html",
-      "image": "https://media.zenfs.com/en/reuters-finance.com/00340d2044c3ab81daf6121cd3bc1311",
-      "publishedAt": "2025-01-29T21:20:23Z",
+      "title": "Nobel Prize in physics spotlights key breakthroughs in AI revolution − making machines that learn",
+      "description": "The Nobel Prize shows that the field of artificial neural networks – and the deep learning AI revolution the technology unleashed – owe as much to physics as biology and computer science.",
+      "content": "If your jaw dropped as you watched the latest AI-generated video, your bank balance was saved from criminals by a fraud detection system, or your day was made a little easier because you were able to dictate a text message on the run, you have many s... [6475 chars]",
+      "url": "https://theconversation.com/nobel-prize-in-physics-spotlights-key-breakthroughs-in-ai-revolution-making-machines-that-learn-240845",
+      "image": "https://images.theconversation.com/files/624371/original/file-20241008-15-5h3i8y.jpg?ixlib=rb-4.1.0&rect=1032%2C0%2C4958%2C2479&q=45&auto=format&w=1356&h=668&fit=crop",
+      "publishedAt": "2024-10-07T13:00:00Z",
       "source": {
-        "name": "Yahoo Finance",
-        "url": "https://finance.yahoo.com"
+        "name": "The Conversation UK",
+        "url": "https://theconversation.com"
       }
     },
     {
-      "title": "Anthropic to raise $2 billion in deal valuing AI startup at $60 billion, WSJ says",
-      "description": "Venture capital firm Lightspeed Venture Partners is leading the funding round, the report said. Anthropic was valued at around $18 billion in a fundraise led by Menlo Ventures in 2024. Amazon.com late last year doubled its investment in the startup to $8 billion, as the e-commerce giant went up against Big Tech rivals in a race to capitalize on generative artificial intelligence technology.",
-      "content": "(Reuters) -AI startup Anthropic is in advanced talks to raise $2 billion in a deal valuing the OpenAI rival at $60 billion, the Wall Street Journal reported on Tuesday, citing people familiar with the matter.\nVenture capital firm Lightspeed Venture P... [1038 chars]",
-      "url": "https://finance.yahoo.com/news/anthropic-raise-2-billion-deal-182252275.html",
-      "image": "https://media.zenfs.com/en/reuters-finance.com/a7a514205e2552d5af69746a217f3b46",
-      "publishedAt": "2025-01-07T18:59:14Z",
+      "title": "Redefining human-centered design: AI and EEG for emotion-sensitive architecture",
+      "description": "The AI model employs a hybrid deep learning approach combining convolutional neural networks (CNNs) and long short-term memory (LSTM) architectures. CNNs extract spatial features from EEG data, while LSTMs capture temporal dependencies, enabling precise emotion classification.",
+      "content": "Artificial intelligence (AI) is revolutionizing various fields, from healthcare and neuroscience to smart cities and human-centered design. In the realm of architecture, AI is now paving the way for intelligent spaces that dynamically respond to huma... [6496 chars]",
+      "url": "https://www.devdiscourse.com/article/business/3286139-redefining-human-centered-design-ai-and-eeg-for-emotion-sensitive-architecture",
+      "image": "https://www.devdiscourse.com/remote.axd?https://devdiscourse.blob.core.windows.net/devnews/05_03_2025_11_54_32_3528248.webp?width=920&format=jpeg",
+      "publishedAt": "2025-03-10T05:44:53Z",
       "source": {
-        "name": "Yahoo Finance",
-        "url": "https://finance.yahoo.com"
+        "name": "Devdiscourse",
+        "url": "https://www.devdiscourse.com"
       }
     },
     {
-      "title": "Indian firms tighten AI defences as cybercrime gets more sophisticated",
-      "description": "Coupled with other sophisticated technologies such as machine learning, artificial intelligence (AI) can both be a boon or a bane. Many cyber criminals are using AI technology to intensify their attacks.",
-      "content": "Sophisticated cyberattacks leveraging AI-powered deepfakes, phishing, data manipulation, and malware are on the rise. To combat these complex threats, Indian companies are looking to upgrade their security infrastructure, experts said.\nCybersecurity ... [5694 chars]",
-      "url": "https://www.livemint.com/industry/indian-firms-tighten-ai-defences-as-cybercrime-gets-more-sophisticated-11735124456428.html",
-      "image": "https://www.livemint.com/lm-img/img/2024/12/25/1600x900/cyber1-khBH--621x414LiveMint_1735128053525_1735128053709.jpg",
-      "publishedAt": "2024-12-25T18:30:00Z",
+      "title": "How Nobel Laureates’ Work On AI, Machine Learning Define Modern Internet, Why They Warn Of ‘Consequences’",
+      "description": "Hopfield used ideas from physics to study a particular type of recurrent neural network, now called the Hopfield network. Hinton extended Hopfield’s ideas to create a new class of models called Boltzmann machines",
+      "content": "It wouldn’t be wrong to say that Artificial Intelligence (AI) has taken over the world. Today, from videos to fraud detection system, dictating a text while doing your other chores, all seem seamless. Thanks to the scientists, mathematicians and engi... [5148 chars]",
+      "url": "https://www.news18.com/explainers/how-nobel-laureates-work-on-ai-machine-learning-define-modern-internet-why-they-warn-of-consequences-9080673.html",
+      "image": "https://images.news18.com/ibnlive/uploads/2024/10/geoffrey-hinton-afp-nobel-2024-2024-10-ddd6e56a04bc24b9ac54c55c6820ff52-16x9.jpg?impolicy=website&width=1200&height=675",
+      "publishedAt": "2024-10-09T12:12:55Z",
       "source": {
-        "name": "Livemint",
-        "url": "https://www.livemint.com"
+        "name": "News18",
+        "url": "https://www.news18.com"
       }
     }
   ],
-  "timestamp": "2025-04-18T06:37:30.498Z"
+  "timestamp": "2025-04-17T11:51:36.789Z"
 }

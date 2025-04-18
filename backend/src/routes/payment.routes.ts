@@ -1,10 +1,12 @@
-import { Router } from 'express';
+import express from 'express';
 import { createOrder, verifyPayment } from '../controllers/payment.controller.js';
-import { auth } from '../middleware/auth';
+import { validate } from '../middleware/validate.js';
+import { createOrderSchema, verifyPaymentSchema } from '../schemas/payment.schema.js';
+import { authenticateJWT } from '../middleware/auth.js';
 
-const router = Router();
+const router = express.Router();
 
-router.post('/order', createOrder);
-router.post('/verify', verifyPayment);
+router.post('/create-order',validate(createOrderSchema), createOrder);
+router.post('/verify-payment', validate(verifyPaymentSchema), verifyPayment);
 
 export default router;
