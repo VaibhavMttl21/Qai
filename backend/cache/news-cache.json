@@ -1,65 +1,65 @@
 {
   "articles": [
     {
-      "title": "Nobel winner Geoffrey Hinton is the ‘godfather of AI’. Here’s an offer he shouldn’t refuse…",
-      "description": "The computer scientist’s dogged belief in the potential of neural networks helped unlock machine learning. But he’d be wise to remember the experience of a fellow laureate",
-      "content": "Way back in 2011 Marc Andreessen, a venture capitalist with aspirations to be a public intellectual, published an essay entitled “Why Software Is Eating the World”, predicting that computer code would take over large swaths of the economy. Thirteen y... [4722 chars]",
-      "url": "https://www.theguardian.com/commentisfree/2024/oct/12/nobel-winner-geoffrey-hinton-is-the-godfather-of-ai-heres-an-offer-he-shouldnt-refuse",
-      "image": "https://i.guim.co.uk/img/media/3be35852b19fecd99d988105ac57bedd2d8f34c2/0_69_5198_3119/master/5198.jpg?width=1200&height=630&quality=85&auto=format&fit=crop&overlay-align=bottom%2Cleft&overlay-width=100p&overlay-base64=L2ltZy9zdGF0aWMvb3ZlcmxheXMvdG8tb3BpbmlvbnMucG5n&enable=upscale&s=2f111ca7b88dd0fcd7f649b31f1c63a1",
-      "publishedAt": "2024-10-12T15:00:27Z",
+      "title": "What is grokking in machine learning?",
+      "description": "The generalisation of overparameterised neural networks has long piqued the curiosity of the machine learning community.",
+      "content": "Neural networks achieve perfect generalisation, well past the point of overfitting, in some cases through grokking a pattern in data. In a potential ground breaking study, researchers from OpenAI (Alethea Power, Yuri Burda, Harri Edwards, Igor Babusc... [4905 chars]",
+      "url": "https://analyticsindiamag.com/what-is-grokking-in-machine-learning-2/",
+      "image": "https://149695847.v2.pressablecdn.com/wp-content/uploads/2022/01/open-ai-pic.jpeg",
+      "publishedAt": "2022-01-24T05:30:00Z",
       "source": {
-        "name": "The Guardian",
-        "url": "https://www.theguardian.com"
+        "name": "Analytics India Magazine",
+        "url": "https://analyticsindiamag.com"
       }
     },
     {
-      "title": "Scalable AI-Driven 3D Model Reconstruction from Smartphone Images for Industry 4.0",
-      "description": "Researchers from Wideverse and SisInfLab at Politecnico di Bari developed a scalable cloud-native pipeline for 3D model reconstruction using smartphone images, leveraging AI and machine learning for efficient and customizable models. The system integrates low-end hardware with high-end cloud resources, enhancing industrial applications like Digital Twins and augmented reality.",
-      "content": "Researchers from Wideverse and SisInfLab at Politecnico di Bari have developed a novel cloud-native pipeline to efficiently reconstruct 3D models using 2D images captured by smartphone cameras. The project addresses the growing need for scalable and ... [6180 chars]",
-      "url": "https://www.devdiscourse.com/article/technology/3110321-scalable-ai-driven-3d-model-reconstruction-from-smartphone-images-for-industry-40",
-      "image": "https://www.devdiscourse.com/remote.axd?https://devdiscourse.blob.core.windows.net/devnews/04_10_2024_13_22_26_0769789.webp?width=920&format=jpeg",
-      "publishedAt": "2024-10-04T14:07:46Z",
+      "title": "A guide to explaining feature importance in neural networks using SHAP",
+      "description": "SHAP values (SHapley Additive exPlanations) is an awesome tool to understand your complex Neural network models and other machine learning models such as Decision trees, Random forest.",
+      "content": "SHAP values (SHapley Additive exPlanations) is an awesome tool to understand your complex Neural network models and other machine learning models such as Decision trees, Random forests. Basically, it visually shows you which feature is important for ... [5777 chars]",
+      "url": "https://analyticsindiamag.com/a-guide-to-explaining-feature-importance-in-neural-networks-using-shap/",
+      "image": "https://149695847.v2.pressablecdn.com/wp-content/uploads/2022/03/2-3.jpg",
+      "publishedAt": "2022-03-22T12:30:00Z",
       "source": {
-        "name": "Devdiscourse",
-        "url": "https://www.devdiscourse.com"
+        "name": "Analytics India Magazine",
+        "url": "https://analyticsindiamag.com"
       }
     },
     {
-      "title": "Nobel Prize in physics spotlights key breakthroughs in AI revolution − making machines that learn",
-      "description": "The Nobel Prize shows that the field of artificial neural networks – and the deep learning AI revolution the technology unleashed – owe as much to physics as biology and computer science.",
-      "content": "If your jaw dropped as you watched the latest AI-generated video, your bank balance was saved from criminals by a fraud detection system, or your day was made a little easier because you were able to dictate a text message on the run, you have many s... [6475 chars]",
-      "url": "https://theconversation.com/nobel-prize-in-physics-spotlights-key-breakthroughs-in-ai-revolution-making-machines-that-learn-240845",
-      "image": "https://images.theconversation.com/files/624371/original/file-20241008-15-5h3i8y.jpg?ixlib=rb-4.1.0&rect=1032%2C0%2C4958%2C2479&q=45&auto=format&w=1356&h=668&fit=crop",
-      "publishedAt": "2024-10-07T13:00:00Z",
+      "title": "Machine learning security needs new perspectives and incentives",
+      "description": "The DeepSloth attack technique targets adaptive deep neural networks and is optimized for fast and sensitive operations.",
+      "content": "Elevate your enterprise data technology and strategy at Transform 2021.\nAt this year’s International Conference on Learning Representations (ICLR), a team of researchers from the University of Maryland presented an attack technique meant to slow down... [12526 chars]",
+      "url": "https://venturebeat.com/2021/06/06/machine-learning-security-needs-new-perspectives-and-incentives/",
+      "image": "https://venturebeat.com/wp-content/themes/vb-news/img/favicon.ico",
+      "publishedAt": "2021-06-06T21:20:13Z",
       "source": {
-        "name": "The Conversation UK",
-        "url": "https://theconversation.com"
+        "name": "VentureBeat",
+        "url": "https://venturebeat.com"
       }
     },
     {
-      "title": "Redefining human-centered design: AI and EEG for emotion-sensitive architecture",
-      "description": "The AI model employs a hybrid deep learning approach combining convolutional neural networks (CNNs) and long short-term memory (LSTM) architectures. CNNs extract spatial features from EEG data, while LSTMs capture temporal dependencies, enabling precise emotion classification.",
-      "content": "Artificial intelligence (AI) is revolutionizing various fields, from healthcare and neuroscience to smart cities and human-centered design. In the realm of architecture, AI is now paving the way for intelligent spaces that dynamically respond to huma... [6496 chars]",
-      "url": "https://www.devdiscourse.com/article/business/3286139-redefining-human-centered-design-ai-and-eeg-for-emotion-sensitive-architecture",
-      "image": "https://www.devdiscourse.com/remote.axd?https://devdiscourse.blob.core.windows.net/devnews/05_03_2025_11_54_32_3528248.webp?width=920&format=jpeg",
-      "publishedAt": "2025-03-10T05:44:53Z",
+      "title": "Innovative machine learning technique transforms MRI imaging efficiency",
+      "description": "Using smartly trained neural networks, researchers at TU Graz have succeeded in generating precise real-time images of the beating heart from just a few MRI measurement data. Other MRI applications can also be accelerated using this procedure.",
+      "content": "Using smartly trained neural networks, researchers at TU Graz have succeeded in generating precise real-time images of the beating heart from just a few MRI measurement data. Other MRI applications can also be accelerated using this procedure.\nMedica... [3680 chars]",
+      "url": "https://www.news-medical.net/news/20240930/Innovative-machine-learning-technique-transforms-MRI-imaging-efficiency.aspx",
+      "image": "https://d2jx2rerrg6sh3.cloudfront.net/image-handler/picture/2014/7/Magnetic_Resonance_Imaging-620x480.jpg",
+      "publishedAt": "2024-09-30T11:13:00Z",
       "source": {
-        "name": "Devdiscourse",
-        "url": "https://www.devdiscourse.com"
+        "name": "News-Medical.net",
+        "url": "https://www.news-medical.net"
       }
     },
     {
-      "title": "How Nobel Laureates’ Work On AI, Machine Learning Define Modern Internet, Why They Warn Of ‘Consequences’",
-      "description": "Hopfield used ideas from physics to study a particular type of recurrent neural network, now called the Hopfield network. Hinton extended Hopfield’s ideas to create a new class of models called Boltzmann machines",
-      "content": "It wouldn’t be wrong to say that Artificial Intelligence (AI) has taken over the world. Today, from videos to fraud detection system, dictating a text while doing your other chores, all seem seamless. Thanks to the scientists, mathematicians and engi... [5148 chars]",
-      "url": "https://www.news18.com/explainers/how-nobel-laureates-work-on-ai-machine-learning-define-modern-internet-why-they-warn-of-consequences-9080673.html",
-      "image": "https://images.news18.com/ibnlive/uploads/2024/10/geoffrey-hinton-afp-nobel-2024-2024-10-ddd6e56a04bc24b9ac54c55c6820ff52-16x9.jpg?impolicy=website&width=1200&height=675",
-      "publishedAt": "2024-10-09T12:12:55Z",
+      "title": "‘Artificial synapse’ could make neural networks work more like brains",
+      "description": "Networks of nanoscale resistors that work in a similar way to nerve cells in the body could offer advantages over digital machine learning",
+      "content": "Networks of nanoscale resistors that work in a similar way to nerve cells in the body could offer advantages over digital machine learning\nArtwork of nodes in a network Kiyoshi Takahase Segundo/Alamy\nA resistor that works in a similar way to nerve ce... [2478 chars]",
+      "url": "https://jimmyspost.com/artificial-synapse-could-make-neural-networks-work-more-like-brains",
+      "image": "https://jimmyspost.com/wp-content/uploads/2022/08/‘Artificial-synapse-could-make-neural-networks-work-more-like-brains.jpg",
+      "publishedAt": "2022-08-09T11:15:57Z",
       "source": {
-        "name": "News18",
-        "url": "https://www.news18.com"
+        "name": "Jimmys Post",
+        "url": "https://jimmyspost.com"
       }
     }
   ],
-  "timestamp": "2025-04-17T11:51:36.789Z"
+  "timestamp": "2025-04-18T14:08:57.873Z"
 }
