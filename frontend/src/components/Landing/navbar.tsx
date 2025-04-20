@@ -2,11 +2,12 @@ import React, { useEffect, useRef, useState, FC, MouseEvent } from "react";
 import { useAnimate, motion } from "framer-motion";
 import { FiMenu, FiArrowUpRight } from "react-icons/fi";
 import useMeasure from "react-use-measure";
+import { Link } from "react-router-dom";
+import { useAuthStore } from "@/store/auth";
 
 const Example: FC = () => {
   return (
     <section
-   
       style={{
         backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='%23171717'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e")`,
       }}
@@ -26,10 +27,8 @@ const GlassNavigation: FC = () => {
   const navRef = useRef<HTMLElement>(null);
 
   const handleMouseMove = ({ offsetX, offsetY, target }: MouseEvent<HTMLDivElement>): void => {
-    // @ts-ignore
-   
     const element = target as HTMLElement;
-const isNavElement = element.classList.contains("glass-nav");
+    const isNavElement = element.classList.contains("glass-nav");
 
     if (isNavElement) {
       setHovered(true);
@@ -144,33 +143,59 @@ interface ButtonsProps {
   setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Buttons: FC<ButtonsProps> = ({ setMenuOpen }) => (
-  <div className="flex items-center gap-4">
-    <div className="hidden md:block">
-      <SignInButton />
+const Buttons: FC<ButtonsProps> = ({ setMenuOpen }) => {
+  const { token, user } = useAuthStore();
+  const isLoggedIn = !!token && !!user;
+
+  return (
+    <div className="flex items-center gap-4">
+      {isLoggedIn ? (
+        <div className="hidden md:block">
+          <DashboardButton />
+        </div>
+      ) : (
+        <>
+          <div className="hidden md:block">
+            <SignInButton />
+          </div>
+          <Link to={isLoggedIn ? "/dashboard" : "/register"}>
+            <button className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95">
+              {isLoggedIn ? "Dashboard" : "Try free"}
+            </button>
+          </Link>
+        </>
+      )}
+
+      <button
+        onClick={() => setMenuOpen((pv) => !pv)}
+        className="ml-2 block scale-100 text-3xl text-white/90 transition-all hover:scale-105 hover:text-white active:scale-95 md:hidden"
+      >
+        <FiMenu />
+      </button>
     </div>
-
-    <button className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95">
-      Try free
-    </button>
-
-    <button
-      onClick={() => setMenuOpen((pv) => !pv)}
-      className="ml-2 block scale-100 text-3xl text-white/90 transition-all hover:scale-105 hover:text-white active:scale-95 md:hidden"
-    >
-      <FiMenu />
-    </button>
-  </div>
-);
+  );
+};
 
 const SignInButton: FC = () => {
   return (
-    <button className="group relative scale-100 overflow-hidden rounded-lg px-4 py-2 transition-transform hover:scale-105 active:scale-95">
-      <span className="relative z-10 text-white/90 transition-colors group-hover:text-white">
-        Sign in
-      </span>
-      <span className="absolute inset-0 z-0 bg-gradient-to-br from-white/20 to-white/5 opacity-0 transition-opacity group-hover:opacity-100" />
-    </button>
+    <Link to="/login">
+      <button className="group relative scale-100 overflow-hidden rounded-lg px-4 py-2 transition-transform hover:scale-105 active:scale-95">
+        <span className="relative z-10 text-white/90 transition-colors group-hover:text-white">
+          Sign in
+        </span>
+        <span className="absolute inset-0 z-0 bg-gradient-to-br from-white/20 to-white/5 opacity-0 transition-opacity group-hover:opacity-100" />
+      </button>
+    </Link>
+  );
+};
+
+const DashboardButton: FC = () => {
+  return (
+    <Link to="/dashboard">
+      <button className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95">
+        Dashboard
+      </button>
+    </Link>
   );
 };
 
@@ -180,6 +205,9 @@ interface MobileMenuProps {
 
 const MobileMenu: FC<MobileMenuProps> = ({ menuOpen }) => {
   const [ref, { height }] = useMeasure();
+  const { token, user } = useAuthStore();
+  const isLoggedIn = !!token && !!user;
+
   return (
     <motion.div
       initial={false}
@@ -194,7 +222,15 @@ const MobileMenu: FC<MobileMenuProps> = ({ menuOpen }) => {
           <TextLink text="History" />
           <TextLink text="Contact" />
         </div>
-        <SignInButton />
+        {isLoggedIn ? (
+          <Link to="/dashboard">
+            <button className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95">
+              Dashboard
+            </button>
+          </Link>
+        ) : (
+          <SignInButton />
+        )}
       </div>
     </motion.div>
   );

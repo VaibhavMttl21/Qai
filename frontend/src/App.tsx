@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from '@/components/ui/toaster';
 import { Layout } from '@/components/layout/Layout';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { GuestRoute } from '@/components/auth/GuestRoute';
 import { LoginPage } from '@/pages/auth/LoginPage';
 import { RegisterPage } from '@/pages/auth/RegisterPage';
 import { ForgotPasswordPage } from '@/pages/auth/ForgotPasswordPage';
@@ -14,7 +15,6 @@ import { VideoPage } from '@/pages/VideoPage';
 import { CommunityPage } from '@/pages/CommunityPage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { PricingPage } from '@/pages/PricingPage';
-// import { AdminUploadPage } from '@/pages/AdminUploadPage';
 import { useAuthStore } from '@/store/auth';
 import { connectSocket } from '@/lib/socket';
 
@@ -41,11 +41,31 @@ function App() {
             <LandingPage />
           }
         />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/verify-otp" element={<VerifyOTPPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/login" element={
+          <GuestRoute>
+            <LoginPage />
+          </GuestRoute>
+        } />
+        <Route path="/register" element={
+          <GuestRoute>
+            <RegisterPage />
+          </GuestRoute>
+        } />
+        <Route path="/forgot-password" element={
+          <GuestRoute>
+            <ForgotPasswordPage />
+          </GuestRoute>
+        } />
+        <Route path="/verify-otp" element={
+          <GuestRoute>
+            <VerifyOTPPage />
+          </GuestRoute>
+        } />
+        <Route path="/reset-password" element={
+          <GuestRoute>
+            <ResetPasswordPage />
+          </GuestRoute>
+        } />
         <Route element={<Layout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           
@@ -89,16 +109,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* <Route
-            path="/admin/upload"
-            element={
-              <ProtectedRoute>
-                <AdminUploadPage />
-              </ProtectedRoute>
-            }
-          />
-          
-          /> */}
         </Route>
         
       </Routes>
