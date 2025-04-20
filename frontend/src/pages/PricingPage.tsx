@@ -34,7 +34,7 @@ export function PricingPage() {
     'Community discussion participation',
     'Post and reply in forums',
     'Downloadable resources',
-    'Certificate of completion',
+   
     'Priority support'
   ];
 
@@ -156,9 +156,11 @@ export function PricingPage() {
         transition={{ delay: 0.3 }}
         className="mt-12 text-center"
       >
-        <h3 className="text-lg font-bold mb-2 text-indigo-600 font-Satoshi">Money Back Guarantee</h3>
+        <h3 className="text-lg font-bold mb-2 text-indigo-600 font-Satoshi">Terms and Condition</h3>
         <p className="text-gray-600 font-Satoshi font-regular" >
-          Not satisfied with our premium content? We offer a 30-day money-back guarantee.
+          QAI
+          <br />Contact us for more queries
+          
         </p>
       </motion.div>
     </div>
