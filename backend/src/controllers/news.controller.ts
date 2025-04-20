@@ -6,10 +6,13 @@ import { dirname } from 'path';
 import { z } from 'zod';
 // const path = require('path');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
-// Cache directory setup
+// // Cache directory setup
+// const CACHE_DIR = path.join(__dirname, '../../cache');
+// const NEWS_CACHE_FILE = path.join(CACHE_DIR, 'news-cache.json');
+
 const CACHE_DIR = path.join(__dirname, '../../cache');
 const NEWS_CACHE_FILE = path.join(CACHE_DIR, 'news-cache.json');
 
@@ -193,7 +196,7 @@ export const getNews = async (req: Request, res: Response) => {
     const response = await fetchWithTimeout(
       `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&token=${apiKey}&max=10&lang=en&from=${fromDate}&sortby=${sortBy}`,
       {},
-      5000
+      10000
     );
 
     if (!response.ok) throw new Error(`Failed to fetch news: ${response.status}`);

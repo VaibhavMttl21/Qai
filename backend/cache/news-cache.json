@@ -1,65 +1,65 @@
 {
   "articles": [
     {
-      "title": "What is grokking in machine learning?",
-      "description": "The generalisation of overparameterised neural networks has long piqued the curiosity of the machine learning community.",
-      "content": "Neural networks achieve perfect generalisation, well past the point of overfitting, in some cases through grokking a pattern in data. In a potential ground breaking study, researchers from OpenAI (Alethea Power, Yuri Burda, Harri Edwards, Igor Babusc... [4905 chars]",
-      "url": "https://analyticsindiamag.com/what-is-grokking-in-machine-learning-2/",
-      "image": "https://149695847.v2.pressablecdn.com/wp-content/uploads/2022/01/open-ai-pic.jpeg",
-      "publishedAt": "2022-01-24T05:30:00Z",
+      "title": "New Artificial Intelligence and Machine Learning centre in IISc Bengaluru",
+      "description": "Kotak-IISc AI-ML centre will offer Bachelor's, Master's and short-term courses in areas such as artificial intelligence, machine learning, deep learning, fintech etc.",
+      "content": "Kotak Mahindra Bank Ltd and the Indian Institute of Science today announced a partnership to set up a state-of-the-art Artificial Intelligence & Machine Learning (AI-ML) centre at the IISc campus here.\nSpread across approximately 1,40,000 square feet... [984 chars]",
+      "url": "https://indianexpress.com/article/education/new-artificial-intelligence-and-machine-learning-centre-in-iisc-bengaluru-7513005/",
+      "image": "https://images.indianexpress.com/2020/03/Indian-institute-of-science-IISC-Bengaluru-Bangalore_1200.jpeg",
+      "publishedAt": "2021-09-16T13:27:50Z",
+      "source": {
+        "name": "The Indian Express",
+        "url": "https://indianexpress.com"
+      }
+    },
+    {
+      "title": "Which Is The Best Laptop For Machine Learning and Artificial Intelligence?",
+      "description": "By having one of these laptops, one can build, train and test their own deep learning models in a short span of time.",
+      "content": "With the rise in analysis platforms across every sector, leading big tech companies and startups are integrating Machine Learning and Deep Learning in their existing system. This advancement has led to a major revolution in the hardware required for ... [1926 chars]",
+      "url": "https://analyticsindiamag.com/ai-trends/which-is-the-best-laptop-for-machine-learning-and-artificial-intelligence/",
+      "image": "https://analyticsindiamag.com/wp-content/uploads/2018/07/Man-With-Laptop.jpg",
+      "publishedAt": "2018-07-05T11:08:13Z",
       "source": {
         "name": "Analytics India Magazine",
         "url": "https://analyticsindiamag.com"
       }
     },
     {
-      "title": "A guide to explaining feature importance in neural networks using SHAP",
-      "description": "SHAP values (SHapley Additive exPlanations) is an awesome tool to understand your complex Neural network models and other machine learning models such as Decision trees, Random forest.",
-      "content": "SHAP values (SHapley Additive exPlanations) is an awesome tool to understand your complex Neural network models and other machine learning models such as Decision trees, Random forests. Basically, it visually shows you which feature is important for ... [5777 chars]",
-      "url": "https://analyticsindiamag.com/a-guide-to-explaining-feature-importance-in-neural-networks-using-shap/",
-      "image": "https://149695847.v2.pressablecdn.com/wp-content/uploads/2022/03/2-3.jpg",
-      "publishedAt": "2022-03-22T12:30:00Z",
+      "title": "Techies, Samsung India Has Big Hiring Plans In 2022",
+      "description": "Engineers, graduating in 2022, will be hired for new-age domains like artificial intelligence, machine learning, IoT, deep learning, networks and more.",
+      "content": "New Delhi, Nov 24: South Korean electronics major Samsung plans to hire over 1,000 engineers in India from IITs and other top engineering colleges, including BITS Pilani and NITs, in 2022. The young engineers, graduating in 2022, will be hired for ne... [1770 chars]",
+      "url": "https://www.news18.com/news/tech/techies-samsung-india-has-big-hiring-plans-in-2022-4484558.html",
+      "image": "https://images.news18.com/ibnlive/uploads/2021/11/jobs-2-1-163715257716x9.jpg",
+      "publishedAt": "2021-11-25T04:59:36Z",
       "source": {
-        "name": "Analytics India Magazine",
-        "url": "https://analyticsindiamag.com"
+        "name": "News18",
+        "url": "https://www.news18.com"
       }
     },
     {
-      "title": "Machine learning security needs new perspectives and incentives",
-      "description": "The DeepSloth attack technique targets adaptive deep neural networks and is optimized for fast and sensitive operations.",
-      "content": "Elevate your enterprise data technology and strategy at Transform 2021.\nAt this year’s International Conference on Learning Representations (ICLR), a team of researchers from the University of Maryland presented an attack technique meant to slow down... [12526 chars]",
-      "url": "https://venturebeat.com/2021/06/06/machine-learning-security-needs-new-perspectives-and-incentives/",
-      "image": "https://venturebeat.com/wp-content/themes/vb-news/img/favicon.ico",
-      "publishedAt": "2021-06-06T21:20:13Z",
+      "title": "What is a deepfake? Everything you need to know about the AI-powered fake media",
+      "description": "Deepfakes use deep learning artificial intelligence to replace the likeness of one person with another in video and other digital media. There are concerns",
+      "content": "Deepfakes use deep learning artificial intelligence to replace the likeness of one person with another in video and other digital media.\nuse deep learning artificial intelligence to replace the likeness of one person with another in video and other d... [8154 chars]",
+      "url": "https://www.businessinsider.in/tech/how-to/what-is-a-deepfake-everything-you-need-to-know-about-the-ai-powered-fake-media/articleshow/80411144.cms",
+      "image": "https://www.businessinsider.in/photo/80411144/what-is-a-deepfake-everything-you-need-to-know-about-the-ai-powered-fake-media.jpg?imgsize=178819",
+      "publishedAt": "2021-01-22T16:46:00Z",
       "source": {
-        "name": "VentureBeat",
-        "url": "https://venturebeat.com"
+        "name": "Business Insider India",
+        "url": "https://www.businessinsider.in"
       }
     },
     {
-      "title": "Innovative machine learning technique transforms MRI imaging efficiency",
-      "description": "Using smartly trained neural networks, researchers at TU Graz have succeeded in generating precise real-time images of the beating heart from just a few MRI measurement data. Other MRI applications can also be accelerated using this procedure.",
-      "content": "Using smartly trained neural networks, researchers at TU Graz have succeeded in generating precise real-time images of the beating heart from just a few MRI measurement data. Other MRI applications can also be accelerated using this procedure.\nMedica... [3680 chars]",
-      "url": "https://www.news-medical.net/news/20240930/Innovative-machine-learning-technique-transforms-MRI-imaging-efficiency.aspx",
-      "image": "https://d2jx2rerrg6sh3.cloudfront.net/image-handler/picture/2014/7/Magnetic_Resonance_Imaging-620x480.jpg",
-      "publishedAt": "2024-09-30T11:13:00Z",
+      "title": "Bee Partners closes fourth fund to add more capital for pre-seed founders in deep tech",
+      "description": "The San Francisco-based firm invests in companies focused on artificial intelligence, machine learning, robotics and frontier technologies.",
+      "content": "For pre-seed founders innovating in the deep tech space, Bee Partners wants to be partners with you. It closed on $50 million in commitments for its fourth fund, which Michael Berolzheimer, managing partner, said was oversubscribed.\nThe San Francisco... [3046 chars]",
+      "url": "https://techcrunch.com/2023/11/01/bee-partners-venture-capital-pre-seed-deep-tech/",
+      "image": "https://techcrunch.com/wp-content/uploads/2023/10/Team-Bee.jpg?resize=1200,675",
+      "publishedAt": "2023-11-01T14:00:54Z",
       "source": {
-        "name": "News-Medical.net",
-        "url": "https://www.news-medical.net"
-      }
-    },
-    {
-      "title": "‘Artificial synapse’ could make neural networks work more like brains",
-      "description": "Networks of nanoscale resistors that work in a similar way to nerve cells in the body could offer advantages over digital machine learning",
-      "content": "Networks of nanoscale resistors that work in a similar way to nerve cells in the body could offer advantages over digital machine learning\nArtwork of nodes in a network Kiyoshi Takahase Segundo/Alamy\nA resistor that works in a similar way to nerve ce... [2478 chars]",
-      "url": "https://jimmyspost.com/artificial-synapse-could-make-neural-networks-work-more-like-brains",
-      "image": "https://jimmyspost.com/wp-content/uploads/2022/08/‘Artificial-synapse-could-make-neural-networks-work-more-like-brains.jpg",
-      "publishedAt": "2022-08-09T11:15:57Z",
-      "source": {
-        "name": "Jimmys Post",
-        "url": "https://jimmyspost.com"
+        "name": "TechCrunch",
+        "url": "https://techcrunch.com"
       }
     }
   ],
-  "timestamp": "2025-04-18T14:08:57.873Z"
+  "timestamp": "2025-04-20T12:52:50.482Z"
 }
