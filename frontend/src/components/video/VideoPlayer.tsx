@@ -45,6 +45,37 @@ export function VideoPlayer() {
         <p className="text-gray-600">{currentVideo.description}</p>
       </motion.div>
 
+      {/* PDF resources section */}
+      {currentVideo.pdfs && currentVideo.pdfs.length > 0 && (
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold mb-2">Resources</h3>
+          <div className="space-y-2">
+            {currentVideo.pdfs.map((pdf) => (
+              <a
+                key={pdf.id}
+                href={pdf.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center p-3 border rounded-lg hover:bg-gray-50"
+              >
+                <div className="mr-3 text-red-600">
+                  {/* PDF icon */}
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-medium">{pdf.title}</p>
+                  {pdf.description && (
+                    <p className="text-sm text-gray-600">{pdf.description}</p>
+                  )}
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {videos.map((video) => (
           <motion.div

@@ -1,65 +1,65 @@
 {
   "articles": [
     {
-      "title": "New Artificial Intelligence and Machine Learning centre in IISc Bengaluru",
-      "description": "Kotak-IISc AI-ML centre will offer Bachelor's, Master's and short-term courses in areas such as artificial intelligence, machine learning, deep learning, fintech etc.",
-      "content": "Kotak Mahindra Bank Ltd and the Indian Institute of Science today announced a partnership to set up a state-of-the-art Artificial Intelligence & Machine Learning (AI-ML) centre at the IISc campus here.\nSpread across approximately 1,40,000 square feet... [984 chars]",
-      "url": "https://indianexpress.com/article/education/new-artificial-intelligence-and-machine-learning-centre-in-iisc-bengaluru-7513005/",
-      "image": "https://images.indianexpress.com/2020/03/Indian-institute-of-science-IISC-Bengaluru-Bangalore_1200.jpeg",
-      "publishedAt": "2021-09-16T13:27:50Z",
+      "title": "Machine Learning vs. Deep Learning: What's the Difference?",
+      "description": "Artificial intelligence technology is undergirded by two intertwined forms of automation.",
+      "content": "Artificial intelligence is everywhere these days, but the fundamentals of how this influential new technology works can be confusing. Two of the most important fields in AI development are “machine learning” and its sub-field, “deep learning.” Here’s... [6776 chars]",
+      "url": "https://gizmodo.com/machine-learning-vs-deep-learning-whats-the-differenc-1851478983",
+      "image": "https://i.kinja-img.com/image/upload/c_fill,h_675,pg_1,q_80,w_1200/2c99d18ebd6f39165ab63f02925ea4bb.jpg",
+      "publishedAt": "2024-05-19T13:00:00Z",
       "source": {
-        "name": "The Guardian",
-        "url": "https://www.theguardian.com"
+        "name": "Gizmodo",
+        "url": "https://gizmodo.com"
       }
     },
     {
-      "title": "Scalable AI-Driven 3D Model Reconstruction from Smartphone Images for Industry 4.0",
-      "description": "Researchers from Wideverse and SisInfLab at Politecnico di Bari developed a scalable cloud-native pipeline for 3D model reconstruction using smartphone images, leveraging AI and machine learning for efficient and customizable models. The system integrates low-end hardware with high-end cloud resources, enhancing industrial applications like Digital Twins and augmented reality.",
-      "content": "Researchers from Wideverse and SisInfLab at Politecnico di Bari have developed a novel cloud-native pipeline to efficiently reconstruct 3D models using 2D images captured by smartphone cameras. The project addresses the growing need for scalable and ... [6180 chars]",
-      "url": "https://www.devdiscourse.com/article/technology/3110321-scalable-ai-driven-3d-model-reconstruction-from-smartphone-images-for-industry-40",
-      "image": "https://www.devdiscourse.com/remote.axd?https://devdiscourse.blob.core.windows.net/devnews/04_10_2024_13_22_26_0769789.webp?width=920&format=jpeg",
-      "publishedAt": "2024-10-04T14:07:46Z",
+      "title": "Why artificial general intelligence lies beyond deep learning",
+      "description": "Many believe deep learning will continue to advance and play a crucial role in achieving AGI — but it does have its limitations.",
+      "content": "Sam Altman’s recent employment saga and speculation about OpenAI’s groundbreaking Q* model have renewed public interest in the possibilities and risks of artificial general intelligence (AGI).\nAGI could learn and execute intellectual tasks comparably... [6111 chars]",
+      "url": "https://venturebeat.com/ai/why-artificial-general-intelligence-lies-beyond-deep-learning/",
+      "image": "https://venturebeat.com/wp-content/uploads/2024/02/an_artificial_intelligence_brain_vibrant_3d_re-transformed.jpeg?w=1200&strip=all",
+      "publishedAt": "2024-02-18T19:15:00Z",
       "source": {
-        "name": "Devdiscourse",
-        "url": "https://www.devdiscourse.com"
+        "name": "VentureBeat",
+        "url": "https://venturebeat.com"
       }
     },
     {
-      "title": "Nobel Prize in physics spotlights key breakthroughs in AI revolution − making machines that learn",
-      "description": "The Nobel Prize shows that the field of artificial neural networks – and the deep learning AI revolution the technology unleashed – owe as much to physics as biology and computer science.",
-      "content": "If your jaw dropped as you watched the latest AI-generated video, your bank balance was saved from criminals by a fraud detection system, or your day was made a little easier because you were able to dictate a text message on the run, you have many s... [6475 chars]",
-      "url": "https://theconversation.com/nobel-prize-in-physics-spotlights-key-breakthroughs-in-ai-revolution-making-machines-that-learn-240845",
-      "image": "https://images.theconversation.com/files/624371/original/file-20241008-15-5h3i8y.jpg?ixlib=rb-4.1.0&rect=1032%2C0%2C4958%2C2479&q=45&auto=format&w=1356&h=668&fit=crop",
-      "publishedAt": "2024-10-07T13:00:00Z",
+      "title": "AI is easy to describe, challenging to do: Cerebras Systems’ CEO Andrew Feldman",
+      "description": "Cerebras Systems is an American artificial intelligence company that builds computer systems for complex artificial intelligence deep learning applications.",
+      "content": "Bengaluru: Training models is difficult and it’s hard for everyone in the industry, said Andrew Feldman, CEO of US-based artificial intelligence company Cerebras Systems, at the Mint Digital Innovation Summit 2024 on Friday.\nWhy is training models di... [1531 chars]",
+      "url": "https://www.livemint.com/industry/ai-is-easy-to-describe-challenging-to-do-cerebras-systems-ceo-andrew-feldman-11716561044183.html",
+      "image": "https://www.livemint.com/lm-img/img/2024/05/24/1600x900/Andrew_Feldman_1716569210093_1716569211675.JPG",
+      "publishedAt": "2024-05-24T16:49:38Z",
       "source": {
-        "name": "The Conversation UK",
-        "url": "https://theconversation.com"
+        "name": "Livemint",
+        "url": "https://www.livemint.com"
       }
     },
     {
-      "title": "Redefining human-centered design: AI and EEG for emotion-sensitive architecture",
-      "description": "The AI model employs a hybrid deep learning approach combining convolutional neural networks (CNNs) and long short-term memory (LSTM) architectures. CNNs extract spatial features from EEG data, while LSTMs capture temporal dependencies, enabling precise emotion classification.",
-      "content": "Artificial intelligence (AI) is revolutionizing various fields, from healthcare and neuroscience to smart cities and human-centered design. In the realm of architecture, AI is now paving the way for intelligent spaces that dynamically respond to huma... [6496 chars]",
-      "url": "https://www.devdiscourse.com/article/business/3286139-redefining-human-centered-design-ai-and-eeg-for-emotion-sensitive-architecture",
-      "image": "https://www.devdiscourse.com/remote.axd?https://devdiscourse.blob.core.windows.net/devnews/05_03_2025_11_54_32_3528248.webp?width=920&format=jpeg",
-      "publishedAt": "2025-03-10T05:44:53Z",
+      "title": "New AI techniques improve tumor detection in PET and CT scans",
+      "description": "Artificial intelligence has the potential to improve the analysis of medical image data. For example, algorithms based on deep learning can determine the location and size of tumors.",
+      "content": "Artificial intelligence has the potential to improve the analysis of medical image data. For example, algorithms based on deep learning can determine the location and size of tumors. This is the result of AutoPET, an international competition in medi... [3522 chars]",
+      "url": "https://www.news-medical.net/news/20250102/New-AI-techniques-improve-tumor-detection-in-PET-and-CT-scans.aspx",
+      "image": "https://d2jx2rerrg6sh3.cloudfront.net/image-handler/picture/2019/5/futuristic_techno_design_on_background_of_supercomputer_data_center_-_Image_-_Timofeev_Vladimir_M1_402c068791b640469e416c4f55d84afe-620x480.jpg",
+      "publishedAt": "2025-01-02T12:50:00Z",
       "source": {
-        "name": "Devdiscourse",
-        "url": "https://www.devdiscourse.com"
+        "name": "News-Medical.net",
+        "url": "https://www.news-medical.net"
       }
     },
     {
-      "title": "How Nobel Laureates’ Work On AI, Machine Learning Define Modern Internet, Why They Warn Of ‘Consequences’",
-      "description": "Hopfield used ideas from physics to study a particular type of recurrent neural network, now called the Hopfield network. Hinton extended Hopfield’s ideas to create a new class of models called Boltzmann machines",
-      "content": "It wouldn’t be wrong to say that Artificial Intelligence (AI) has taken over the world. Today, from videos to fraud detection system, dictating a text while doing your other chores, all seem seamless. Thanks to the scientists, mathematicians and engi... [5148 chars]",
-      "url": "https://www.news18.com/explainers/how-nobel-laureates-work-on-ai-machine-learning-define-modern-internet-why-they-warn-of-consequences-9080673.html",
-      "image": "https://images.news18.com/ibnlive/uploads/2024/10/geoffrey-hinton-afp-nobel-2024-2024-10-ddd6e56a04bc24b9ac54c55c6820ff52-16x9.jpg?impolicy=website&width=1200&height=675",
-      "publishedAt": "2024-10-09T12:12:55Z",
+      "title": "Humanoid robot masters the art of sketching through deep learning",
+      "description": "There is a new collaboration of artificial intelligence and robotics as researchers reveal a humanoid robot's real-time sketching abilities.",
+      "content": "Researchers from Universidad Complutense de Madrid (UCM) and Universidad Carlos III de Madrid (UC3M) have unveiled a development in the field of artificial intelligence and robotics. Through research, they present a deep learning-based model that ena... [496 chars]",
+      "url": "https://interestingengineering.com/innovation/robot-masters-the-art-of-sketching",
+      "image": "https://cms.interestingengineering.com/wp-content/uploads/2024/02/human-like-real-time-s-1.jpg",
+      "publishedAt": "2024-02-25T20:55:43Z",
       "source": {
-        "name": "News18",
-        "url": "https://www.news18.com"
+        "name": "Interesting Engineering",
+        "url": "https://interestingengineering.com"
       }
     }
   ],
-  "timestamp": "2025-04-17T11:51:36.789Z"
+  "timestamp": "2025-04-21T08:37:15.461Z"
 }

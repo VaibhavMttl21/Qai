@@ -3,10 +3,11 @@ import { useAdminAuthStore } from '../store/admin-auth';
 import { Button } from '../components/ui/Button';
 import { ExcelUpload } from '../components/ExcelUpload';
 import { VideoUpload } from '../components/VideoUpload';
+import { PdfUpload } from '../components/PdfUpload';
 
 export function DashboardPage() {
   const { user, logout } = useAdminAuthStore();
-  const [activeTab, setActiveTab] = useState<'excel' | 'video'>('excel');
+  const [activeTab, setActiveTab] = useState<'excel' | 'video' | 'pdf'>('excel');
   
   return (
     <div className="min-h-screen bg-gray-100">
@@ -51,12 +52,27 @@ export function DashboardPage() {
             >
               Video Upload
             </button>
+            <button
+              onClick={() => setActiveTab('pdf')}
+              className={`${
+                activeTab === 'pdf'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+            >
+              PDF Upload
+            </button>
           </nav>
         </div>
         
         {/* Tab content */}
         <div className="mt-6">
-          {activeTab === 'excel' ? <ExcelUpload /> : <VideoUpload />}
+          {activeTab === 'excel' 
+            ? <ExcelUpload /> 
+            : activeTab === 'video' 
+              ? <VideoUpload /> 
+              : <PdfUpload />
+          }
         </div>
       </main>
     </div>
