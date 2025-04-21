@@ -1,12 +1,21 @@
 import { create } from 'zustand';
 import api from '../lib/api';
 
+interface PDF {
+  id: string;
+  title: string;
+  description?: string;
+  url: string;
+  videoId: string;
+}
+
 interface Video {
   id: string;
   title: string;
   description: string;
   url: string;
   order: number;
+  pdfs?: PDF[];
 }
 
 interface VideoProgress {
