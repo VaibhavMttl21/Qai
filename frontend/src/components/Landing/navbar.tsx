@@ -148,10 +148,12 @@ const Buttons: FC<ButtonsProps> = ({ setMenuOpen }) => (
     <div className="hidden md:block">
       <SignInButton />
     </div>
+    <Link to='/register'>
 
     <button className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95">
-      Try free
+      Sign up
     </button>
+    </Link>
 
       <button
         onClick={() => setMenuOpen((pv) => !pv)}
@@ -161,16 +163,20 @@ const Buttons: FC<ButtonsProps> = ({ setMenuOpen }) => (
       </button>
     </div>
   );
-};
+
 
 const SignInButton: FC = () => {
   return (
+    <>
+    <Link to="/login">
     <button className="group relative scale-100 overflow-hidden rounded-lg px-4 py-2 transition-transform hover:scale-105 active:scale-95">
       <span className="relative z-10 text-white/90 transition-colors group-hover:text-white">
         Sign in
       </span>
       <span className="absolute inset-0 z-0 bg-gradient-to-br from-white/20 to-white/5 opacity-0 transition-opacity group-hover:opacity-100" />
     </button>
+    </Link>
+    </>
   );
 };
 
