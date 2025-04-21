@@ -1,90 +1,89 @@
+import React, { useRef } from "react";
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useSpring,
+} from "framer-motion";
+import { FiArrowRight } from "react-icons/fi";
 
-import { motion } from "framer-motion";
-import "../../styles/fonts.css"
+const SPRING_OPTIONS = {
+  mass: 1.5,
+  stiffness: 500,
+  damping: 100,
+};
 
+const NeuFollowButton3 = () => {
+  const ref = useRef<HTMLButtonElement | null>(null);
 
-const Button = () => {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const xSpring = useSpring(x, SPRING_OPTIONS);
+  const ySpring = useSpring(y, SPRING_OPTIONS);
+
+  const transform = useMotionTemplate`translateX(${xSpring}px) translateY(${ySpring}px)`;
+
+  const handleMove = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (!ref.current) return;
+
+    const { height, width } = ref.current.getBoundingClientRect();
+    const { offsetX, offsetY } = e.nativeEvent;
+
+    const xPct = offsetX / width;
+    const yPct = 1 - offsetY / height;
+
+    const newY = 12 + yPct * 12;
+    const newX = 12 + xPct * 12;
+
+    x.set(newX);
+    y.set(-newY);
+  };
+
+  const handleReset = () => {
+    x.set(0);
+    y.set(0);
+  };
+
   return (
-    
-      <MarqueeButton>Start your journey!</MarqueeButton>
-    
+    <section className="pl-6 pr-6 py-6 justify-left">
+      <div className="mx-auto h-20 w-full max-w-80 bg-neutral-900">
+        <motion.button
+          ref={ref}
+          style={{
+            transform,
+          }}
+          onMouseMove={handleMove}
+          onMouseLeave={handleReset}
+          onMouseDown={handleReset}
+          className="group flex h-full w-full items-center justify-between border-2 text-white  bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-8 text-xl font-semibold"
+        >
+          <Copy>Register Now!</Copy>
+          <Arrow />
+        </motion.button>
+      </div>
+    </section>
   );
 };
 
-const MarqueeButton = ({ children }: { children: string }) => {
+const Copy = ({ children }: { children: string }) => {
   return (
-    <motion.button
-      whileHover={{
-        scale: 1.05,
-      }}
-      whileTap={{
-        scale: 0.95,
-      }}
-      className="relative overflow-hidden rounded-full bg-gradient-to-br from-purple-400 from-40% to-indigo-400 p-4 text-xl uppercase text-black mt-10 font-satoshi font-bold"
-    >
-      <motion.span
-        className="block"
-        initial={{ x: "0%" }}
-        animate={{
-          x: "calc(-100% - 6px)",
-        }}
-        transition={{
-          ease: "linear",
-          duration: 5,
-          repeat: Infinity,
-          repeatType: "loop",
-        }}
-      >
-        {children} •{" "}
-      </motion.span>
-
-      <motion.span
-        initial={{ x: "calc(-100% - 6px)" }}
-        animate={{
-          x: "calc(-200% - 12px)",
-        }}
-        transition={{
-          ease: "linear",
-          duration: 5,
-          repeat: Infinity,
-          repeatType: "loop",
-        }}
-        className="absolute left-4 top-4 block"
-      >
-        {children} •
-      </motion.span>
-      <motion.span
-        initial={{ x: "calc(100% + 6px)" }}
-        animate={{
-          x: "0%",
-        }}
-        transition={{
-          ease: "linear",
-          duration: 5,
-          repeat: Infinity,
-          repeatType: "loop",
-        }}
-        className="absolute left-4 top-4 block"
-      >
-        {children} •
-      </motion.span>
-      <motion.span
-        initial={{ x: "calc(200% + 12px)" }}
-        animate={{
-          x: "calc(100% + 6px)",
-        }}
-        transition={{
-          ease: "linear",
-          duration: 5,
-          repeat: Infinity,
-          repeatType: "loop",
-        }}
-        className="absolute left-4 top-4 block"
-      >
-        {children} •
-      </motion.span>
-    </motion.button>
+    <span className="relative overflow-hidden">
+      <span className="inline-block transition-transform duration-300 group-hover:-translate-y-full">
+        {children}
+      </span>
+      <span className="absolute left-0 top-0 block translate-y-full transition-transform duration-300 group-hover:translate-y-0">
+        {children}
+      </span>
+    </span>
   );
 };
 
-export default Button;
+const Arrow = () => (
+  <div className="pointer-events-none flex h-6 w-6 overflow-hidden text-2xl">
+    <FiArrowRight className="shrink-0 -translate-x-full text-black transition-transform duration-300 group-hover:translate-x-0" />
+    <FiArrowRight className="shrink-0 -translate-x-full transition-transform duration-300 group-hover:translate-x-0" />
+  </div>
+);
+
+export default NeuFollowButton3;

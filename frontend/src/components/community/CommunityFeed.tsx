@@ -247,7 +247,7 @@ export function CommunityFeed() {
   // Theme styles
   const themeStyles = {
     background: isDarkMode 
-      ? 'bg-gradient-to-br from-neutral-900 via-neutral-700 to-neutral-500' 
+      ? 'bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-900' 
       : 'bg-gradient-to-br from-indigo-100 via-purple-100 to-violet-200',
     header: isDarkMode 
       ? 'text-white' 
