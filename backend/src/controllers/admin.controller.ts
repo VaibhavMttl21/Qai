@@ -152,24 +152,25 @@ export const videoUpload = multer({
 const pubsub = new PubSub();
 
 export const addVideo = async (req: AuthRequest, res: Response) => {
-  const { title, description, url, order } = req.body;
+  const { title, description, order } = req.body;
   const file = req.file;
   
   if (!file) return res.status(400).json({ error: 'No file uploaded' });
-  if (!title || !url) return res.status(400).json({ message: 'Title and URL are required' });
+  if (!title) return res.status(400).json({ message: 'Title and URL are required' });
   
   try {
     const id = uuidv4();
     const key = `raw/${id}.mp4`;
     const stream = createReadStream(file.path);
-
+    console.log('Uploading video to R2:', key);
     await r2.send(new PutObjectCommand({
       Bucket: process.env.R2_BUCKET!,
       Key: key,
       Body: stream,
       ContentType: file.mimetype,
     }));
-
+    const url = `${process.env.R2_PUBLIC_URL}/${key}`;
+    console.log('Video uploaded to R2:', key);
     fs.unlinkSync(file.path);
 
     const video = await prisma.video.create({
@@ -181,7 +182,7 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
         order: Number(order),
       },
     });
-
+    console.log('Video created in database:', video);
 
     const topic = pubsub.topic(process.env.PUBSUB_TOPIC!);
     await topic.publishMessage({
@@ -238,11 +239,11 @@ export const uploadPdf = async (req: AuthRequest, res: Response) => {
     
     // Upload PDF to R2 storage
     const id = uuidv4();
-    const key = `pdfs/${id}${path.extname(file.originalname)}`;
+    const key = `${id}.pdf`;
     const stream = createReadStream(file.path);
 
     await r2.send(new PutObjectCommand({
-      Bucket: process.env.R2_BUCKET!,
+      Bucket: process.env.R2_PDF_BUCKET!,
       Key: key,
       Body: stream,
       ContentType: 'application/pdf',
@@ -256,9 +257,8 @@ export const uploadPdf = async (req: AuthRequest, res: Response) => {
       id,
       title,
       description,
-      url: `${process.env.R2_PUBLIC_URL}/${key}`,
-      userId: req.user!.id,
-      videoId: videoId, // Always include videoId as it's required
+      url: `${process.env.R2_ENDPOINT!}/${key}`,
+      videoId: videoId, 
     };
 
     const pdf = await prisma.pDF.create({
@@ -279,9 +279,6 @@ export const uploadPdf = async (req: AuthRequest, res: Response) => {
 export const getAllPdfs = async (req: AuthRequest, res: Response) => {
   try {
     const pdfs = await prisma.pDF.findMany({
-      where: {
-        userId: req.user!.id, // Filter by the logged-in user
-      },
       orderBy: {
         createdAt: 'desc'
       }

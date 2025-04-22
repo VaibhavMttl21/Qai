@@ -6,7 +6,7 @@ import { Input } from './ui/Input';
 export function VideoUpload() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [videoUrl, setVideoUrl] = useState('');
+  // const [videoUrl, setVideoUrl] = useState('');
   const [order, setOrder] = useState<number>(0);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ export function VideoUpload() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title || !videoUrl || !file) {
+    if (!title|| !file) {
       setError('Title, video URL, and video file are required');
       return;
     }
@@ -29,7 +29,7 @@ export function VideoUpload() {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('description', description);
-      formData.append('url', videoUrl); // This could be the source URL (e.g. YouTube), or a dummy string if you're only using R2 files
+      // formData.append('url', videoUrl); // This could be the source URL (e.g. YouTube), or a dummy string if you're only using R2 files
       formData.append('order', order.toString());
       formData.append('file', file);
 
@@ -42,7 +42,7 @@ export function VideoUpload() {
       setSuccess('Video added successfully!');
       setTitle('');
       setDescription('');
-      setVideoUrl('');
+      // setVideoUrl('');
       setOrder(0);
       setFile(null);
     } catch (error) {
@@ -90,13 +90,13 @@ export function VideoUpload() {
           />
         </div>
 
-        <Input
+        {/* <Input
           label="Video URL"
           value={videoUrl}
           onChange={(e) => setVideoUrl(e.target.value)}
           placeholder="https://youtube.com/watch?v=..."
           required
-        />
+        /> */}
 
         <Input
           label="Display Order"
