@@ -13,7 +13,7 @@ const SPRING_OPTIONS = {
   damping: 100,
 };
 
-const NeuFollowButton3 = () => {
+const NeuFollowButton = () => {
   const ref = useRef<HTMLButtonElement | null>(null);
 
   const x = useMotionValue(0);
@@ -46,8 +46,8 @@ const NeuFollowButton3 = () => {
   };
 
   return (
-    <section className="pl-6 pr-6 py-6 justify-left">
-      <div className="mx-auto h-20 w-full max-w-80 bg-neutral-900">
+    <section className="pl-6 pr-6 py-6">
+      <div className="mx-auto h-20 w-full max-w-145 bg-[#e3e3e3]">
         <motion.button
           ref={ref}
           style={{
@@ -56,9 +56,9 @@ const NeuFollowButton3 = () => {
           onMouseMove={handleMove}
           onMouseLeave={handleReset}
           onMouseDown={handleReset}
-          className="group flex h-full w-full items-center justify-between border-2 text-white  bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-8 text-xl font-semibold"
+          className="group flex h-full w-full items-center justify-between border-2 text-white border-black bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-8 text-xl font-semibold"
         >
-          <Copy>Register Now!</Copy>
+          <Copy>COMMUNITY!</Copy>
           <Arrow />
         </motion.button>
       </div>
@@ -86,4 +86,4 @@ const Arrow = () => (
   </div>
 );
 
-export default NeuFollowButton3;
+export default NeuFollowButton;

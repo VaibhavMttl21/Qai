@@ -7,7 +7,6 @@ import multer from 'multer';
 import { Readable } from 'stream';
 import bcrypt from 'bcryptjs';
 
-
 const prisma = new PrismaClient();
 
 // Use memory storage instead of disk storage
@@ -119,7 +118,6 @@ export const uploadFile = async (req: AuthRequest, res: Response) => {
   }
 };
 
-
 import path from 'path';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
@@ -196,5 +194,102 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
   } catch (error) {
     console.error('Video add error:', error);
     res.status(500).json({ message: 'Error adding video' });
+  }
+};
+
+export const pdfUpload = multer({
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, '/tmp');
+    },
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname);
+      cb(null, `${Date.now()}-${file.fieldname}${ext}`);
+    },
+  }),
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === 'application/pdf') {
+      cb(null, true);
+    } else {
+      cb(null, false);
+      cb(new Error('Only PDF files are allowed'));
+    }
+  },
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
+});
+
+export const uploadPdf = async (req: AuthRequest, res: Response) => {
+  const { title, description, videoId } = req.body;
+  const file = req.file;
+  
+  if (!file) return res.status(400).json({ error: 'No file uploaded' });
+  if (!title) return res.status(400).json({ message: 'Title is required' });
+  if (!videoId) return res.status(400).json({ message: 'Video ID is required' });
+  
+  try {
+    // Check if the video exists
+    const video = await prisma.video.findUnique({
+      where: { id: videoId }
+    });
+    
+    if (!video) {
+      return res.status(404).json({ message: 'Video not found' });
+    }
+    
+    // Upload PDF to R2 storage
+    const id = uuidv4();
+    const key = `pdfs/${id}${path.extname(file.originalname)}`;
+    const stream = createReadStream(file.path);
+
+    await r2.send(new PutObjectCommand({
+      Bucket: process.env.R2_BUCKET!,
+      Key: key,
+      Body: stream,
+      ContentType: 'application/pdf',
+    }));
+
+    // Remove the temporary file
+    fs.unlinkSync(file.path);
+
+    // Create PDF record in database
+    const pdfData = {
+      id,
+      title,
+      description,
+      url: `${process.env.R2_PUBLIC_URL}/${key}`,
+      userId: req.user!.id,
+      videoId: videoId, // Always include videoId as it's required
+    };
+
+    const pdf = await prisma.pDF.create({
+      data: pdfData,
+    });
+
+    res.status(201).json({ 
+      message: 'PDF uploaded successfully',
+      pdf
+    });
+  } catch (error) {
+    console.error('PDF upload error:', error);
+    res.status(500).json({ message: 'Error uploading PDF' });
+  }
+};
+
+// Add a new endpoint to get all PDFs (or filtered by user)
+export const getAllPdfs = async (req: AuthRequest, res: Response) => {
+  try {
+    const pdfs = await prisma.pDF.findMany({
+      where: {
+        userId: req.user!.id, // Filter by the logged-in user
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+    
+    res.json(pdfs);
+  } catch (error) {
+    console.error('Error fetching PDFs:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };

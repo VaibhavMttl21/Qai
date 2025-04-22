@@ -33,9 +33,10 @@
 // }
 import { motion } from "framer-motion";
 import BlurText from "./text";
-import Button from "./buttonpre";
+// import Button from "./buttonpre";
 import { Link } from "react-router-dom";
 import '../../styles/fonts.css';
+import NeuFollowButton3 from "./buttonpre";
 
 const handleAnimationComplete = () => {
   console.log('Animation completed!');
@@ -93,8 +94,8 @@ export function PreHeading() {
           Step into the future with QAI — a powerful AI course designed for Indian school students. Learn to study smarter, understand Artificial Intelligence, and build skills that matter.
           <br />
           <Link to="/login">
-            <div className="mt-4 sm:mt-6">
-              <Button />
+            <div className="mt-4 sm:mt-6 justify-left">
+              <NeuFollowButton3/>
             </div>
           </Link>
         </motion.p>

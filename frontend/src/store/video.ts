@@ -1,6 +1,14 @@
 import { create } from 'zustand';
 import api from '../lib/api';
 
+interface PDF {
+  id: string;
+  title: string;
+  description?: string;
+  url: string;
+  videoId: string;
+}
+
 interface Video {
   id: string;
   title: string;
@@ -8,6 +16,7 @@ interface Video {
   url: string;
   hlsUrls: HLSUrls;
   order: number;
+  pdfs?: PDF[];
 }
 
 interface HLSUrls {

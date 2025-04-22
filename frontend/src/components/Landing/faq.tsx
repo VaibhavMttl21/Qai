@@ -21,32 +21,24 @@ const BasicFAQ = () => {
         <h3 className="mb-4 text-center text-3xl font-satoshi font-bold">
           Frequently asked questions
         </h3>
-        <Question title="Why is the sky blue?" defaultOpen>
+        <Question title="Do I need any coding background?" defaultOpen>
           <p className="font-satoshi font-regular">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque
-            laboriosam neque reprehenderit saepe eius dolorum vel consequuntur
-            perspiciatis ad vero.
+          Not at all! This course is built for absolute beginners
           </p>
         </Question>
-        <Question title="Why did the chicken cross the road?">
+        <Question title="Can I access the course anytime?">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque
-            laboriosam neque reprehenderit saepe eius dolorum vel consequuntur
-            perspiciatis ad vero.
+          Yes, once enrolled, you get full lifetime access.
           </p>
         </Question>
-        <Question title="How many licks does it take to get to the center of a tootsie pop?">
+        <Question title="Is it suitable for all boards?">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque
-            laboriosam neque reprehenderit saepe eius dolorum vel consequuntur
-            perspiciatis ad vero.
+          Yes, it aligns with CBSE, ICSE, and state board levels.
           </p>
         </Question>
-        <Question title="Where's Waldo?">
+        <Question title="Do schools get support?">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque
-            laboriosam neque reprehenderit saepe eius dolorum vel consequuntur
-            perspiciatis ad vero.
+          100%. We provide onboarding, training, and live support,
           </p>
         </Question>
       </div>

@@ -3,12 +3,16 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { z } from 'zod';
+// const path = require('path');
 
-// Fix __dirname in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
 
-// Cache directory setup
+// // Cache directory setup
+// const CACHE_DIR = path.join(__dirname, '../../cache');
+// const NEWS_CACHE_FILE = path.join(CACHE_DIR, 'news-cache.json');
+
 const CACHE_DIR = path.join(__dirname, '../../cache');
 const NEWS_CACHE_FILE = path.join(CACHE_DIR, 'news-cache.json');
 
@@ -40,12 +44,33 @@ const MOCK_NEWS = [
   }
 ];
 
+// Define the article schema for validation and type safety
+const articleSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  url: z.string().url(),
+  image: z.string().url().optional(),
+  publishedAt: z.string().datetime(),
+  source: z.object({
+    name: z.string()
+  })
+});
+
+// Define the response schema
+const newsResponseSchema = z.object({
+  articles: z.array(articleSchema),
+  cached: z.boolean().optional(),
+  error: z.string().optional(),
+  isMock: z.boolean().optional()
+});
+
+type NewsResponse = z.infer<typeof newsResponseSchema>;
+
 // Ensure cache directory exists
 async function ensureCacheDir() {
   try {
     await fs.access(CACHE_DIR);
-  } catch (error) {
-    // Directory doesn't exist, create it
+  } catch {
     await fs.mkdir(CACHE_DIR, { recursive: true });
   }
 }
@@ -70,8 +95,7 @@ async function readNewsCache() {
       articles: cache.articles,
       timestamp: new Date(cache.timestamp)
     };
-  } catch (error) {
-    // File doesn't exist or is invalid
+  } catch {
     return null;
   }
 }
@@ -80,7 +104,7 @@ async function readNewsCache() {
 const fetchWithTimeout = async (url: string, options = {}, timeout = 10000) => {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
-  
+
   try {
     const response = await fetch(url, {
       ...options,
@@ -99,79 +123,145 @@ export const getNews = async (req: Request, res: Response) => {
     console.log("Request received for news");
     const now = new Date();
     
-    // Try to read cache from disk
+    // Check for valid cache from today
     const cache = await readNewsCache();
     
-    // Check if cache exists and is from today
+    // If we have cache from today, use it
     if (cache) {
-      const cacheDate = cache.timestamp;
-      const isToday = cacheDate.getDate() === now.getDate() && 
-                     cacheDate.getMonth() === now.getMonth() &&
-                     cacheDate.getFullYear() === now.getFullYear();
-      
-      // Check if cache is from today AND was created after 9 AM
-      if (isToday && cacheDate.getHours() >= 9) {
-        console.log("Using cached news from disk, cached today after 9 AM");
-        return res.json({ articles: cache.articles });
-      }
-      
-      // If it's before 9 AM and we have yesterday's cache after 9 AM, still use it
-      if (now.getHours() < 9 && cacheDate.getHours() >= 9) {
-        console.log("Using cached news from disk, it's before 9 AM");
-        return res.json({ articles: cache.articles });
+      const cacheDate = new Date(cache.timestamp);
+      const isSameDay = 
+        cacheDate.getDate() === now.getDate() &&
+        cacheDate.getMonth() === now.getMonth() &&
+        cacheDate.getFullYear() === now.getFullYear();
+        
+      if (isSameDay) {
+        console.log("Using today's cached news data");
+        // Validate the cached data against our schema
+        const validatedCache = newsResponseSchema.parse({ 
+          articles: cache.articles, 
+          cached: true 
+        });
+        return res.json(validatedCache);
       }
     }
     
-    // If we reach here, we need to fetch new data
-    const apiKey = process.env.NEWS_API_KEY; 
+    // If we got here, we need to fetch fresh news
+    console.log("No valid cache found for today, fetching fresh news");
+    
+    const apiKey = process.env.NEWS_API_KEY;
     if (!apiKey) {
       throw new Error('NEWS_API_KEY environment variable is not set');
     }
+
+    // Calculate yesterday's date for the "from" parameter
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const fromDate = yesterday.toISOString().split('T')[0];
+
+    // Array of AI-related topics to randomly rotate through
+    const topics = [
+      'artificial intelligence',
+      'machine learning',
+      'AI applications',
+      'generative AI',
+      'neural networks',
+      'deep learning',
+      'AI technology'
+    ];
+
+    // Extract query params if they exist
+    const topicQuery = req.query.topic as string | undefined;
     
-    console.log("Fetching fresh news data from API");
+    // Pick 3 random topics or use the provided topic
+    const randomTopics = [];
+    if (topicQuery) {
+      randomTopics.push(topicQuery);
+    } else {
+      for (let i = 0; i < 3; i++) {
+        const randomIndex = Math.floor(Math.random() * topics.length);
+        randomTopics.push(topics[randomIndex]);
+        topics.splice(randomIndex, 1); // Remove to avoid duplicates
+      }
+    }
+
+    // Create a query with the random topics
+    const query = randomTopics.join(' OR ');
+    
+    // Add a random sorting parameter (publishedAt or relevance)
+    const sortBy = Math.random() > 0.5 ? 'publishedAt' : 'relevance';
+
+    console.log(`Fetching fresh news data from API with query: ${query}`);
+    console.log(`Using sort: ${sortBy}, from date: ${fromDate}`);
+
     const response = await fetchWithTimeout(
-      `https://gnews.io/api/v4/search?q=artificial intelligence OR machine learning OR generative AI OR AI technology&token=${apiKey}&max=5&lang=en`,
+      `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&token=${apiKey}&max=10&lang=en&from=${fromDate}&sortby=${sortBy}`,
       {},
-      5000 // 5 second timeout
+      10000
     );
-    
+
     if (!response.ok) throw new Error(`Failed to fetch news: ${response.status}`);
     const data = await response.json();
-    
-    // Map the API response to include image property if it's imageUrl in the API
-    const mappedArticles = data.articles.map((article: any) => ({
+
+    // If we got more than 5 articles, randomly select 5
+    let articlesToUse = data.articles;
+    if (articlesToUse.length > 5) {
+      articlesToUse = shuffleArray(articlesToUse).slice(0, 5);
+    }
+
+    const mappedArticles = articlesToUse.map((article: any) => ({
       ...article,
       image: article.image || article.imageUrl || article.urlToImage
     }));
-    
-    // Cache articles to disk
+
+    // Save the fresh news to cache with the current timestamp
     await saveNewsCache(mappedArticles, now);
     console.log("Fetched fresh news, saved to disk cache");
-    
-    res.json({ articles: mappedArticles });
+
+    // Validate the response data
+    const validatedResponse = newsResponseSchema.parse({ articles: mappedArticles });
+    res.json(validatedResponse);
   } catch (error: any) {
     console.error('News API error:', error);
-    
-    // Try to return cached data as fallback, even if it's old
+
     try {
       const cache = await readNewsCache();
       if (cache && cache.articles.length > 0) {
         console.log("Returning old cache due to API error");
-        return res.json({ 
+        // Validate the cached data
+        const validatedCache = newsResponseSchema.parse({
           articles: cache.articles,
           cached: true,
           error: error.message
         });
+        return res.json(validatedCache);
       }
     } catch (cacheError) {
       console.error("Failed to read cache:", cacheError);
     }
-    
-    // If all else fails, return mock data with error
-    res.status(500).json({ 
-      error: error.message,
-      articles: MOCK_NEWS,
-      isMock: true
-    });
+
+    // Validate mock data
+    try {
+      const validatedMockData = newsResponseSchema.parse({
+        articles: MOCK_NEWS,
+        isMock: true,
+        error: error.message
+      });
+      res.status(500).json(validatedMockData);
+    } catch (validationError) {
+      // If even our mock data is invalid, this is a serious issue
+      console.error("Mock data validation failed:", validationError);
+      res.status(500).json({
+        error: "Internal server error: Unable to provide valid news data"
+      });
+    }
   }
 };
+
+function shuffleArray(articlesToUse: any[]) {
+  for (let i = articlesToUse.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [articlesToUse[i], articlesToUse[j]] = [articlesToUse[j], articlesToUse[i]];
+  }
+  return articlesToUse;
+}
+

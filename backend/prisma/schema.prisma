@@ -46,6 +46,18 @@ model Video {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   progress    Progress[]
+  pdfs        PDF[]      // Add relation to PDFs
+}
+
+model PDF {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  url         String
+  videoId     String
+  video       Video    @relation(fields: [videoId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Progress {

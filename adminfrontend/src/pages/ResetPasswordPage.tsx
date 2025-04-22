@@ -34,6 +34,7 @@ export function ResetPasswordPage() {
     e.preventDefault();
     
     if (password !== confirmPassword) {
+      alert("Passwords do not match");
       // toast({
       //   title: "Error",
       //   description: "Passwords do not match",
@@ -43,6 +44,7 @@ export function ResetPasswordPage() {
     }
     
     if (password.length < 8) {
+      alert("Password must be at least 8 characters long");
       // toast({
       //   title: "Error",
       //   description: "Password must be at least 8 characters long",
