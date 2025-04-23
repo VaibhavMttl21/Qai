@@ -71,41 +71,41 @@ export const getVideoPdfs = async (req: Request, res: Response) => {
 };
 
 // Add endpoint to get all PDFs for the logged-in user
-export const getUserPdfs = async (req: AuthRequest, res: Response) => {
-  try {
-    const pdfs = await prisma.pDF.findMany({
-      where: {
-        userId: req.user!.id,
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
+// export const getUserPdfs = async (req: AuthRequest, res: Response) => {
+//   try {
+//     const pdfs = await prisma.pDF.findMany({
+//       where: {
+//         userId: req.user!.id,
+//       },
+//       orderBy: {
+//         createdAt: 'desc'
+//       }
+//     });
     
-    res.json(pdfs);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+//     res.json(pdfs);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
 
-// Get PDFs not associated with any video
-export const getOrphanedPdfs = async (req: AuthRequest, res: Response) => {
-  try {
-    const pdfs = await prisma.pDF.findMany({
-      where: {
-        userId: req.user!.id,
-        videoId: null,
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
+// // Get PDFs not associated with any video
+// export const getOrphanedPdfs = async (req: AuthRequest, res: Response) => {
+//   try {
+//     const pdfs = await prisma.pDF.findMany({
+//       where: {
+//         userId: req.user!.id,
+//         videoId: null,
+//       },
+//       orderBy: {
+//         createdAt: 'desc'
+//       }
+//     });
     
-    res.json(pdfs);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+//     res.json(pdfs);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
 
 // Add a new controller to get all videos without restrictions for admin use
 export const getAllVideos = async (req: AuthRequest, res: Response) => {
