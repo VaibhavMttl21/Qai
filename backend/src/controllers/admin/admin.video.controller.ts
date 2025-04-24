@@ -106,13 +106,15 @@ export const deleteVideo = async (req: AuthRequest, res: Response) => {
     }));
     console.log('Video deleted from R2:', key);
 
-    const encodedKey = `${video.id}`;
-      const command = new DeleteObjectCommand({
-        Bucket: process.env.R2_ENCODED_BUCKET!,
-        Key: encodedKey,
-      });
-      await r2.send(command);
-
+    if (video.encoded) {
+        const encodedKey = `${video.id}`;
+        const command = new DeleteObjectCommand({
+          Bucket: process.env.R2_ENCODED_BUCKET!,
+          Key: encodedKey,
+        });
+        await r2.send(command);
+    }
+    
     // Delete the video from the database
     await prisma.video.delete({
       where: { id },
