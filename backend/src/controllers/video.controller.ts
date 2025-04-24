@@ -107,20 +107,3 @@ export const getVideoPdfs = async (req: Request, res: Response) => {
 //   }
 // };
 
-// Add a new controller to get all videos without restrictions for admin use
-export const getAllVideos = async (req: AuthRequest, res: Response) => {
-  try {
-    const videos = await prisma.video.findMany({
-      orderBy: { order: 'asc' },
-      select: {
-        id: true,
-        title: true,
-        order: true
-      }
-    });
-    
-    res.json(videos);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
