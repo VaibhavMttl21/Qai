@@ -182,6 +182,7 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
         description,
         url,
         order: Number(order),
+        moduleId: moduleId,
       },
     });
     console.log('Video created in database:', video);
