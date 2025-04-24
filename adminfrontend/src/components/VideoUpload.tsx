@@ -1,23 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../lib/api';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 
+interface Module {
+  id: string;
+  name: string;
+}
+
 export function VideoUpload() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  // const [videoUrl, setVideoUrl] = useState('');
   const [order, setOrder] = useState<number>(0);
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  
+  // Module state
+  const [modules, setModules] = useState<Module[]>([]);
+  const [selectedModuleId, setSelectedModuleId] = useState<string>('');
+  const [loadingModules, setLoadingModules] = useState(false);
+
+  // Fetch modules on component mount
+  useEffect(() => {
+    fetchModules();
+  }, []);
+
+  const fetchModules = async () => {
+    try {
+      setLoadingModules(true);
+      const response = await api.get('/api/admin/modules');
+      setModules(response.data);
+      setLoadingModules(false);
+    } catch (error) {
+      setError('Failed to fetch modules');
+      setLoadingModules(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!title|| !file) {
-      setError('Title, video URL, and video file are required');
+    if (!title || !file) {
+      setError('Title and video file are required');
+      return;
+    }
+
+    if (!selectedModuleId) {
+      setError('Please select a module');
       return;
     }
 
@@ -29,9 +60,9 @@ export function VideoUpload() {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('description', description);
-      // formData.append('url', videoUrl); // This could be the source URL (e.g. YouTube), or a dummy string if you're only using R2 files
       formData.append('order', order.toString());
       formData.append('file', file);
+      formData.append('moduleId', selectedModuleId);
 
       await api.post('/api/admin/videos', formData, {
         headers: {
@@ -42,7 +73,6 @@ export function VideoUpload() {
       setSuccess('Video added successfully!');
       setTitle('');
       setDescription('');
-      // setVideoUrl('');
       setOrder(0);
       setFile(null);
     } catch (error) {
@@ -69,6 +99,31 @@ export function VideoUpload() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Module selection section */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Select Module
+          </label>
+          
+          {loadingModules ? (
+            <div className="text-sm text-gray-500">Loading modules...</div>
+          ) : (
+            <select
+              value={selectedModuleId}
+              onChange={(e) => setSelectedModuleId(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              required
+            >
+              <option value="">-- Select a module --</option>
+              {modules.map(module => (
+                <option key={module.id} value={module.id}>
+                  {module.name}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+
         <Input
           label="Video Title"
           value={title}
@@ -89,14 +144,6 @@ export function VideoUpload() {
             rows={4}
           />
         </div>
-
-        {/* <Input
-          label="Video URL"
-          value={videoUrl}
-          onChange={(e) => setVideoUrl(e.target.value)}
-          placeholder="https://youtube.com/watch?v=..."
-          required
-        /> */}
 
         <Input
           label="Display Order"

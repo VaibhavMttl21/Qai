@@ -152,11 +152,13 @@ export const videoUpload = multer({
 const pubsub = new PubSub();
 
 export const addVideo = async (req: AuthRequest, res: Response) => {
-  const { title, description, order } = req.body;
+  const { title, description, order , moduleId } = req.body;
+  console.log('Received request to add video:', req.body);
   const file = req.file;
   
   if (!file) return res.status(400).json({ error: 'No file uploaded' });
   if (!title) return res.status(400).json({ message: 'Title and URL are required' });
+  if (!moduleId) return res.status(400).json({ message: 'Module ID is required' });
   
   try {
     const id = uuidv4();
@@ -287,6 +289,46 @@ export const getAllPdfs = async (req: AuthRequest, res: Response) => {
     res.json(pdfs);
   } catch (error) {
     console.error('Error fetching PDFs:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Get all modules
+export const getAllModules = async (req: AuthRequest, res: Response) => {
+  try {
+    const modules = await prisma.module.findMany({
+      orderBy: {
+        order: 'asc'
+      }
+    });
+    
+    res.json(modules);
+  } catch (error) {
+    console.error('Error fetching modules:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Create a new module
+export const createModule = async (req: AuthRequest, res: Response) => {
+  try {
+    const { name, description, order } = req.body;
+    
+    if (!name) {
+      return res.status(400).json({ message: 'Module name is required' });
+    }
+    
+    const module = await prisma.module.create({
+      data: {
+        name,
+        description: description || null,
+        order: order ? Number(order) : 0
+      }
+    });
+    
+    res.status(201).json(module);
+  } catch (error) {
+    console.error('Error creating module:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };

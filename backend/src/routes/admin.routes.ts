@@ -1,5 +1,15 @@
 import { Router } from 'express';
-import { upload, uploadFile, addVideo, videoUpload, pdfUpload, uploadPdf, getAllPdfs } from '../controllers/admin.controller';
+import { 
+  upload, 
+  uploadFile, 
+  addVideo, 
+  videoUpload, 
+  pdfUpload, 
+  uploadPdf, 
+  getAllPdfs,
+  getAllModules,
+  createModule
+} from '../controllers/admin.controller';
 import { auth, isAdminUser } from '../middleware/auth';
 // import { adminGuard } from '../middleware/admin';
 
@@ -14,6 +24,10 @@ router.post('/videos', auth, isAdminUser, videoUpload.single('file'), addVideo);
 // Add PDF endpoint
 router.post('/pdfs', auth, isAdminUser, pdfUpload.single('file'), uploadPdf);
 router.get('/pdfs', auth, isAdminUser, getAllPdfs);
+
+// Module endpoints
+router.get('/modules', auth, isAdminUser, getAllModules);
+router.post('/modules', auth, isAdminUser, createModule);
 
 // Create admin endpoint
 // router.post('/create-admin', auth, isAdminUser);

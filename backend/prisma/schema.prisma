@@ -36,17 +36,19 @@ model User {
 }
 
 model Video {
-  id          String     @id @default(uuid())
-  title       String
+  id        String   @id @default(uuid())
+  title     String
   description String
-  url         String
-  order       Int        @unique
-  encoded     Boolean    @default(false)
-  hlsUrls     Json?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  progress    Progress[]
-  pdfs        PDF[]      // Add relation to PDFs
+  url       String
+  order     Int      @unique
+  encoded   Boolean  @default(false)
+  hlsUrls   Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  moduleId  String
+  module    Module   @relation(fields: [moduleId], references: [id])
+  progress  Progress[]
+  pdfs      PDF[]
 }
 
 model PDF {
@@ -58,6 +60,16 @@ model PDF {
   video       Video    @relation(fields: [videoId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Module {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  order       Int      @default(0) 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  videos      Video[]
 }
 
 model Progress {
