@@ -79,11 +79,13 @@ export function VideoPlayer() {
           <motion.div
           key={video.id}
           whileHover={{ scale: 1.02 }}
-          className={`p-4 rounded-lg border ${
-            currentVideo.id === video.id
-            ? 'border-primary'
-            : 'border-gray-200'
-          }`}
+          {...{
+            className: `p-4 rounded-lg border ${
+              currentVideo.id === video.id
+                ? 'border-primary'
+                : 'border-gray-200'
+            }`,
+          }}
           >
             <Button
               variant="ghost"
