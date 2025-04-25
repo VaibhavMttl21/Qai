@@ -78,6 +78,8 @@ async function encodeToHLS(inputPath: string, outputDir: string, resolution: str
         '-hls_time', '4',
         '-hls_playlist_type', 'vod',
         '-f', 'hls',
+        '-start_number 0',   // added this for hls
+        '-hls_flags independent_segments'  // added this for hls
       ])
       .output(path.join(outPath, 'index.m3u8'))
       .on('end', () => resolve())
