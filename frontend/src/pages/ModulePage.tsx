@@ -27,7 +27,7 @@ export function ModulePage() {
   useEffect(() => {
     const fetchModules = async () => {
       try {
-        const response = await api.get('/api/modules');
+        const response = await api.get('/api/videos/modules');
         setModules(response.data);
         // Expand the first module by default
         if (response.data.length > 0) {

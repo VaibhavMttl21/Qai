@@ -7,6 +7,10 @@ const prisma = new PrismaClient();
 export const getVideos = async (req: AuthRequest, res: Response) => {
   try {
     const videos = await prisma.video.findMany({
+      where:
+      {
+        encoded: true,
+      },
       orderBy: { order: 'asc' },
       include: {
         pdfs: true, // Include associated PDFs
@@ -26,15 +30,16 @@ export const getVideos = async (req: AuthRequest, res: Response) => {
 
 export const updateProgress = async (req: AuthRequest, res: Response) => {
   try {
+    console.log("request in updateProgress", req.user);
     const { videoId } = req.params;
+    console.log("videoId", videoId);
     const { completed } = req.body;
-
     const progress = await prisma.progress.upsert({
       where: {
         userId_videoId: {
           userId: req.user!.id,
           videoId,
-        },
+        }
       },
       update: { completed },
       create: {
@@ -46,6 +51,22 @@ export const updateProgress = async (req: AuthRequest, res: Response) => {
 
     res.json(progress);
   } catch (error) {
+    console.error('Error updating progress:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+//get progress for all videos
+export const getProgress = async (req: AuthRequest, res: Response) => {
+  try {
+    const progress = await prisma.progress.findMany({
+      where: {
+        userId: req.user!.id,  
+      }
+    });
+    res.json(progress);
+  } catch (error) {
+    console.error('Error fetching progress:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -100,17 +121,17 @@ export const getAllModules = async (req: AuthRequest, res: Response) => {
 };
 
 // Get all videos (for admin dropdown)
-export const getAllVideos = async (req: AuthRequest, res: Response) => {
-  try {
-    const videos = await prisma.video.findMany({
-      orderBy: { order: 'asc' }
-    });
+// export const getAllVideos = async (req: AuthRequest, res: Response) => {
+//   try {
+//     const videos = await prisma.video.findMany({
+//       orderBy: { order: 'asc' }
+//     });
     
-    res.json(videos);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+//     res.json(videos);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
 
 // Add endpoint to get all PDFs for the logged-in user
 // export const getUserPdfs = async (req: AuthRequest, res: Response) => {

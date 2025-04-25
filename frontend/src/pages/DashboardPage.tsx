@@ -1,5 +1,4 @@
 
-
 import { useAuthStore } from '@/store/auth';
 import { useVideoStore } from '@/store/video';
 import { Button } from '@/components/ui/button';
@@ -12,9 +11,15 @@ import NeuFollowButton2 from '@/components/Dashboard/Button';
 
 export function DashboardPage() {
   const { user } = useAuthStore();
-  const { videos, progress } = useVideoStore();
-  const { news, isLoading, error, fetchNews } = useDashboardStore();
+  // const { videos, progress } = useVideoStore();
+  const { videos, fetchVideos ,progress , fetchProgress} = useVideoStore();
+  
+  useEffect(() => {
+    fetchVideos();
+    fetchProgress();
+  }, [fetchVideos,fetchProgress]);
 
+  const { news, isLoading, error, fetchNews } = useDashboardStore();
   const completedVideos = Object.values(progress).filter(Boolean).length;
   const totalVideos = videos.length;
   const progressPercentage = totalVideos > 0 ? (completedVideos / totalVideos) * 100 : 0;

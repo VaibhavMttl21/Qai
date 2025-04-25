@@ -5,7 +5,8 @@ import 'video.js/dist/video-js.css';
 import { useVideoStore } from '@/store/video';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, FileText } from 'lucide-react';
+import { ChevronLeft, ChevronRight, FileText, CheckCircle, XCircle } from 'lucide-react';
+import Hls from 'hls.js'
 
 export function VideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -21,11 +22,13 @@ export function VideoPlayer() {
     fetchVideos,
     setCurrentVideo,
     updateProgress,
+    fetchProgress
   } = useVideoStore();
 
   useEffect(() => {
     fetchVideos();
-  }, [fetchVideos]);
+    fetchProgress();
+  }, [fetchVideos,fetchProgress]);
 
   useEffect(() => {
     if (videos.length > 0 && videoId) {
@@ -35,13 +38,9 @@ export function VideoPlayer() {
       }
     }
   }, [videos, videoId, setCurrentVideo]);
-
+  
   useEffect(() => {
     if (!currentVideo || !videoRef.current || !currentVideo.hlsUrls) return;
-
-    const token = localStorage.getItem('token');
-    const rawUrl = currentVideo.hlsUrls[quality];
-    const secureUrl = token ? `${rawUrl}?token=${token}` : rawUrl;
 
     // Dispose previous player if it exists
     if (playerRef.current) {
@@ -49,29 +48,64 @@ export function VideoPlayer() {
       playerRef.current = null;
     }
 
-    const player = videojs(videoRef.current, {
-      controls: true,
-      autoplay: false,
-      preload: 'auto',
-      responsive: true,
-      fluid: true,
-      sources: [{ src: secureUrl, type: 'application/x-mpegURL' }],
-    });
+    const token = localStorage.getItem('token');
+    console.log('Token:', token);
 
-    player.on('ended', () => {
-      updateProgress(currentVideo.id, true);
-    });
+    const rawUrl = currentVideo.hlsUrls[quality];
+    const secureUrl = token ? `${rawUrl}?token=${token}` : rawUrl;
+    console.log('Secure URL:', secureUrl);
 
-    playerRef.current = player;
+    let hls = null;
 
-    return () => {
-      if (playerRef.current) {
-        playerRef.current.dispose();
-        playerRef.current = null;
+    if (Hls.isSupported()) {
+      // Initialize Hls.js and set up the Authorization header for requests
+      hls = new Hls({
+        xhrSetup: (xhr, url) => {
+          // Set Authorization header with the token for each request
+          if (token) {
+            xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+          }
+        },
+      });
+
+      hls.loadSource(secureUrl); // Load the HLS URL
+      hls.attachMedia(videoRef.current); // Attach to the video element
+
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        videoRef.current?.play(); // Play video once manifest is parsed
+      });
+
+      // Handle HLS error (e.g., if no compatible format found)
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        console.error('HLS.js error:', data);
+      });
+    } else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+      // For browsers that support native HLS
+      videoRef.current.src = secureUrl;
+      videoRef.current.play();
+    }
+
+    // Add event listener to track when video ends
+    const videoElement = videoRef.current;
+    const handleVideoEnd = () => {
+      // Update progress when video ends
+      if (currentVideo && !progress[currentVideo.id]) {
+        updateProgress(currentVideo.id, true);
       }
     };
-  }, [currentVideo, quality, updateProgress]);
 
+    videoElement.addEventListener('ended', handleVideoEnd);
+
+    // Dispose of the HLS instance when the component unmounts
+    return () => {
+      if (hls) {
+        hls.destroy();
+      }
+      // Clean up event listener
+      videoElement.removeEventListener('ended', handleVideoEnd);
+    };
+  }, [currentVideo, quality, updateProgress, progress]);
+  
   const handleVideoSelect = (video: typeof currentVideo) => {
     if (video) {
       navigate(`/video/${video.id}`);
@@ -95,6 +129,13 @@ export function VideoPlayer() {
     if (currentIndex > 0) {
       const prevVideo = videos[currentIndex - 1];
       navigate(`/video/${prevVideo.id}`);
+    }
+  };
+  
+  // Toggle completion status manually
+  const toggleCompletion = () => {
+    if (currentVideo) {
+      updateProgress(currentVideo.id, !progress[currentVideo.id]);
     }
   };
 
@@ -145,19 +186,41 @@ export function VideoPlayer() {
           {/* Video Player */}
           <div className="bg-white p-4 rounded-lg shadow-md">
             {/* Quality Selector */}
-            <div className="mb-4">
-              <label className="mr-2 font-medium text-sm">Quality:</label>
-              <select
-                value={quality}
-                onChange={(e) => setQuality(e.target.value as '480p' | '720p' | '1080p')}
-                className="border rounded px-2 py-1 text-sm"
+            <div className="mb-4 flex justify-between items-center">
+              <div>
+                <label className="mr-2 font-medium text-sm">Quality:</label>
+                <select
+                  value={quality}
+                  onChange={(e) => setQuality(e.target.value as '480p' | '720p' | '1080p')}
+                  className="border rounded px-2 py-1 text-sm"
+                >
+                  {Object.keys(currentVideo.hlsUrls).map((res) => (
+                    <option key={res} value={res}>
+                      {res}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              
+              {/* Manual progress toggle */}
+              <Button 
+                size="sm" 
+                variant={progress[currentVideo.id] ? "destructive" : "default"}
+                onClick={toggleCompletion}
+                className="flex items-center gap-1"
               >
-                {Object.keys(currentVideo.hlsUrls).map((res) => (
-                  <option key={res} value={res}>
-                    {res}
-                  </option>
-                ))}
-              </select>
+                {progress[currentVideo.id] ? (
+                  <>
+                    <XCircle className="h-4 w-4" />
+                    Mark as incomplete
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle className="h-4 w-4" />
+                    Mark as complete
+                  </>
+                )}
+              </Button>
             </div>
 
             {/* Video Player */}
@@ -166,21 +229,19 @@ export function VideoPlayer() {
                 ref={videoRef}
                 className="video-js vjs-default-skin w-full h-full"
                 controls
+                loop={false}
               />
             </div>
-
-            {/* PDF Resources Section with Navigation Buttons */}
-            {currentVideo.pdfs && currentVideo.pdfs.length > 0 && (
-              <div className="mt-6 border-t pt-4">
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-lg font-semibold">Resources</h3>
+            <div className="mt-6 pt-4">
+             <div className="flex justify-between items-center mb-2">
+                  
                   <div className="flex space-x-2">
                     <Button 
                       size="sm" 
                       variant="outline" 
                       onClick={navigateToPrevVideo}
                       disabled={videos.findIndex(v => v.id === currentVideo.id) === 0}
-                    >
+                      >
                       <ChevronLeft className="mr-1 h-4 w-4" /> Previous
                     </Button>
                     <Button 
@@ -188,12 +249,16 @@ export function VideoPlayer() {
                       variant="outline" 
                       onClick={navigateToNextVideo}
                       disabled={videos.findIndex(v => v.id === currentVideo.id) === videos.length - 1}
-                    >
+                      >
                       Next <ChevronRight className="ml-1 h-4 w-4" />
                     </Button>
                   </div>
-                </div>
-                
+                </div>   
+                </div>    
+            {/* PDF Resources Section with Navigation Buttons */}
+            {currentVideo.pdfs && currentVideo.pdfs.length > 0 && (
+              <div className="mt-6 border-t pt-4">
+                <h3 className="text-lg font-semibold mb-5">Resources</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {currentVideo.pdfs.map((pdf) => (
                     <a

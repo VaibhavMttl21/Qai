@@ -42,6 +42,7 @@ interface VideoState {
   fetchModules: () => Promise<void>;
   setCurrentVideo: (video: Video) => void;
   updateProgress: (videoId: string, completed: boolean) => Promise<void>;
+  fetchProgress: () => Promise<void>;
 }
 
 export const useVideoStore = create<VideoState>((set, get) => ({
@@ -75,6 +76,20 @@ export const useVideoStore = create<VideoState>((set, get) => ({
     set({ currentVideo: video });
   },
   
+  // Fetch progress for all videos
+  fetchProgress: async () => {
+    try {
+      const response = await api.get('/api/videos/progress');
+      const progressData = response.data.reduce((acc: Record<string, boolean>, item: { videoId: string; completed: boolean }) => {
+        acc[item.videoId] = item.completed;
+        return acc;
+      }, {});
+      set({ progress: progressData });
+    } catch (error) {
+      console.error('Failed to fetch progress:', error);
+    }
+  },            
+
   updateProgress: async (videoId, completed) => {
     try {
       await api.post(`/api/videos/${videoId}/progress`, { completed });
