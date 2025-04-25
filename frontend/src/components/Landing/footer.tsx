@@ -166,13 +166,17 @@ export default function Footer() {
 
         {/* Social Media Centered */}
         <div className="flex flex-col items-center gap-4 order-3 md:order-none">
-          <p className="text-sm text-black">Connect with us</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, <br />
+          sed do eiusmod tempor incididunt ut labore et dolore magna aliqua <br />
+           Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris <br />
+           ut aliquip ex ea commodo consequat. </p>
+          {/* <p className="text-sm text-black">Connect with us</p>
           <div className="flex gap-5 text-xl">
             <a href="#" className="hover:text-blue-400 transition"><FaFacebookF /></a>
             <a href="#" className="hover:text-sky-400 transition"><FaTwitter /></a>
             <a href="#" className="hover:text-pink-400 transition"><FaInstagram /></a>
             <a href="#" className="hover:text-blue-500 transition"><FaLinkedinIn /></a>
-          </div>
+          </div> */}
         </div>
 
         {/* Logo and Address on the right */}
