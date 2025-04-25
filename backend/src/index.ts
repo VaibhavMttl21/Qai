@@ -5,6 +5,7 @@ import { Server } from 'socket.io';
 import dotenv from 'dotenv';
 import routes from './routes';
 import { createAdmin } from './types/create-admin';
+import { createVideo } from './types/create-video';
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ io.on('connection', (socket) => {
 });
 
 //  createAdmin()
+// createVideo()
 const PORT = process.env.PORT || 3000;
 httpServer.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

@@ -5,7 +5,6 @@ import { auth } from '../middleware/auth';
 const router = Router();
 
 router.get('/', auth, getVideos);
-router.get('/all', auth, getAllVideos); 
 router.get('/modules', auth, getAllModules);
 router.get('/progress',auth,getProgress) // Add new endpoint for modules
 router.post('/:videoId/progress', auth, updateProgress);

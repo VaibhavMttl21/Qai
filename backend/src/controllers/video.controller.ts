@@ -7,6 +7,10 @@ const prisma = new PrismaClient();
 export const getVideos = async (req: AuthRequest, res: Response) => {
   try {
     const videos = await prisma.video.findMany({
+      where:
+      {
+        encoded: true,
+      },
       orderBy: { order: 'asc' },
       include: {
         pdfs: true, // Include associated PDFs
@@ -117,17 +121,17 @@ export const getAllModules = async (req: AuthRequest, res: Response) => {
 };
 
 // Get all videos (for admin dropdown)
-export const getAllVideos = async (req: AuthRequest, res: Response) => {
-  try {
-    const videos = await prisma.video.findMany({
-      orderBy: { order: 'asc' }
-    });
+// export const getAllVideos = async (req: AuthRequest, res: Response) => {
+//   try {
+//     const videos = await prisma.video.findMany({
+//       orderBy: { order: 'asc' }
+//     });
     
-    res.json(videos);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+//     res.json(videos);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// };
 
 // Add endpoint to get all PDFs for the logged-in user
 // export const getUserPdfs = async (req: AuthRequest, res: Response) => {
