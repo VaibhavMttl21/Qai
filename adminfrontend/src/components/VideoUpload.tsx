@@ -156,18 +156,24 @@ export function VideoUpload() {
           required
         />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Upload Video File
-          </label>
-          <input
-            type="file"
-            accept="video/*"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-            required
-            className="w-full border text-white border-gray-300 rounded-md p-2 bg-blue-500 hover:bg-blue-400"
-          />
-        </div>
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-1">
+    Upload Video File
+  </label>
+  <input
+    id="video-file"
+    type="file"
+    accept="video/*"
+    onChange={(e) => setFile(e.target.files?.[0] || null)}
+    required
+    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+  />
+  {file && (
+    <p className="mt-1 text-sm text-gray-500">
+      Selected file: {file.name}
+    </p>
+  )}
+</div>
 
         <Button type="submit" isLoading={loading}>
           Add Video

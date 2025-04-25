@@ -6,10 +6,11 @@ import { VideoUpload } from '../components/VideoUpload';
 import { PdfUpload } from '../components/PdfUpload';
 import { ModuleCreation } from '../components/ModuleCreation';
 import { DeleteResourcesPage } from './DeleteResourcesPage';
+import { RenameResource } from '../components/RenameResource';
 
 export function DashboardPage() {
   const { user, logout } = useAdminAuthStore();
-  const [activeTab, setActiveTab] = useState<'excel' | 'video' | 'pdf' | 'module' | 'delete'>('excel');
+  const [activeTab, setActiveTab] = useState<'excel' | 'video' | 'pdf' | 'module' | 'delete' | 'rename'>('excel');
   
   return (
     <div className="min-h-screen bg-gray-100">
@@ -75,6 +76,16 @@ export function DashboardPage() {
               Module Creation
             </button>
             <button
+              onClick={() => setActiveTab('rename')}
+              className={`${
+                activeTab === 'rename'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+            >
+              Rename Resources
+            </button>
+            <button
               onClick={() => setActiveTab('delete')}
               className={`${
                 activeTab === 'delete'
@@ -97,7 +108,9 @@ export function DashboardPage() {
                 ? <PdfUpload />
                 : activeTab === 'module'
                   ? <ModuleCreation />
-                  : <DeleteResourcesPage />
+                  : activeTab === 'rename'
+                    ? <RenameResource />
+                    : <DeleteResourcesPage />
           }
         </div>
       </main>

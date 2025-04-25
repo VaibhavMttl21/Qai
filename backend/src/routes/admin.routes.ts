@@ -14,8 +14,9 @@ router.post('/upload', auth, isAdminUser, upload.single('file'), uploadFile);
 
 // Add video endpoint
 router.post('/videos', auth, isAdminUser, videoUpload.single('file'), addVideo);
-router.delete('/videos/:id', auth, isAdminUser,deleteVideo);
+router.delete('/videos/:id', auth, isAdminUser, deleteVideo);
 router.get('/videos', auth, isAdminUser, updateVideo);
+router.put('/videos/:id', auth, isAdminUser, updateVideo); // Added rename endpoint for videos
 
 // Add PDF endpoint
 router.post('/pdfs', auth, isAdminUser, pdfUpload.single('file'), uploadPdf);
@@ -26,9 +27,8 @@ router.put('/pdfs/:id', auth, isAdminUser, updatePdf);
 // Module endpoints
 router.delete('/module/:id', auth, isAdminUser, deleteModule);
 router.post('/modules', auth, isAdminUser, createModule);
-router.get('/modules', auth, isAdminUser, getAllModules)
+router.get('/modules', auth, isAdminUser, getAllModules);
 router.put('/module/:id', auth, isAdminUser, updateModule);
-
 
 // Create admin endpoint
 // router.post('/create-admin', auth, isAdminUser);

@@ -1,16 +1,14 @@
-import { useEffect } from 'react';
+
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { ProtectedRoute } from './components/ProtectedRoute';
-import { useAdminAuthStore } from './store/admin-auth';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { VerifyOTPPage } from './pages/verifyOtp';
-import { DeleteResourcesPage } from './pages/DeleteResourcesPage';
+import { RenameResource } from './components/RenameResource';
 
 function App() {
-  const { checkAuth } = useAdminAuthStore();
 
   return (
     <BrowserRouter>
@@ -21,6 +19,14 @@ function App() {
           element={
             <ProtectedRoute>
               <DashboardPage />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/rename-resources" 
+          element={
+            <ProtectedRoute>
+              <RenameResource />
             </ProtectedRoute>
           } 
         />
