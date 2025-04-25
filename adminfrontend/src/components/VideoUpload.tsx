@@ -164,7 +164,7 @@ export function VideoUpload() {
             accept="video/*"
             onChange={(e) => setFile(e.target.files?.[0] || null)}
             required
-            className="w-full border border-gray-300 rounded-md p-2"
+            className="w-full border text-white border-gray-300 rounded-md p-2 bg-blue-500 hover:bg-blue-400"
           />
         </div>
 
