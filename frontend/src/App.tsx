@@ -15,6 +15,8 @@ import { VideoPage } from '@/pages/VideoPage';
 import { CommunityPage } from '@/pages/CommunityPage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { PricingPage } from '@/pages/PricingPage';
+import { ModulePage } from './pages/ModulePage';
+import { VideoDetailsPage } from './pages/VideoDetailsPage';
 import { useAuthStore } from '@/store/auth';
 import { connectSocket } from '@/lib/socket';
 
@@ -109,6 +111,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/modules" element={<ModulePage />} />
+          <Route path="/video/:videoId" element={<VideoDetailsPage />} />
         </Route>
         
       </Routes>

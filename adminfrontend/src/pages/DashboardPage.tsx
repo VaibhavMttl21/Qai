@@ -5,10 +5,11 @@ import { ExcelUpload } from '../components/ExcelUpload';
 import { VideoUpload } from '../components/VideoUpload';
 import { PdfUpload } from '../components/PdfUpload';
 import { ModuleCreation } from '../components/ModuleCreation';
+import { DeleteResourcesPage } from './DeleteResourcesPage';
 
 export function DashboardPage() {
   const { user, logout } = useAdminAuthStore();
-  const [activeTab, setActiveTab] = useState<'excel' | 'video' | 'pdf' | 'module'>('excel');
+  const [activeTab, setActiveTab] = useState<'excel' | 'video' | 'pdf' | 'module' | 'delete'>('excel');
   
   return (
     <div className="min-h-screen bg-gray-100">
@@ -73,6 +74,16 @@ export function DashboardPage() {
             >
               Module Creation
             </button>
+            <button
+              onClick={() => setActiveTab('delete')}
+              className={`${
+                activeTab === 'delete'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+            >
+              Delete Resources
+            </button>
           </nav>
         </div>
         
@@ -84,7 +95,9 @@ export function DashboardPage() {
               ? <VideoUpload /> 
               : activeTab === 'pdf'
                 ? <PdfUpload />
-                : <ModuleCreation />
+                : activeTab === 'module'
+                  ? <ModuleCreation />
+                  : <DeleteResourcesPage />
           }
         </div>
       </main>

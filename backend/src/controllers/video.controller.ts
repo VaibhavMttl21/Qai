@@ -70,6 +70,48 @@ export const getVideoPdfs = async (req: Request, res: Response) => {
   }
 };
 
+// Add endpoint to get all modules with their videos
+export const getAllModules = async (req: AuthRequest, res: Response) => {
+  try {
+    const modules = await prisma.module.findMany({
+      include: {
+        videos: {
+          orderBy: { order: 'asc' },
+          include: { pdfs: true }
+        }
+      },
+      orderBy: { createdAt: 'asc' }
+    });
+
+    // If user is not paid, limit videos in each module
+    if (!req.user?.isPaid) {
+      const limitedModules = modules.map(module => ({
+        ...module,
+        videos: module.videos.slice(0, 1)
+      }));
+      return res.json(limitedModules);
+    }
+
+    res.json(modules);
+  } catch (error) {
+    console.error('Error fetching modules:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Get all videos (for admin dropdown)
+export const getAllVideos = async (req: AuthRequest, res: Response) => {
+  try {
+    const videos = await prisma.video.findMany({
+      orderBy: { order: 'asc' }
+    });
+    
+    res.json(videos);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 // Add endpoint to get all PDFs for the logged-in user
 // export const getUserPdfs = async (req: AuthRequest, res: Response) => {
 //   try {

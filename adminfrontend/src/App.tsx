@@ -7,6 +7,7 @@ import { useAdminAuthStore } from './store/admin-auth';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { VerifyOTPPage } from './pages/verifyOtp';
+import { DeleteResourcesPage } from './pages/DeleteResourcesPage';
 
 function App() {
   const { checkAuth } = useAdminAuthStore();
