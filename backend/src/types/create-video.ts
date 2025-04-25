@@ -15,12 +15,7 @@ export async function createVideo() {
         order: 1,
         createdAt: new Date("2025-04-25T09:23:14.755Z"),
         updatedAt: new Date("2025-04-25T09:23:14.755Z"),
-        videos: {
-          connect: [
-            { id: "28a53cb1-b021-4521-b9ed-fde9a60f2c0f" },
-            { id: "38e5e6f0-4306-4870-97d2-f595927966e6" },
-          ],
-        },
+       
       },
     });
     
@@ -55,9 +50,6 @@ export async function createVideo() {
         },
       },
     },
-    pdfs: {
-      connect: [{ id: "963085af-7bde-4623-9496-cb2c52d436da" }],
-    },
   },
 });
 
@@ -89,6 +81,18 @@ export async function createVideo() {
   },
 });
 
+prisma.module.update({
+    where: { id: "6d52db7b-a23c-4fd6-b893-07723478d587" },
+    data: {
+        videos: {
+        connect: [
+            { id: "28a53cb1-b021-4521-b9ed-fde9a60f2c0f" },
+            { id: "38e5e6f0-4306-4870-97d2-f595927966e6" },
+        ],
+        },
+    },
+    });
+
 await prisma.pDF.create({
   data: {
     id: "963085af-7bde-4623-9496-cb2c52d436da",
@@ -104,6 +108,17 @@ await prisma.pDF.create({
     },
   },
 });
+
+prisma.video.update({
+  where: { id: "28a53cb1-b021-4521-b9ed-fde9a60f2c0f" },
+  data: {
+    pdfs: {
+      connect: [
+        { id: "963085af-7bde-4623-9496-cb2c52d436da" }, 
+        ],
+    },
+    },
+    });
 
 
     console.log('Admin user created successfully:', video);
