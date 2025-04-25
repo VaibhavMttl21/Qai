@@ -96,7 +96,7 @@ const Cursor: FC<CursorProps> = ({ hovered, scope }) => {
 };
 
 const Logo: FC = () => (
-  <span className="pointer-events-none relative left-0 top-[50%] z-10 text-4xl font-black text-white mix-blend-overlay md:absolute md:left-[50%] md:-translate-x-[50%] md:-translate-y-[50%]">
+  <span className="pointer-events-none relative left-0 top-[50%] z-10 text-4xl font-black text-white/20  md:absolute md:left-[50%] md:-translate-x-[50%] md:-translate-y-[50%]">
     QAI.
   </span>
 );
