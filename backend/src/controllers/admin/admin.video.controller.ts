@@ -141,3 +141,37 @@ export const deleteVideo = async (req: AuthRequest, res: Response) => {
   }
 }
 
+// update video
+export const updateVideo = async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  const { title, description, order } = req.body;
+
+  if (!id) return res.status(400).json({ message: 'Video ID is required' });
+  if (!title) return res.status(400).json({ message: 'Title is required' });
+  
+  try {
+    // Check if the video exists
+    const video = await prisma.video.findUnique({
+      where: { id }
+    });
+
+    if (!video) {
+      return res.status(404).json({ message: 'Video not found' });
+    }
+
+    // Update video record in database
+    const updatedVideo = await prisma.video.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        order
+      }
+    });
+
+    res.status(200).json(updatedVideo);
+  } catch (error) {
+    console.error('Error updating video:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

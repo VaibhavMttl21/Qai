@@ -134,3 +134,38 @@ export const deletePdf = async (req: AuthRequest, res: Response) => {
   }
 }
 
+export const updatePdf = async (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  const { title, description } = req.body;
+
+  if (!id) return res.status(400).json({ message: 'PDF ID is required' });
+  if (!title) return res.status(400).json({ message: 'Title is required' });
+  
+  try {
+    // Check if the PDF exists
+    const pdf = await prisma.pDF.findUnique({
+      where: { id }
+    });
+
+    if (!pdf) {
+      return res.status(404).json({ message: 'PDF not found' });
+    }
+
+    // Update PDF record in database
+    const updatedPdf = await prisma.pDF.update({
+      where: { id },
+      data: {
+        title,
+        description,
+      },
+    });
+
+    res.status(200).json({ 
+      message: 'PDF updated successfully',
+      pdf: updatedPdf
+    });
+  } catch (error) {
+    console.error('PDF update error:', error);
+    res.status(500).json({ message: 'Error updating PDF' });
+  }
+}
