@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getVideos, updateProgress, getVideoPdfs, getAllVideos, getAllModules, getProgress } from '../controllers/video.controller';
+import { getVideos, updateProgress, getVideoPdfs, getAllModules, getProgress } from '../controllers/video.controller';
 import { auth } from '../middleware/auth';
 
 const router = Router();

@@ -23,7 +23,7 @@ export function PdfUpload() {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await api.get('/api/videos/all');
+        const response = await api.get<Video[]>('/api/videos/');
         setVideos(response.data);
       } catch (err) {
         console.error('Failed to fetch videos:', err);

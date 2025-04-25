@@ -94,6 +94,9 @@ export const deleteVideo = async (req: AuthRequest, res: Response) => {
   try {
     const video = await prisma.video.findUnique({
       where: { id },
+      include:{
+        pdfs:true,
+      }
     });
     
     if (!video) return res.status(404).json({ message: 'Video not found' });
@@ -115,10 +118,20 @@ export const deleteVideo = async (req: AuthRequest, res: Response) => {
         await r2.send(command);
     }
     
-    // Delete the video from the database
+    for (const pdf of video.pdfs) {
+      const pdfKey = pdf.url.split('/').pop();
+      await r2.send(new DeleteObjectCommand({
+        Bucket: process.env.R2_PDF_BUCKET!,
+        Key: pdfKey,
+      }));
+      console.log('PDF deleted from R2:', pdfKey);
+    }
+
+    // Delete the video from the database pdf are also deleted due to cascade delete
     await prisma.video.delete({
       where: { id },
     });
+
     console.log('Video deleted from database:', id);
 
     res.status(200).json({ message: 'Video deleted successfully' });
@@ -127,3 +140,4 @@ export const deleteVideo = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: 'Error deleting video' });
   }
 }
+

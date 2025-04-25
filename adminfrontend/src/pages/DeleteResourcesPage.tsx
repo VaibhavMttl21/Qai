@@ -46,8 +46,8 @@ export function DeleteResourcesPage() {
   // Fetch data based on active tab
   useEffect(() => {
     if (activeTab === 'pdfs') fetchPdfs();
-    else if (activeTab === 'videos') fetchVideos();
-    else if (activeTab === 'modules') fetchModules();
+    else fetchModules();
+    if (activeTab === 'videos') {fetchVideos();}
   }, [activeTab]);
   
   // Fetch functions
@@ -55,9 +55,10 @@ export function DeleteResourcesPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get('/api/admin/pdfs');
+      const response = await api.get<PDF[]>('/api/admin/pdfs');
       setPdfs(response.data);
     } catch (err) {
+      console.error(err);
       setError('Failed to fetch PDFs');
     } finally {
       setLoading(false);
@@ -68,9 +69,10 @@ export function DeleteResourcesPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get('/api/video/all');
+      const response = await api.get<Video[]>('/api/videos/');
       setVideos(response.data);
     } catch (err) {
+      console.error(err);
       setError('Failed to fetch videos');
     } finally {
       setLoading(false);
@@ -81,9 +83,10 @@ export function DeleteResourcesPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get('/api/admin/modules');
+      const response = await api.get<Module[]>('/api/admin/modules');
       setModules(response.data);
     } catch (err) {
+      console.error(err);
       setError('Failed to fetch modules');
     } finally {
       setLoading(false);
@@ -99,6 +102,7 @@ export function DeleteResourcesPage() {
       setPdfs(pdfs.filter(pdf => pdf.id !== id));
       setSuccess('PDF deleted successfully');
     } catch (err) {
+      console.error(err);
       setError('Failed to delete PDF');
     } finally {
       setLoading(false);
@@ -115,6 +119,7 @@ export function DeleteResourcesPage() {
       setVideos(videos.filter(video => video.id !== id));
       setSuccess('Video deleted successfully');
     } catch (err) {
+      console.error(err);
       setError('Failed to delete video');
     } finally {
       setLoading(false);
@@ -131,6 +136,7 @@ export function DeleteResourcesPage() {
       setModules(modules.filter(module => module.id !== id));
       setSuccess('Module deleted successfully');
     } catch (err) {
+      console.error(err);
       setError('Failed to delete module');
     } finally {
       setLoading(false);
@@ -229,9 +235,26 @@ export function DeleteResourcesPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
             <h3 className="text-lg font-bold mb-4">Confirm Delete</h3>
-            <p className="mb-6">
-              Are you sure you want to delete this {resourceType}? This action cannot be undone.
-            </p>
+            {resourceType === 'pdf' && (
+              <p className="mb-6">
+              Are you sure you want to delete this PDF? <br />
+              This action cannot be undone.
+              </p>
+            )}
+            {resourceType === 'video' && (
+              <p className="mb-6">
+              Are you sure you want to delete this video?<br /> 
+              <strong>Deleting a video might also delete its associated PDFs.</strong><br />
+              This action cannot be undone.
+              </p>
+            )}
+            {resourceType === 'module' && (
+              <p className="mb-6 text-red-700">
+              Are you sure you want to delete this module?<br />
+              This action cannot be undone. <br /> <br />
+              <strong>Note: Module with associated videos or resources cannot be deleted.</strong>
+              </p>
+            )}
             <div className="flex justify-end space-x-3">
               <Button
                 onClick={cancelDelete}
@@ -258,7 +281,7 @@ export function DeleteResourcesPage() {
         ) : activeTab === 'pdfs' ? (
           <PDFsList pdfs={pdfs} onDelete={handleDeleteConfirm} />
         ) : activeTab === 'videos' ? (
-          <VideosList videos={videos} onDelete={handleDeleteConfirm} />
+          <VideosList videos={videos} modules = {modules} onDelete={handleDeleteConfirm} />
         ) : (
           <ModulesList modules={modules} onDelete={handleDeleteConfirm} />
         )}
@@ -308,7 +331,7 @@ function PDFsList({ pdfs, onDelete }: { pdfs: PDF[], onDelete: (id: string, type
 }
 
 // Video List component
-function VideosList({ videos, onDelete }: { videos: Video[], onDelete: (id: string, type: 'video') => void }) {
+function VideosList({ videos,modules,onDelete }: { videos: Video[],modules: Module[] ,onDelete: (id: string, type: 'video') => void }) {
   if (videos.length === 0) {
     return <p className="text-center py-4 text-gray-500">No videos found.</p>;
   }
@@ -322,6 +345,7 @@ function VideosList({ videos, onDelete }: { videos: Video[], onDelete: (id: stri
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Module</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -330,6 +354,8 @@ function VideosList({ videos, onDelete }: { videos: Video[], onDelete: (id: stri
               <tr key={video.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{video.title}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{video.order}</td>
+                {/* display module name */}
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{modules.find(m => m.id === video.moduleId)?.name ?? 'N/A'}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <button
                     onClick={() => onDelete(video.id, 'video')}

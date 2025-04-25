@@ -54,15 +54,14 @@ export const deleteModule = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: 'Module ID is required' });
     }
 
-
     const module = await prisma.module.delete({
       where: { id }
     });
-    
+
     res.status(200).json({ message: 'Module deleted successfully' });
   } catch (error) {
     console.error('Error deleting module:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Module may have videos' });
   }
 };
 

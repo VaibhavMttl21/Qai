@@ -30,10 +30,11 @@ export function VideoUpload() {
   const fetchModules = async () => {
     try {
       setLoadingModules(true);
-      const response = await api.get('/api/admin/modules');
+      const response = await api.get<Module[]>('/api/admin/modules');
       setModules(response.data);
       setLoadingModules(false);
     } catch (error) {
+      console.error('Failed to fetch modules:\n', error);
       setError('Failed to fetch modules');
       setLoadingModules(false);
     }
