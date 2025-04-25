@@ -28,15 +28,15 @@ const navItems = [
   { name: 'Profile', href: '/profile', icon: User },
   { name: 'Pricing', href: '/pricing', icon: CreditCard },
 ];
-const adminItems = [{ name: 'Upload Data', href: '/admin/upload', icon: Upload }];
+// const adminItems = [{ name: 'Upload Data', href: '/admin/upload', icon: Upload }];
 
 export function Sidebar() {
   const { user, logout } = useAuthStore();
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
   const [isAnimating, setIsAnimating] = useState(false);
-  const isAdmin = user?.userType === 'ADMIN';
-  const links = isAdmin ? [...navItems, ...adminItems] : navItems;
+  // const isAdmin = user?.userType === 'ADMIN';
+  const links = navItems;
 
   // Reference for transition control
   const animationRef = useRef(null);

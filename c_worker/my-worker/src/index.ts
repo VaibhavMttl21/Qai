@@ -4,9 +4,24 @@ export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url)
 
+    // ✅ Handle CORS preflight
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        headers: {
+          "Access-Control-Allow-Origin": "*", // Change this to your frontend domain if needed
+          "Access-Control-Allow-Methods": "GET, OPTIONS",
+          "Access-Control-Allow-Headers": "Authorization, Content-Type",
+          "Access-Control-Max-Age": "86400"
+        }
+      })
+    }
+
     const token = extractToken(request, url)
     if (!token) {
-      return new Response("Unauthorized: No token", { status: 401 })
+      return new Response("Unauthorized: No token", {
+        status: 401,
+        headers: corsHeaders()
+      })
     }
 
     try {
@@ -16,15 +31,20 @@ export default {
       )
 
       if (!payload.isPaid) {
-        return new Response("Forbidden: Not a paid user", { status: 403 })
+        return new Response("Forbidden: Not a paid user", {
+          status: 403,
+          headers: corsHeaders()
+        })
       }
 
-      // Handle the HLS video requests
-      const key = url.pathname.slice(1) // Strip out '/videos/' to get the key
+      const key = url.pathname.slice(1)
       const object = await env.VIDEOS_BUCKET.get(key)
 
       if (!object) {
-        return new Response("File not found", { status: 404 })
+        return new Response("File not found", {
+          status: 404,
+          headers: corsHeaders()
+        })
       }
 
       const contentType = key.endsWith(".m3u8")
@@ -33,19 +53,18 @@ export default {
         ? "video/mp2t"
         : "application/octet-stream"
 
-      // Return the video segment or playlist file with appropriate headers
       return new Response(object.body, {
         headers: {
+          ...corsHeaders(),
           "Content-Type": contentType,
-          "Cache-Control": "public, max-age=3600",
-          "Access-Control-Allow-Origin": "", // You can specify your frontend domain here
-          "Access-Control-Allow-Methods": "GET, OPTIONS",
-          "Access-Control-Allow-Headers": "Authorization, Content-Type",
-          "Access-Control-Max-Age": "86400",
+          "Cache-Control": "public, max-age=3600"
         }
       })
     } catch (err) {
-      return new Response("Unauthorized: Invalid token", { status: 403 })
+      return new Response("Unauthorized: Invalid token", {
+        status: 403,
+        headers: corsHeaders()
+      })
     }
   }
 }
@@ -58,6 +77,16 @@ function extractToken(req: Request, url: URL): string | null {
   }
 
   return url.searchParams.get("token")
+}
+
+// ✅ Centralized CORS headers
+function corsHeaders() {
+  return {
+    "Access-Control-Allow-Origin": "*", // change to your frontend domain if needed
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Authorization, Content-Type",
+    "Access-Control-Max-Age": "86400"
+  }
 }
 
 interface Env {

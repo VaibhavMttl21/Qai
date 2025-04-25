@@ -6,6 +6,7 @@ import { useVideoStore } from '@/store/video';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, FileText } from 'lucide-react';
+import Hls from 'hls.js'
 
 export function VideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -35,13 +36,8 @@ export function VideoPlayer() {
       }
     }
   }, [videos, videoId, setCurrentVideo]);
-
-  useEffect(() => {
+useEffect(() => {
     if (!currentVideo || !videoRef.current || !currentVideo.hlsUrls) return;
-
-    const token = localStorage.getItem('token');
-    const rawUrl = currentVideo.hlsUrls[quality];
-    const secureUrl = token ? `${rawUrl}?token=${token}` : rawUrl;
 
     // Dispose previous player if it exists
     if (playerRef.current) {
@@ -49,29 +45,50 @@ export function VideoPlayer() {
       playerRef.current = null;
     }
 
-    const player = videojs(videoRef.current, {
-      controls: true,
-      autoplay: false,
-      preload: 'auto',
-      responsive: true,
-      fluid: true,
-      sources: [{ src: secureUrl, type: 'application/x-mpegURL' }],
-    });
+    const token = localStorage.getItem('token');
+    console.log('Token:', token);
 
-    player.on('ended', () => {
-      updateProgress(currentVideo.id, true);
-    });
+    const rawUrl = currentVideo.hlsUrls[quality];
+    const secureUrl = token ? `${rawUrl}?token=${token}` : rawUrl;
+    console.log('Secure URL:', secureUrl);
 
-    playerRef.current = player;
+    let hls = null;
 
+    if (Hls.isSupported()) {
+      // Initialize Hls.js and set up the Authorization header for requests
+      hls = new Hls({
+        xhrSetup: (xhr, url) => {
+          // Set Authorization header with the token for each request
+          if (token) {
+            xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+          }
+        },
+      });
+
+      hls.loadSource(secureUrl); // Load the HLS URL
+      hls.attachMedia(videoRef.current); // Attach to the video element
+
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        videoRef.current?.play(); // Play video once manifest is parsed
+      });
+
+      // Handle HLS error (e.g., if no compatible format found)
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        console.error('HLS.js error:', data);
+      });
+    } else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
+      // For browsers that support native HLS
+      videoRef.current.src = secureUrl;
+      videoRef.current.play();
+    }
+
+    // Dispose of the HLS instance when the component unmounts
     return () => {
-      if (playerRef.current) {
-        playerRef.current.dispose();
-        playerRef.current = null;
+      if (hls) {
+        hls.destroy();
       }
     };
   }, [currentVideo, quality, updateProgress]);
-
   const handleVideoSelect = (video: typeof currentVideo) => {
     if (video) {
       navigate(`/video/${video.id}`);

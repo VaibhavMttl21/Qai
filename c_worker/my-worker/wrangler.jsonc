@@ -16,7 +16,7 @@
 	"r2_buckets": [
 	{
 		"binding": "VIDEOS_BUCKET",
-		"bucket_name": "my-r2-bucket"
+		"bucket_name": "encoded"
 	}
 	],
 	// "vars": { "VIDEOS_BUCKET": "production_value" },
