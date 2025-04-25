@@ -29,11 +29,9 @@ export async function createVideo() {
     order: 1,
     encoded: true,
     hlsUrls: {
-      create: {
         "480p": "https://videos.raghu.fun/28a53cb1-b021-4521-b9ed-fde9a60f2c0f/480p/index.m3u8",
         "720p": "https://videos.raghu.fun/28a53cb1-b021-4521-b9ed-fde9a60f2c0f/720p/index.m3u8",
         "1080p": "https://videos.raghu.fun/28a53cb1-b021-4521-b9ed-fde9a60f2c0f/1080p/index.m3u8",
-      },
     },
     createdAt: new Date("2025-04-25T09:34:37.256Z"),
     updatedAt: new Date("2025-04-25T10:09:06.579Z"),
@@ -62,11 +60,9 @@ export async function createVideo() {
     order: 2,
     encoded: true,
     hlsUrls: {
-      create: {
         "480p": "https://videos.raghu.fun/38e5e6f0-4306-4870-97d2-f595927966e6/480p/index.m3u8",
         "720p": "https://videos.raghu.fun/38e5e6f0-4306-4870-97d2-f595927966e6/720p/index.m3u8",
         "1080p": "https://videos.raghu.fun/38e5e6f0-4306-4870-97d2-f595927966e6/1080p/index.m3u8",
-      },
     },
     createdAt: new Date("2025-04-25T11:16:41.642Z"),
     updatedAt: new Date("2025-04-25T11:29:26.837Z"),
