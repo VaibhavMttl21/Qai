@@ -177,7 +177,7 @@ export default function Footer() {
 
         {/* Logo and Address on the right */}
         <div className="flex flex-col items-end text-right gap-2">
-          <img src="/logo.png" alt="Logo" className="w-28 md:w-36" />
+          <img src="/logo69.jpeg" alt="Logo" className="w-28 md:w-36 rounded-full" />
           <address className="text-sm text-black not-italic">
             Skill static Inc.<br />
             Vill. chhiachhi ,<br />

@@ -3,6 +3,7 @@ import { useAnimate, motion } from "framer-motion";
 import { FiMenu, FiArrowUpRight } from "react-icons/fi";
 import useMeasure from "react-use-measure";
 import { Link } from "react-router-dom";
+
 import { useAuthStore } from "@/store/auth";
 
 const Example: FC = () => {
@@ -102,10 +103,14 @@ const Logo: FC = () => (
 );
 
 const Links: FC = () => (
-  <div className="hidden items-center gap-2 md:flex">
-    <GlassLink text="Introduction" />
-    <GlassLink text="Testimonials" />
-    <GlassLink text="Why us" />
+  <div className="hidden items-center gap-2 md:flex scroll-smooth">
+    
+    <GlassLink text="Intro" href="#intro"/>
+    <GlassLink text="Testimonials" href="#testimonials"/>
+
+    <GlassLink text="Why us" href="#why"/>
+   
+   
   </div>
 );
 
@@ -113,10 +118,10 @@ interface GlassLinkProps {
   text: string;
 }
 
-const GlassLink: FC<GlassLinkProps> = ({ text }) => {
+const GlassLink: FC<GlassLinkProps> = ({ text,href }) => {
   return (
     <a
-      href="#"
+      href={href}
       className="group relative scale-100 overflow-hidden rounded-lg px-4 py-2 transition-transform hover:scale-105 active:scale-95"
     >
       <span className="relative z-10 text-white/90 transition-colors group-hover:text-white">

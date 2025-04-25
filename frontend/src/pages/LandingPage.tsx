@@ -18,14 +18,23 @@ export function LandingPage() {
         <>
 
     <Example />
-   
+   <section id="intro" className="scroll-smooth">
    <PreHeading />
+   </section>
+   
    <DrawCircleText/> 
    {/* <Explain/> */}
+   <section id="why" className="scroll-smooth">
    <StickyCards/>
+   </section>
+   
    <BenefitsSection/>
     <Video />
+
+    <section id="testimonials" className="scroll-smooth">
     <StackedCardTestimonials/>
+    </section>
+   
    <BasicFAQ/>
    <Footer/>
   
