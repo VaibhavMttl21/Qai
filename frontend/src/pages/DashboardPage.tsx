@@ -50,7 +50,7 @@ export function DashboardPage() {
       {/* Welcome & Progress Section */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <motion.h1
-          className="text-2xl font-bold mb-4 pt-6 pl-6 min-h-[48px] w-fit md:min-w-[300px] whitespace-nowrap "
+          className="text-lg md:text-xl lg:text-2xl pl-6 pt-6 pb-4 font-bold text-gray-800 whitespace-pre-wrap break-words w-full max-w-full overflow-hidden "
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
