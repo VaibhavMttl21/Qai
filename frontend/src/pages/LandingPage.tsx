@@ -2,7 +2,7 @@
 import BasicFAQ from "@/components/Landing/faq";
 import Explain from "@/components/Landing/majorcomponent";
 
-import Example from "@/components/Landing/navbar";
+import Example from "@/components/layout/navbar";
 import { PreHeading } from "@/components/Landing/preHeading";
 import StackedCardTestimonials from "@/components/Landing/testimonials";
 import { DrawCircleText } from "@/components/Landing/vision";

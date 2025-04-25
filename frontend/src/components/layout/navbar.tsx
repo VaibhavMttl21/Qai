@@ -148,17 +148,31 @@ interface ButtonsProps {
   setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Buttons: FC<ButtonsProps> = ({ setMenuOpen }) => (
-  <div className="flex items-center gap-4">
-    <div className="hidden md:block">
-      <SignInButton />
-    </div>
-    <Link to='/register'>
-
-    <button className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95">
-      Sign up
-    </button>
-    </Link>
+const Buttons: FC<ButtonsProps> = ({ setMenuOpen }) => {
+  const { token, user } = useAuthStore();
+  const isLoggedIn = !!token && !!user;
+  
+  return (
+    <div className="flex items-center gap-4">
+      <div className="hidden md:block">
+        {isLoggedIn ? (
+          <Link to="/dashboard">
+            <button className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95">
+              Dashboard
+            </button>
+          </Link>
+        ) : (
+          <SignInButton />
+        )}
+      </div>
+      
+      {!isLoggedIn && (
+        <Link to='/register'>
+          <button className="relative scale-100 overflow-hidden rounded-lg bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-4 py-2 font-medium text-white transition-transform hover:scale-105 active:scale-95">
+            Sign up
+          </button>
+        </Link>
+      )}
 
       <button
         onClick={() => setMenuOpen((pv) => !pv)}
@@ -168,7 +182,7 @@ const Buttons: FC<ButtonsProps> = ({ setMenuOpen }) => (
       </button>
     </div>
   );
-
+};
 
 const SignInButton: FC = () => {
   return (
@@ -193,7 +207,6 @@ const MobileMenu: FC<MobileMenuProps> = ({ menuOpen }) => {
   const [ref, { height }] = useMeasure();
   const { token, user } = useAuthStore();
   const isLoggedIn = !!token && !!user;
-
   return (
     <motion.div
       initial={false}

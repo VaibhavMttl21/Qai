@@ -23,60 +23,72 @@ import { connectSocket } from '@/lib/socket';
 function App() {
   const initAuth = useAuthStore(state => state.initAuth);
   const token = useAuthStore(state => state.token);
-  
+
   useEffect(() => {
     initAuth();
-    
+
     // If the user has a token, connect to the socket
     if (token) {
       connectSocket();
     }
   }, [initAuth, token]);
-  
 
   return (
     <Router>
       <Routes>
+        {/* Public Route: Landing Page */}
+        <Route path="/" element={<LandingPage />} />
+
+        {/* Guest-only Routes */}
         <Route
-          path="/home"
+          path="/login"
           element={
-            <LandingPage />
+            <GuestRoute>
+              <LoginPage />
+            </GuestRoute>
           }
         />
-        <Route path="/login" element={
-          <GuestRoute>
-            <LoginPage />
-          </GuestRoute>
-        } />
-        <Route path="/register" element={
-          <GuestRoute>
-            <RegisterPage />
-          </GuestRoute>
-        } />
-        <Route path="/forgot-password" element={
-          <GuestRoute>
-            <ForgotPasswordPage />
-          </GuestRoute>
-        } />
-        <Route path="/verify-otp" element={
-          <GuestRoute>
-            <VerifyOTPPage />
-          </GuestRoute>
-        } />
-        <Route path="/reset-password" element={
-          <GuestRoute>
-            <ResetPasswordPage />
-          </GuestRoute>
-        } />
+        <Route
+          path="/register"
+          element={
+            <GuestRoute>
+              <RegisterPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <GuestRoute>
+              <ForgotPasswordPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/verify-otp"
+          element={
+            <GuestRoute>
+              <VerifyOTPPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <GuestRoute>
+              <ResetPasswordPage />
+            </GuestRoute>
+          }
+        />
+
+        {/* Protected Routes with Layout */}
         <Route element={<Layout />}>
-          <Route index element={<Navigate to="/dashboard" replace />} />
-          
           <Route
             path="/dashboard"
             element={
               <ProtectedRoute>
                 <DashboardPage />
-               </ProtectedRoute>
+              </ProtectedRoute>
             }
           />
           <Route
@@ -111,10 +123,20 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/modules" element={<ModulePage />} />
-          <Route path="/video/:videoId" element={<VideoDetailsPage />} />
+          <Route path="/modules" element={
+            <ProtectedRoute>
+              <ModulePage />
+            </ProtectedRoute>
+            } />
+          <Route path="/video/:videoId" element={
+            <ProtectedRoute>
+              <VideoDetailsPage />
+            </ProtectedRoute>
+            } />
         </Route>
-        
+
+        {/* Catch-all Route: Redirect to Landing Page */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Toaster />
     </Router>
