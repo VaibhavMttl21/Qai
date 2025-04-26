@@ -1,58 +1,37 @@
-import AccordionSolutions from "@/components/Landing/benefits";
 import BasicFAQ from "@/components/Landing/faq";
-import Explain from "@/components/Landing/majorcomponent";
-
-import Example from "@/components/Landing/navbar";
+import Example from "@/components/layout/navbar";
 import { PreHeading } from "@/components/Landing/preHeading";
 import StackedCardTestimonials from "@/components/Landing/testimonials";
 import { DrawCircleText } from "@/components/Landing/vision";
-import FallingText from "@/components/Landing/FallingText";
 import { Video } from "@/components/Landing/video";
-import CollapseCardFeatures from "@/components/Landing/collapseCard";
-import { WaterFooter } from "@/components/Landing/footer";
-import { BusRevealText } from "@/components/Landing/reveal";
-
-
+import Footer from "@/components/Landing/footer";
+import BenefitsSection from "@/components/Landing/benefits";
+import { StickyCards } from "@/components/Landing/newAbout";
 
 export function LandingPage() {
-    return (
-        <>
+  return (
+    <div className="overflow-x-hidden w-full max-w-[100vw]">
+      <Example />
 
-    <Example />
-   
-   <PreHeading />
-   <DrawCircleText/>
-   
-   <Explain/>
-  
-   
-  
-        
+      <section id="intro" className="scroll-smooth">
+        <PreHeading />
+      </section>
 
- 
-   <AccordionSolutions/>
-    {/* <FallingText
-        text={`React Bits is a library of animated and interactive React components designed to streamline UI development and simplify your workflow.`}
-        highlightWords={["React", "Bits", "animated", "components", "simplify"]}
-        highlightClass="highlighted"
-        trigger="hover"
-        backgroundColor="transparent"
-        wireframes={false}
-        gravity={0.56}
-        fontSize="2rem"
-        mouseConstraintStiffness={0.9}
-        />  */}
-        <Video />
-        {/* <CollapseCardFeatures/> */}
+      <DrawCircleText />
 
+      <section id="why" className="scroll-smooth">
+        <StickyCards />
+      </section>
 
-   <StackedCardTestimonials/>
-   <BasicFAQ/>
-   {/* <BusRevealText/> */}
-   <WaterFooter/>
-  
-    </>
+      <BenefitsSection />
+      <Video />
 
+      <section id="testimonials" className="scroll-smooth">
+        <StackedCardTestimonials />
+      </section>
 
-    );
-  }
+      <BasicFAQ />
+      <Footer />
+    </div>
+  );
+}

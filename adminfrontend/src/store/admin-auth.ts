@@ -7,6 +7,7 @@ interface AdminUser {
   email: string;
   name: string;
   userType: 'ADMIN'; // Only ADMIN type can be admin
+  exp?: number; // Optional expiration time from JWT
 }
 
 interface AdminAuthState {

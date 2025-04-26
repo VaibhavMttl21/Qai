@@ -8,7 +8,7 @@ import path from 'path';
 import tmp from 'tmp-promise';
 import { Readable } from 'stream';
 
-const pubsub = new PubSub();
+const pubsub = new PubSub({projectId: 'test-qai'});
 const prisma = new PrismaClient();
 
 const s3 = new S3Client({
@@ -22,7 +22,7 @@ const s3 = new S3Client({
 
 const SOURCE_BUCKET = process.env.R2_SOURCE_BUCKET!;
 const TARGET_BUCKET = process.env.R2_TARGET_BUCKET!;
-const CDN_DOMAIN = process.env.R2_CDN_DOMAIN!;
+const DEMO_TAEGET_BUCKET = process.env.R2_DEMO_TARGET_BUCKET!;
 
 async function downloadFromR2(key: string, outPath: string) {
   const command = new GetObjectCommand({ Bucket: SOURCE_BUCKET, Key: key });
@@ -30,24 +30,26 @@ async function downloadFromR2(key: string, outPath: string) {
   const stream = response.Body as Readable;
   const writeStream = fs.createWriteStream(outPath);
   
-  await new Promise((resolve, reject) => {
-    stream.pipe(writeStream).on('finish', () => resolve).on('error', (error) => reject);
+  await new Promise<void>((resolve, reject) => {
+    stream.pipe(writeStream)
+      .on('finish', () => resolve())
+      .on('error', (error) => reject(error));
   });
 }
 
-async function uploadFolderToR2(folderPath: string, prefix: string) {
+async function uploadFolderToR2(folderPath: string, prefix: string, demo: boolean) {
   const files = await fs.readdir(folderPath);
   for (const file of files) {
     const fullPath = path.join(folderPath, file);
     const stat = await fs.stat(fullPath);
-
+    const BUCKET = demo ? DEMO_TAEGET_BUCKET: TARGET_BUCKET;
     if (stat.isDirectory()) {
-      await uploadFolderToR2(fullPath, `${prefix}/${file}`);
+      await uploadFolderToR2(fullPath, `${prefix}/${file}`,demo);
     } else {
       const fileBuffer = await fs.readFile(fullPath);
       const key = `${prefix}/${file}`;
       const command = new PutObjectCommand({
-        Bucket: TARGET_BUCKET,
+        Bucket: BUCKET,
         Key: key,
         Body: fileBuffer,
       });
@@ -76,6 +78,8 @@ async function encodeToHLS(inputPath: string, outputDir: string, resolution: str
         '-hls_time', '4',
         '-hls_playlist_type', 'vod',
         '-f', 'hls',
+        '-start_number 0',   // added this for hls
+        '-hls_flags independent_segments'  // added this for hls
       ])
       .output(path.join(outPath, 'index.m3u8'))
       .on('end', () => resolve())
@@ -84,14 +88,15 @@ async function encodeToHLS(inputPath: string, outputDir: string, resolution: str
   });
 }
 
-async function handleMessage(videoId: string, rawKey: string) {
+async function handleMessage(videoId: string, rawKey: string, demo: boolean) {
   const temp = await tmp.dir({ unsafeCleanup: true });
   const inputPath = path.join(temp.path, 'input.mp4');
-
+  console.log(`downloading video to ${inputPath}`);
   // 1. Download raw video
   await downloadFromR2(rawKey, inputPath);
 
   // 2. Encode to 1080p, 720p, 480p
+  console.log('Encoding video...');
   const resolutions = ['1920x1080', '1280x720', '854x480'];
   const qualities = ['1080p', '720p', '480p'];
   for (let i = 0; i < resolutions.length; i++) {
@@ -99,10 +104,12 @@ async function handleMessage(videoId: string, rawKey: string) {
   }
 
   // 3. Upload each encoded folder to R2
-  const uploadPrefix = `encoded/${videoId}`;
-  await uploadFolderToR2(temp.path, uploadPrefix);
+  console.log('Uploading to R2...');
+  const uploadPrefix = `${videoId}`;
+  await uploadFolderToR2(temp.path, uploadPrefix, demo);
 
   // 4. Update DB with HLS URLs
+  const CDN_DOMAIN = demo ? process.env.R2_DEMO_CDN_DOMAIN! : process.env.R2_CDN_DOMAIN!;
   const hlsUrls: Record<string, string> = {};
   for (const quality of qualities) {
     hlsUrls[quality] = `${CDN_DOMAIN}/${uploadPrefix}/${quality}/index.m3u8`;
@@ -120,51 +127,51 @@ async function handleMessage(videoId: string, rawKey: string) {
 }
 
 // Subscribe to Pub/Sub
-const subscription = pubsub.subscription('video-encoding-subscription');
+const subscription = pubsub.subscription('video-encoding-sub');
 
 subscription.on('message', async (message) => {
   try {
     const data = JSON.parse(message.data.toString());
-    const { videoId, rawKey } = data;
+    const { videoId, rawKey, demo } = data;
     
     // Get retry count from attributes or set to 0
     const retryCount = parseInt(message.attributes.retryCount || '0', 10);
     
     if (retryCount > 3) {
       // Send to dead letter topic after 3 retries
-      await pubsub.topic('failed-video-encodings').publish(
-        Buffer.from(JSON.stringify({
-          videoId,
-          rawKey,
-          error: 'Max retries exceeded'
-        }))
-      );
+      // await pubsub.topic('failed-video-encodings').publish(
+      //   Buffer.from(JSON.stringify({
+      //     videoId,
+      //     rawKey,
+      //     error: 'Max retries exceeded'
+      //   }))
+      // );
       
       // Update DB to mark video as failed
-      await prisma.video.update({
-        where: { id: videoId },
-        data: { encodingFailed: true }
-      });
+      // await prisma.video.update({
+      //   where: { id: videoId },
+      //   data: { encodingFailed: true }
+      // });
       
-      message.ack(); // Don't retry again
+      message.ack(); 
       return;
     }
     
     console.log(`🎥 Processing video ${videoId} (Attempt: ${retryCount + 1})`);
-    await handleMessage(videoId, rawKey);
+    await handleMessage(videoId, rawKey, demo);
 
     message.ack();
   } catch (err) {
     console.error('❌ Error processing message:', err);
     
 
-    const data = JSON.parse(message.data.toString());
+    // const data = JSON.parse(message.data.toString());
     const retryCount = parseInt(message.attributes.retryCount || '0', 10);
     
-    await pubsub.topic('video-encoding-topic').publish(
-      Buffer.from(message.data.toString()),
-      { retryCount: (retryCount + 1).toString() }
-    );
+    await pubsub.topic('video-encoding').publishMessage({
+      data: Buffer.from(message.data.toString()),
+      attributes: { retryCount: (retryCount + 1).toString() }
+    });
     
     message.ack(); 
   }

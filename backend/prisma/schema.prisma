@@ -17,34 +17,61 @@ enum UserType {
 }
 
 model User {
-  id             String         @id @default(uuid())
-  email          String         @unique
-  password       String
-  name           String
-  userType       UserType
-  isPaid         Boolean        @default(true)
-  firebaseUid    String?        
-  profilePicture String?        
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  posts          Post[]
-  replies        Reply[]
-  videoProgress  Progress[]
-  adminPosts     AdminPost[]
-  adminReplies   AdminReply[]
+  id               String         @id @default(uuid())
+  email            String         @unique
+  password         String
+  name             String
+  userType         UserType
+  isPaid           Boolean        @default(false)
+  firebaseUid      String?        
+  profilePicture   String?        
+  hasCustomPassword Boolean       @default(false)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  posts            Post[]
+  replies          Reply[]
+  videoProgress    Progress[]
+  adminPosts       AdminPost[]
+  adminReplies     AdminReply[]
+  todo             Todo[]
 }
 
 model Video {
-  id          String     @id @default(uuid())
-  title       String
+  id        String   @id @default(uuid())
+  title     String
   description String
+  demo      Boolean @default(false)
+  url       String
+  order     Int      
+  encoded   Boolean  @default(false)
+  hlsUrls   Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  moduleId  String
+  module    Module   @relation(fields: [moduleId], references: [id])
+  progress  Progress[]
+  pdfs      PDF[]
+}
+
+model PDF {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
   url         String
-  order       Int        @unique
-  encoded     Boolean    @default(false)
-  hlsUrls     Json?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  progress    Progress[]
+  videoId     String
+  video       Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Module {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  order       Int      @unique() 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  videos      Video[]
 }
 
 model Progress {
@@ -91,8 +118,14 @@ model Payment {
   createdAt          DateTime @default(now())
 }
 
-
-
+model Otp {
+  email     String   @id
+  otp       String
+  expiresAt DateTime
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+}
 
 model AdminPost {
   id        String      @id @default(uuid())
@@ -117,6 +150,14 @@ model AdminReply {
   updatedAt   DateTime  @updatedAt
   user        User      @relation(fields: [userId], references: [id])
   adminPost   AdminPost @relation(fields: [adminPostId], references: [id])
+}
+
+model Todo {
+  userId       String
+  id           String    @id @default(uuid())
+  description  String
+  completed    Boolean  @default(false)
+  user         User     @relation(fields: [userId], references: [id])
 }
 
 
