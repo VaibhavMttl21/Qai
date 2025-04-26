@@ -1,4 +1,3 @@
-
 import BasicFAQ from "@/components/Landing/faq";
 import Example from "@/components/layout/navbar";
 import { PreHeading } from "@/components/Landing/preHeading";
@@ -9,34 +8,30 @@ import Footer from "@/components/Landing/footer";
 import BenefitsSection from "@/components/Landing/benefits";
 import { StickyCards } from "@/components/Landing/newAbout";
 
-
-
 export function LandingPage() {
-    return (
-        <>
+  return (
+    <div className="overflow-x-hidden w-full max-w-[100vw]">
+      <Example />
 
-    <Example />
-   <section id="intro" className="scroll-smooth">
-   <PreHeading />
-   </section>
-   
-   <DrawCircleText/> 
-   <section id="why" className="scroll-smooth">
-   <StickyCards/>
-   </section>
-   
-   <BenefitsSection/>
-    <Video />
+      <section id="intro" className="scroll-smooth">
+        <PreHeading />
+      </section>
 
-    <section id="testimonials" className="scroll-smooth">
-    <StackedCardTestimonials/>
-    </section>
-   
-   <BasicFAQ/>
-   <Footer/>
-  
-    </>
+      <DrawCircleText />
 
+      <section id="why" className="scroll-smooth">
+        <StickyCards />
+      </section>
 
-    );
-  }
+      <BenefitsSection />
+      <Video />
+
+      <section id="testimonials" className="scroll-smooth">
+        <StackedCardTestimonials />
+      </section>
+
+      <BasicFAQ />
+      <Footer />
+    </div>
+  );
+}
