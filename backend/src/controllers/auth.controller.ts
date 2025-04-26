@@ -19,11 +19,21 @@ if (!admin.apps.length) {
 }
 
 // Create a nodemailer transporter
+// const transporter = nodemailer.createTransport({
+//   service: process.env.EMAIL_SERVICE || 'gmail',
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+//   },
+// });
+
 const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL_SERVICE || 'gmail',
+  host: 'smtp.hostinger.com', // Hostinger SMTP server
+  port: 465,                  // SSL port
+  secure: true,               // Use SSL
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: process.env.EMAIL_USER,     // Your full Hostinger email
+    pass: process.env.EMAIL_PASS,     // Your Hostinger email password
   },
 });
 
@@ -35,7 +45,8 @@ const generateRandomOTP = (): string => {
 // Send OTP to user's email
 const sendOTPEmail = async (email: string, otp: string) => {
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    // from: process.env.EMAIL_USER,
+    from: `"QAI"<${process.env.EMAIL_USER}>`,
     to: email,
     subject: 'Your OTP for Account Verification',
     html: `
