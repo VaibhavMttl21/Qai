@@ -119,7 +119,7 @@ export function ModulePage() {
                         <motion.div
                           key={video.id}
                           {...{ className: "bg-white p-3 rounded-lg border border-indigo-100 cursor-pointer hover:border-indigo-300 transition-colors" }}
-                          onTap={() => handleVideoClick(video.id)}
+                          onClick={() => handleVideoClick(video.id)}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >
