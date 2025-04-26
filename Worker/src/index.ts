@@ -22,7 +22,7 @@ const s3 = new S3Client({
 
 const SOURCE_BUCKET = process.env.R2_SOURCE_BUCKET!;
 const TARGET_BUCKET = process.env.R2_TARGET_BUCKET!;
-const CDN_DOMAIN = process.env.R2_CDN_DOMAIN!;
+const DEMO_TAEGET_BUCKET = process.env.R2_DEMO_TARGET_BUCKET!;
 
 async function downloadFromR2(key: string, outPath: string) {
   const command = new GetObjectCommand({ Bucket: SOURCE_BUCKET, Key: key });
@@ -37,19 +37,19 @@ async function downloadFromR2(key: string, outPath: string) {
   });
 }
 
-async function uploadFolderToR2(folderPath: string, prefix: string) {
+async function uploadFolderToR2(folderPath: string, prefix: string, demo: boolean) {
   const files = await fs.readdir(folderPath);
   for (const file of files) {
     const fullPath = path.join(folderPath, file);
     const stat = await fs.stat(fullPath);
-
+    const BUCKET = demo ? DEMO_TAEGET_BUCKET: TARGET_BUCKET;
     if (stat.isDirectory()) {
-      await uploadFolderToR2(fullPath, `${prefix}/${file}`);
+      await uploadFolderToR2(fullPath, `${prefix}/${file}`,demo);
     } else {
       const fileBuffer = await fs.readFile(fullPath);
       const key = `${prefix}/${file}`;
       const command = new PutObjectCommand({
-        Bucket: TARGET_BUCKET,
+        Bucket: BUCKET,
         Key: key,
         Body: fileBuffer,
       });
@@ -88,7 +88,7 @@ async function encodeToHLS(inputPath: string, outputDir: string, resolution: str
   });
 }
 
-async function handleMessage(videoId: string, rawKey: string) {
+async function handleMessage(videoId: string, rawKey: string, demo: boolean) {
   const temp = await tmp.dir({ unsafeCleanup: true });
   const inputPath = path.join(temp.path, 'input.mp4');
   console.log(`downloading video to ${inputPath}`);
@@ -106,9 +106,10 @@ async function handleMessage(videoId: string, rawKey: string) {
   // 3. Upload each encoded folder to R2
   console.log('Uploading to R2...');
   const uploadPrefix = `${videoId}`;
-  await uploadFolderToR2(temp.path, uploadPrefix);
+  await uploadFolderToR2(temp.path, uploadPrefix, demo);
 
   // 4. Update DB with HLS URLs
+  const CDN_DOMAIN = demo ? process.env.R2_DEMO_CDN_DOMAIN! : process.env.R2_CDN_DOMAIN!;
   const hlsUrls: Record<string, string> = {};
   for (const quality of qualities) {
     hlsUrls[quality] = `${CDN_DOMAIN}/${uploadPrefix}/${quality}/index.m3u8`;
@@ -131,7 +132,7 @@ const subscription = pubsub.subscription('video-encoding-sub');
 subscription.on('message', async (message) => {
   try {
     const data = JSON.parse(message.data.toString());
-    const { videoId, rawKey } = data;
+    const { videoId, rawKey, demo } = data;
     
     // Get retry count from attributes or set to 0
     const retryCount = parseInt(message.attributes.retryCount || '0', 10);
@@ -157,7 +158,7 @@ subscription.on('message', async (message) => {
     }
     
     console.log(`🎥 Processing video ${videoId} (Attempt: ${retryCount + 1})`);
-    await handleMessage(videoId, rawKey);
+    await handleMessage(videoId, rawKey, demo);
 
     message.ack();
   } catch (err) {

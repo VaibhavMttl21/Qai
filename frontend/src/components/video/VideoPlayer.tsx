@@ -260,7 +260,7 @@ export function VideoPlayer() {
                         )}
                       </div>
                     </motion.a>
-                  ))}
+                  ))} 
                 </div>
               </div>
             )}

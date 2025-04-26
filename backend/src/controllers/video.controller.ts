@@ -6,6 +6,19 @@ const prisma = new PrismaClient();
 
 export const getVideos = async (req: AuthRequest, res: Response) => {
   try {
+    if (!req.user?.isPaid) {
+      const demo = await prisma.video.findMany({
+        where:{
+          encoded: true,
+          demo: true
+        },
+        orderBy: {
+          order: 'asc'
+        }
+      });
+      return res.json(demo);
+    }
+    
     const videos = await prisma.video.findMany({
       where:
       {
@@ -16,12 +29,7 @@ export const getVideos = async (req: AuthRequest, res: Response) => {
         pdfs: true, // Include associated PDFs
       }
     });
-
-    if (!req.user?.isPaid) {
-      // Return only first video for unpaid users
-      return res.json(videos.slice(0, 1));
-    }
-
+    
     res.json(videos);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -133,23 +141,6 @@ export const getAllModules = async (req: AuthRequest, res: Response) => {
 //   }
 // };
 
-// Add endpoint to get all PDFs for the logged-in user
-// export const getUserPdfs = async (req: AuthRequest, res: Response) => {
-//   try {
-//     const pdfs = await prisma.pDF.findMany({
-//       where: {
-//         userId: req.user!.id,
-//       },
-//       orderBy: {
-//         createdAt: 'desc'
-//       }
-//     });
-    
-//     res.json(pdfs);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// };
 
 // // Get PDFs not associated with any video
 // export const getOrphanedPdfs = async (req: AuthRequest, res: Response) => {

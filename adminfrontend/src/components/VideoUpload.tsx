@@ -16,6 +16,7 @@ export function VideoUpload() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [isDemo, setIsDemo] = useState<boolean>(false);
   
   // Module state
   const [modules, setModules] = useState<Module[]>([]);
@@ -64,6 +65,7 @@ export function VideoUpload() {
       formData.append('order', order.toString());
       formData.append('file', file);
       formData.append('moduleId', selectedModuleId);
+      formData.append('demo', isDemo.toString());
 
       await api.post('/api/admin/videos', formData, {
         headers: {
@@ -76,6 +78,7 @@ export function VideoUpload() {
       setDescription('');
       setOrder(0);
       setFile(null);
+      setIsDemo(false);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to add video');
     } finally {
@@ -156,24 +159,37 @@ export function VideoUpload() {
           required
         />
 
-<div>
-  <label className="block text-sm font-medium text-gray-700 mb-1">
-    Upload Video File
-  </label>
-  <input
-    id="video-file"
-    type="file"
-    accept="video/*"
-    onChange={(e) => setFile(e.target.files?.[0] || null)}
-    required
-    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-  />
-  {file && (
-    <p className="mt-1 text-sm text-gray-500">
-      Selected file: {file.name}
-    </p>
-  )}
-</div>
+        <div className="flex items-center">
+          <input
+            id="demo-checkbox"
+            type="checkbox"
+            checked={isDemo}
+            onChange={(e) => setIsDemo(e.target.checked)}
+            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          />
+          <label htmlFor="demo-checkbox" className="ml-2 block text-sm text-gray-900">
+            Demo Video (available without subscription)
+          </label>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Upload Video File
+          </label>
+          <input
+            id="video-file"
+            type="file"
+            accept="video/*"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+            required
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          />
+          {file && (
+            <p className="mt-1 text-sm text-gray-500">
+              Selected file: {file.name}
+            </p>
+          )}
+        </div>
 
         <Button type="submit" isLoading={loading}>
           Add Video

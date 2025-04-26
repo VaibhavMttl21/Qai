@@ -38,13 +38,14 @@ export const videoUpload = multer({
 
 
 export const addVideo = async (req: AuthRequest, res: Response) => {
-  const { title, description, order , moduleId } = req.body;
+  const { title, description, order, demo, moduleId } = req.body;
   console.log('Received request to add video:', req.body);
   const file = req.file;
   
   if (!file) return res.status(400).json({ error: 'No file uploaded' });
   if (!title) return res.status(400).json({ message: 'Title and URL are required' });
   if (!moduleId) return res.status(400).json({ message: 'Module ID is required' });
+  if(!demo) return res.status(400).json({ message: 'Demo catagory is required' });
   
   try {
     const id = uuidv4();
@@ -65,17 +66,19 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
       data: {
         id,
         title,
+        demo,
         description,
         url,
         order: Number(order),
         moduleId: moduleId,
       },
     });
-    console.log('Video created in database:', video);
+
+    // console.log('Video created in database:', video);
 
     const topic = pubsub.topic(process.env.PUBSUB_TOPIC!);
     await topic.publishMessage({
-      json: { videoId: id, rawKey: key },
+      json: { videoId: id, rawKey: key,demo:demo },
     });
 
     res.status(201).json({ 
@@ -107,12 +110,13 @@ export const deleteVideo = async (req: AuthRequest, res: Response) => {
       Bucket: process.env.R2_BUCKET!,
       Key: key,
     }));
-    console.log('Video deleted from R2:', key);
-
+    
+    // console.log('Video deleted from R2:', key);
+    const BUCKET = video.demo ? process.env.R2_ENCODED_BUCKET!: process.env.R2_ENCODED_BUCKET_DEMO!;
     if (video.encoded) {
         const encodedKey = `${video.id}`;
         const command = new DeleteObjectCommand({
-          Bucket: process.env.R2_ENCODED_BUCKET!,
+          Bucket: BUCKET!,
           Key: encodedKey,
         });
         await r2.send(command);
@@ -165,7 +169,7 @@ export const updateVideo = async (req: AuthRequest, res: Response) => {
       data: {
         title,
         description,
-        order
+        order: Number(order),
       }
     });
 
