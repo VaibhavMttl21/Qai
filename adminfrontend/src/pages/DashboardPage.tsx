@@ -5,13 +5,15 @@ import { ExcelUpload } from '../components/ExcelUpload';
 import { VideoUpload } from '../components/VideoUpload';
 import { PdfUpload } from '../components/PdfUpload';
 import { ModuleCreation } from '../components/ModuleCreation';
-import { DeleteResourcesPage } from './DeleteResourcesPage';
+import { DeleteResources} from '../components/DeleteResource';
 import { RenameResource } from '../components/RenameResource';
+import { AdminCreation } from '../components/AdminCreation';
+import { DeleteAdmin } from '../components/DeleteAdmin';
 import { Menu, X } from 'lucide-react';
 
 export function DashboardPage() {
   const { user, logout } = useAdminAuthStore();
-  const [activeTab, setActiveTab] = useState<'excel' | 'video' | 'pdf' | 'module' | 'delete' | 'rename'>('excel');
+  const [activeTab, setActiveTab] = useState<'excel' | 'video' | 'pdf' | 'module' | 'delete' | 'rename' | 'admin' | 'deleteAdmin'>('excel');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   
   const tabs = [
@@ -21,6 +23,8 @@ export function DashboardPage() {
     { id: 'module', label: 'Module Creation' },
     { id: 'rename', label: 'Rename Resources' },
     { id: 'delete', label: 'Delete Resources' },
+    { id: 'admin', label: 'Create Admin' },
+    { id: 'deleteAdmin', label: 'Delete Admin' },
   ] as const;
 
   const handleTabClick = (tab: typeof activeTab) => {
@@ -117,7 +121,11 @@ export function DashboardPage() {
                     ? <ModuleCreation />
                     : activeTab === 'rename'
                       ? <RenameResource />
-                      : <DeleteResourcesPage />
+                      : activeTab === 'admin'
+                        ? <AdminCreation />
+                        : activeTab === 'deleteAdmin'
+                          ? <DeleteAdmin />
+                          : <DeleteResources />
             }
           </div>
         </main>

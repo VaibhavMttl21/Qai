@@ -9,6 +9,7 @@ import { createReadStream } from 'fs';
 import { PutObjectCommand,DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { r2 } from '../../utils/r2';
 import { PubSub } from '@google-cloud/pubsub';
+import { boolean } from 'zod';
 
 const prisma = new PrismaClient();
 const pubsub = new PubSub();
@@ -66,7 +67,7 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
       data: {
         id,
         title,
-        demo,
+        demo: Boolean(demo),
         description,
         url,
         order: Number(order),

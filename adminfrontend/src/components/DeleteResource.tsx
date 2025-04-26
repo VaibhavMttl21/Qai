@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../lib/api';
-import { Button } from '../components/ui/Button';
+import { Button } from './ui/Button';
 
 // Define interfaces for our data types
 interface PDF {
@@ -27,7 +27,7 @@ interface Module {
   order?: number;
 }
 
-export function DeleteResourcesPage() {
+export function DeleteResources() {
   // Active tab state
   const [activeTab, setActiveTab] = useState<'pdfs' | 'videos' | 'modules'>('pdfs');
   

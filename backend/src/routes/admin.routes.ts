@@ -5,6 +5,7 @@ import { addVideo, deleteVideo, updateVideo, videoUpload } from '../controllers/
 import { uploadPdf, pdfUpload, getAllPdfs, deletePdf, updatePdf } from '../controllers/admin/admin.pdfs.controller';
 import { createModule, deleteModule, getAllModules, updateModule } from '../controllers/admin/admin.modules.controller';
 import { auth, isAdminUser } from '../middleware/auth';
+import { createAdmin, deleteAdmin, getAdmins } from '../controllers/admin/admin.auth.controller';
 // import { adminGuard } from '../middleware/admin';
 
 const router = Router();
@@ -31,6 +32,7 @@ router.get('/modules', auth, isAdminUser, getAllModules);
 router.put('/module/:id', auth, isAdminUser, updateModule);
 
 // Create admin endpoint
-// router.post('/create-admin', auth, isAdminUser);
-
+router.post('/create-admin', auth, isAdminUser,createAdmin);
+router.get('/admins', auth, isAdminUser, getAdmins); // Assuming you want to fetch all admins
+router.delete('/admins/:id', auth, isAdminUser, deleteAdmin); // Assuming you want to delete an admin by ID
 export default router;
