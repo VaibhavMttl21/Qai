@@ -140,7 +140,7 @@ export function ProfilePage() {
                     </div>
                   </div>
 
-                  <div className="flex justify-center gap-4 mt-6">
+                  {/* <div className="flex justify-center gap-4 mt-6">
                     {isEditing ? (
                       <>
                         <Button type="submit" disabled={isLoading} className="bg-indigo-600 hover:bg-indigo-700 transition text-white">
@@ -168,7 +168,7 @@ export function ProfilePage() {
                         Edit Profile
                       </Button>
                     )}
-                  </div>
+                  </div> */}
                 </form>
               </div>
             </div>
