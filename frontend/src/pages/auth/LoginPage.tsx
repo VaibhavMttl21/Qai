@@ -57,7 +57,7 @@ export function LoginPage() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-5xl mx-auto shadow-2xl rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 items-stretch relative z-20"
+        {...{className:"w-full max-w-5xl mx-auto shadow-2xl rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 items-stretch relative z-20"}}
       >
         {/* Left Side */}
         <div className="bg-white/90 backdrop-blur-md rounded-l-2xl p-6 sm:p-8 md:p-10 flex flex-col justify-center">
@@ -89,7 +89,7 @@ export function LoginPage() {
                 </p>
               </div>
               {/* Pass bgColor to LoginForm as a prop */}
-              <LoginForm />
+              <LoginForm bgColor={''} />
             </motion.div>
           </div>
         </div>

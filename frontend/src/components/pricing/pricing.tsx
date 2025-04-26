@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FiCheckCircle, FiXSquare } from "react-icons/fi";
 
@@ -139,12 +139,12 @@ const PriceColumn = ({
               duration: 0.25,
               ease: "easeInOut",
             }}
-            className="block text-6xl font-bold"
+            {...{className:"block text-6xl font-bold"}}
           >
             ${price}
           </motion.span>
         </AnimatePresence>
-        <motion.div layout className="font-medium text-zinc-600">
+        <motion.div layout {...{className:"font-medium text-zinc-600"}}>
           <span className="block">/user</span>
           <span className="block">/month</span>
         </motion.div>
@@ -206,7 +206,7 @@ const Toggle = ({
         <motion.span
           layout
           transition={{ ease: "easeInOut" }}
-          className="h-full w-1/2 rounded-full border border-zinc-900 bg-white"
+          {...{className :"h-full w-1/2 rounded-full border border-zinc-900 bg-white"}}
         />
       </div>
     </div>

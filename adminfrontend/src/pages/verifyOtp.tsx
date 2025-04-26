@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-// import { Button } from '@/components/ui/button';
-// import { Input } from '@/components/ui/input';
-// import { Label } from '@/components/ui/label';
-// import { useToast } from '@/components/ui/use-toast';
 import  api  from '../lib/api';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
@@ -14,8 +10,7 @@ export function VerifyOTPPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState(60);
   const [canResend, setCanResend] = useState(false);
-  
-  // const { toast } = useToast();
+
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email;
@@ -24,14 +19,12 @@ export function VerifyOTPPage() {
     `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='#989898 ' stroke-width='1.5'><path d='M0 0H32V32'/></svg>`
   );
 
-  // Redirect if no email in state
   useEffect(() => {
     if (!email) {
       navigate('/forgot-password');
     }
   }, [email, navigate]);
 
-  // Countdown timer for resend
   useEffect(() => {
     if (countdown > 0) {
       const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
@@ -41,38 +34,27 @@ export function VerifyOTPPage() {
     }
   }, [countdown]);
 
+  interface VerifyOtpResponse {
+    token: string;
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!otp) {
       alert("Please enter the verification code");
-      // toast({
-      //   title: "Error",
-      //   description: "Please enter the verification code",
-      //   variant: "destructive",
-      // });
+
       return;
     }
     
     setIsLoading(true);
     
     try {
-      const response = await api.post('/api/auth/verify-otp', { email, otp });
+      const response = await api.post<VerifyOtpResponse>('/api/auth/verify-otp', { email, otp });
       alert("Verification successful");
-      // toast({d
-      //   title: "Success",
-      //   description: "Verification successful",
-      // });
-      
-      // Navigate to reset password page
       navigate('/reset-password', { state: { email, token: response.data.token } });
     } catch (error) {
       alert("Invalid verification code. Please try again.");
-      // toast({
-      //   title: "Error",
-      //   description: "Invalid verification code. Please try again.",
-      //   variant: "destructive",
-      // });
     } finally {
       setIsLoading(false);
     }
@@ -84,19 +66,9 @@ export function VerifyOTPPage() {
     try {
       await api.post('/auth/forgot-password', { email });
       
-      // toast({
-      //   title: "OTP Sent",
-      //   description: "A new verification code has been sent to your email",
-      // });
-      
       setCountdown(60);
       setCanResend(false);
     } catch (error) {
-      // toast({
-      //   title: "Error",
-      //   description: "Failed to send verification code. Please try again.",
-      //   variant: "destructive",
-      // });
     } finally {
       setIsLoading(false);
     }

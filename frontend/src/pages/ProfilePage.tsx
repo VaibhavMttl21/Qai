@@ -48,6 +48,7 @@ export function ProfilePage() {
     }
   };
 
+  
   return (
     <div className="min-h-screen w-full bg-white font-santoshi relative"
     style={{
@@ -62,7 +63,7 @@ export function ProfilePage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          {...{className: "text-center mb-12"}}
         >
           <h1 className="text-5xl font-black bg-gradient-to-r from-purple-600 via-indigo-500 to-purple-800 bg-clip-text text-transparent font-Satoshi ">
             Your Profile
@@ -178,7 +179,7 @@ export function ProfilePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 shadow-lg p-6 mt-6"
+                {...{className:"rounded-2xl bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 shadow-lg p-6 mt-6"}}
               >
                 <div className="flex items-center justify-center mb-4">
                   <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
@@ -205,7 +206,7 @@ export function ProfilePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white rounded-2xl border-2 justify-center border-indigo-100 shadow-xl p-6"
+              {...{className:"bg-white rounded-2xl border-2 justify-center border-indigo-100 shadow-xl p-6"}}
             >
               <div className="flex items-center mb-4">
                 <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center mr-3">
@@ -224,7 +225,7 @@ export function ProfilePage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-white rounded-2xl border-2 border-indigo-100 shadow-xl p-6"
+                {...{className:"bg-white rounded-2xl border-2 border-indigo-100 shadow-xl p-6"}}
               >
                 <div className="flex items-center mb-4">
                   <div className="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center mr-3">

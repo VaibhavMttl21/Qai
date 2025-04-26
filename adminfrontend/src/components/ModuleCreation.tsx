@@ -28,7 +28,7 @@ export function ModuleCreation() {
   const fetchModules = async () => {
     try {
       setLoadingModules(true);
-      const response = await api.get('/api/admin/modules');
+      const response = await api.get<Module[]>('/api/admin/modules');
       setModules(response.data);
       setLoadingModules(false);
     } catch (error) {
@@ -48,7 +48,7 @@ export function ModuleCreation() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.post('/api/admin/modules', {
+      const response = await api.post<Module>('/api/admin/modules', {
         name: newModuleName,
         description: moduleDescription || null,
         order: moduleOrder

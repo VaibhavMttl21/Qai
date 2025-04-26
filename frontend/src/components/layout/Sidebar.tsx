@@ -71,7 +71,7 @@ export function Sidebar() {
   return (
     <motion.nav
       ref={animationRef}
-      className="sticky top-0 h-screen border-r border-gray-200 bg-[#e3e3e3] p-3 shadow-sm z-10 flex flex-col overflow-hidden"
+      {...{className:"sticky top-0 h-screen border-r border-gray-200 bg-[#e3e3e3] p-3 shadow-sm z-10 flex flex-col overflow-hidden"}}
       style={{ width: open ? '220px' : '64px' }}
       animate={{ width: open ? '220px' : '64px' }}
       transition={transition}
@@ -94,7 +94,7 @@ export function Sidebar() {
                     <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="ml-3 text-left overflow-hidden"
+                      {...{className :"ml-3 text-left overflow-hidden"}}
                     >
                       <p className="text-sm font-semibold leading-none truncate">
                         {user?.name}
@@ -164,7 +164,7 @@ export function Sidebar() {
                 <motion.span
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="ml-3 truncate"
+                  {...{className:"ml-3 truncate"}}
                 >
                   {item.name}
                 </motion.span>
@@ -183,7 +183,7 @@ export function Sidebar() {
       >
         <div className={`flex items-center ${open ? 'justify-start pl-3' : 'justify-center'}`}>
           <motion.div 
-            className="inline-flex items-center justify-center"
+            {...{className:"inline-flex items-center justify-center"}}
             animate={{ 
               rotate: isHovering ? 180 : 0,
               scale: isHovering ? 1.2 : 1
@@ -196,7 +196,7 @@ export function Sidebar() {
             <motion.span
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="ml-2 text-xs"
+              {...{className:"ml-2 text-xs"}}
             >
               Collapse
             </motion.span>

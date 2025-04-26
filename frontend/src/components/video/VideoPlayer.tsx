@@ -60,7 +60,7 @@ export function VideoPlayer() {
     if (Hls.isSupported()) {
       // Initialize Hls.js and set up the Authorization header for requests
       hls = new Hls({
-        xhrSetup: (xhr, url) => {
+        xhrSetup: (xhr,) => {
           // Set Authorization header with the token for each request
           if (token) {
             xhr.setRequestHeader("Authorization", `Bearer ${token}`);
@@ -76,7 +76,7 @@ export function VideoPlayer() {
       });
 
       // Handle HLS error (e.g., if no compatible format found)
-      hls.on(Hls.Events.ERROR, (event, data) => {
+      hls.on(Hls.Events.ERROR, ( data) => {
         console.error('HLS.js error:', data);
       });
     } else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
@@ -153,7 +153,7 @@ export function VideoPlayer() {
         {/* Video Player - Now on the left side and larger */}
         <div className="lg:w-3/5 flex flex-col h-full">
           <motion.div 
-            className="bg-white p-4 rounded-xl shadow-lg flex flex-col h-full border border-indigo-100"
+            {...{className:"bg-white p-4 rounded-xl shadow-lg flex flex-col h-full border border-indigo-100"}}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
@@ -271,7 +271,7 @@ export function VideoPlayer() {
         <div className="lg:w-2/5 flex flex-col h-full">
           {/* Video Description */}
           <motion.div 
-            className="bg-white p-4 rounded-xl shadow-lg mb-4 border border-indigo-100"
+            {...{className:"bg-white p-4 rounded-xl shadow-lg mb-4 border border-indigo-100"}}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.1 }}
@@ -296,7 +296,7 @@ export function VideoPlayer() {
 
           {/* Video List - Moved from left sidebar to right panel */}
           <motion.div 
-            className="bg-white p-4 rounded-xl shadow-lg flex-grow overflow-hidden border border-indigo-100"
+            {...{className:"bg-white p-4 rounded-xl shadow-lg flex-grow overflow-hidden border border-indigo-100"}}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: 0.2 }}

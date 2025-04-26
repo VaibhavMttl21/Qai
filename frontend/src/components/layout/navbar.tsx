@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, FC, MouseEvent } from "react";
+import React, { useEffect, useRef, useState, FC } from "react";
 import { useAnimate, motion } from "framer-motion";
 import { FiMenu, FiArrowUpRight } from "react-icons/fi";
 import useMeasure from "react-use-measure";
@@ -27,15 +27,16 @@ const GlassNavigation: FC = () => {
   const [scope, animate] = useAnimate();
   const navRef = useRef<HTMLElement>(null);
 
-  const handleMouseMove = ({ offsetX, offsetY, target }: MouseEvent<HTMLDivElement>): void => {
-    const element = target as HTMLElement;
+  // Create a separate handler for native DOM events
+  const handleNativeMouseMove = (e: globalThis.MouseEvent): void => {
+    const element = e.target as HTMLElement;
     const isNavElement = element.classList.contains("glass-nav");
 
     if (isNavElement) {
       setHovered(true);
 
-      const top = offsetY + "px";
-      const left = offsetX + "px";
+      const top = e.offsetY + "px";
+      const left = e.offsetX + "px";
 
       animate(scope.current, { top, left }, { duration: 0 });
     } else {
@@ -44,10 +45,11 @@ const GlassNavigation: FC = () => {
   };
 
   useEffect(() => {
-    navRef.current?.addEventListener("mousemove", handleMouseMove);
+    // Use the native DOM event handler here
+    navRef.current?.addEventListener("mousemove", handleNativeMouseMove);
 
     return () =>
-      navRef.current?.removeEventListener("mousemove", handleMouseMove);
+      navRef.current?.removeEventListener("mousemove", handleNativeMouseMove);
   }, []);
 
   return (
@@ -89,7 +91,7 @@ const Cursor: FC<CursorProps> = ({ hovered, scope }) => {
       }}
       transition={{ duration: 0.15 }}
       ref={scope}
-      className="pointer-events-none absolute z-0 grid h-[50px] w-[50px] origin-[0px_0px] place-content-center rounded-full bg-gradient-to-br from-purple-400 from-40% to-indigo-400 text-2xl"
+      {...{className :"pointer-events-none absolute z-0 grid h-[50px] w-[50px] origin-[0px_0px] place-content-center rounded-full bg-gradient-to-br from-purple-400 from-40% to-indigo-400 text-2xl"}}
     >
       <FiArrowUpRight className="text-white" />
     </motion.span>
@@ -116,6 +118,7 @@ const Links: FC = () => (
 
 interface GlassLinkProps {
   text: string;
+  href: string;
 }
 
 const GlassLink: FC<GlassLinkProps> = ({ text,href }) => {
@@ -213,7 +216,7 @@ const MobileMenu: FC<MobileMenuProps> = ({ menuOpen }) => {
       animate={{
         height: menuOpen ? height : "0px",
       }}
-      className="block overflow-hidden md:hidden"
+      {...{className:"block overflow-hidden md:hidden"}}
     >
       <div ref={ref} className="flex items-center justify-between px-4 pb-4">
         <div className="flex items-center gap-4">

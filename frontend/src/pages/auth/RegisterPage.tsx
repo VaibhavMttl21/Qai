@@ -80,7 +80,7 @@ export function RegisterPage() {
               </div>
 
               {/* Pass bgColor to RegisterForm as a prop */}
-              <RegisterForm  />
+              <RegisterForm bgColor={''}  />
             </motion.div>
           </div>
         </div>

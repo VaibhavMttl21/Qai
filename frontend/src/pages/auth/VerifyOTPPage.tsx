@@ -98,7 +98,7 @@ export function VerifyOTPPage() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
-        className="w-full max-w-md p-8 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl relative z-20"
+        {...{className :"w-full max-w-md p-8 bg-white/90 backdrop-blur-md rounded-2xl shadow-xl relative z-20"}}
       >
         <div className="text-center mb-8">
           <h2 className="text-3xl font-extrabold text-gray-900">Verify OTP</h2>

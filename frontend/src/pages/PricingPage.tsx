@@ -47,7 +47,7 @@ export function PricingPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-12"
+        {...{className :"text-center mb-12"}}
       >
         <h1 className="text-4xl pb-1 font-black font-Satoshi mb-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-transparent bg-clip-text">
           Pricing
@@ -64,7 +64,7 @@ export function PricingPage() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-lg shadow-md py-6 pr-6 pl-6 border border-indigo-200 flex flex-col justify-between"
+          {...{className:"bg-white rounded-lg shadow-md py-6 pr-6 pl-6 border border-indigo-200 flex flex-col justify-between"}}
         >
           <div>
             <div className="text-center mb-6">
@@ -107,7 +107,7 @@ export function PricingPage() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-lg shadow-md py-6 pr-6 pl-6 border-2 border-purple-600 relative flex flex-col justify-between"
+          {...{ className: "bg-white rounded-lg shadow-md py-6 pr-6 pl-6 border-2 border-purple-600 relative flex flex-col justify-between" }}
         >
           <div className="absolute top-0 right-0 font-Satoshi bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-3 py-1 text-sm font-semibold rounded-bl-lg transform translate-y-[-50%]">
             ★ Popular
@@ -154,7 +154,7 @@ export function PricingPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="mt-12 text-center"
+        {...{className: "mt-12 text-center"}}
       >
         <h3 className="text-lg font-bold mb-2 text-indigo-600 font-Satoshi">Terms and Condition</h3>
         <p className="text-gray-600 font-Satoshi font-regular" >

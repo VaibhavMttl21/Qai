@@ -33,6 +33,7 @@ model User {
   videoProgress    Progress[]
   adminPosts       AdminPost[]
   adminReplies     AdminReply[]
+  todo             Todo[]
 }
 
 model Video {
@@ -148,6 +149,14 @@ model AdminReply {
   updatedAt   DateTime  @updatedAt
   user        User      @relation(fields: [userId], references: [id])
   adminPost   AdminPost @relation(fields: [adminPostId], references: [id])
+}
+
+model Todo {
+  userId       String
+  id           String    @id @default(uuid())
+  description  String
+  completed    Boolean  @default(false)
+  user         User     @relation(fields: [userId], references: [id])
 }
 
 

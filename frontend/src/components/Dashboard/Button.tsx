@@ -45,13 +45,17 @@ const NeuFollowButton2 = () => {
     y.set(0);
   };
 
+  const MotionButton = motion.button as React.ComponentType<
+  React.ButtonHTMLAttributes<HTMLButtonElement> & { ref?: React.Ref<HTMLButtonElement> }
+>;
+
   return (
     <section className="pl-6 pr-6 py-6">
       <div className="mx-auto h-20 w-full max-w-145 bg-[#e3e3e3]">
-        <motion.button
+        <MotionButton
           ref={ref}
           style={{
-            transform,
+            transform: transform as unknown as React.CSSProperties['transform'],
           }}
           onMouseMove={handleMove}
           onMouseLeave={handleReset}
@@ -60,7 +64,7 @@ const NeuFollowButton2 = () => {
         >
           <Copy>VIDEOS!</Copy>
           <Arrow />
-        </motion.button>
+        </MotionButton>
       </div>
     </section>
   );

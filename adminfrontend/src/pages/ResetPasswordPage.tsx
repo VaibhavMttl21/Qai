@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-// import { Button } from '@/components/ui/button';
-// import { Input } from '@/components/ui/input';
-// import { Label } from '@/components/ui/label';
-// import { useToast } from '@/components/ui/use-toast';
 import  api  from '../lib/api';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
@@ -14,7 +10,6 @@ export function ResetPasswordPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  // const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
   const { email, token } = location.state || {};
@@ -23,33 +18,18 @@ export function ResetPasswordPage() {
     `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='#989898 ' stroke-width='1.5'><path d='M0 0H32V32'/></svg>`
   );
 
-  // Redirect if no email or token in state
-  // useEffect(() => {
-  //   if (!email || !token) {
-  //     navigate('/forgot-password');
-  //   }
-  // }, [email, token, navigate]);
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (password !== confirmPassword) {
       alert("Passwords do not match");
-      // toast({
-      //   title: "Error",
-      //   description: "Passwords do not match",
-      //   variant: "destructive",
-      // });
       return;
     }
     
     if (password.length < 8) {
       alert("Password must be at least 8 characters long");
-      // toast({
-      //   title: "Error",
-      //   description: "Password must be at least 8 characters long",
-      //   variant: "destructive",
-      // });
       return;
     }
     
@@ -58,18 +38,9 @@ export function ResetPasswordPage() {
     try {
       await api.post('/api/auth/reset-password', { email, token, password });
       
-      // toast({
-      //   title: "Success",
-      //   description: "Your password has been reset successfully",
-      // });
       
       navigate('/login');
     } catch (error) {
-      // toast({
-      //   title: "Error",
-      //   description: "Failed to reset password. Please try again.",
-      //   variant: "destructive",
-      // });
     } finally {
       setIsLoading(false);
     }

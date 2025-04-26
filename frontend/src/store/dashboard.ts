@@ -3,6 +3,7 @@ import api from '../lib/api';
 // Remove node-cron import
 
 interface NewsArticle {
+  image: any;
   id: string;
   title: string;
   description: string;
@@ -33,7 +34,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   fetchNews: async () => {
     // Check if we've already fetched today after 9 AM
     const now = new Date();
-    const lastFetched = get().lastFetched ? new Date(get().lastFetched) : null;
+    const lastFetched = get().lastFetched !== null && typeof get().lastFetched === 'number' ? new Date(get().lastFetched as number) : null;
     const todayAt9AM = new Date(now);
     todayAt9AM.setHours(9, 0, 0, 0);
     
@@ -61,7 +62,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       // Save to localStorage for backup
       localStorage.setItem('aiNews', JSON.stringify(data.articles || []));
       localStorage.setItem('aiNewsFetchedAt', now.toISOString());
-    } catch (err) {
+    } catch (err : any) {
       console.error('News fetch error:', err);
       set({ error: err.message });
       
@@ -78,7 +79,10 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   initScheduler: () => {
     // Clear existing timer if any
     if (get().schedulerTimerId !== null) {
-      window.clearTimeout(get().schedulerTimerId);
+      const timerId = get().schedulerTimerId;
+      if (timerId !== null) {
+        window.clearTimeout(timerId);
+      }
     }
     
     // Function to schedule the next run at 9 AM
@@ -114,7 +118,8 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
     
     // Also fetch immediately if we haven't fetched yet today
     const now = new Date();
-    const lastFetched = get().lastFetched ? new Date(get().lastFetched) : null;
+    const lastFetchedTime = get().lastFetched;
+    const lastFetched = lastFetchedTime !== null ? new Date(lastFetchedTime) : null;
     const todayAt9AM = new Date(now);
     todayAt9AM.setHours(9, 0, 0, 0);
     
@@ -125,8 +130,9 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
   },
   
   stopScheduler: () => {
-    if (get().schedulerTimerId !== null) {
-      window.clearTimeout(get().schedulerTimerId);
+    const timerId = get().schedulerTimerId;
+    if (timerId !== null) {
+      window.clearTimeout(timerId);
       set({ schedulerTimerId: null });
     }
   }

@@ -1,7 +1,5 @@
 
 import BasicFAQ from "@/components/Landing/faq";
-import Explain from "@/components/Landing/majorcomponent";
-
 import Example from "@/components/layout/navbar";
 import { PreHeading } from "@/components/Landing/preHeading";
 import StackedCardTestimonials from "@/components/Landing/testimonials";
@@ -23,7 +21,6 @@ export function LandingPage() {
    </section>
    
    <DrawCircleText/> 
-   {/* <Explain/> */}
    <section id="why" className="scroll-smooth">
    <StickyCards/>
    </section>

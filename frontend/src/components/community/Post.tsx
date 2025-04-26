@@ -43,6 +43,7 @@ interface PostProps {
   };
   viewMode?: 'prioritized' | 'chronological';
   disableActions?: boolean; // Add this line
+  isDarkMode?: boolean; // Add this line
 }
 
 export function Post({ post, viewMode = 'prioritized', disableActions }: PostProps) {
@@ -253,7 +254,7 @@ export function Post({ post, viewMode = 'prioritized', disableActions }: PostPro
                 key={reply.id}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className={`ml-12 ${reply.isAdmin && viewMode === 'prioritized' ? 'bg-blue-50' : 'bg-gray-50'} rounded-lg p-4`}
+                {...{ className: `ml-12 ${reply.isAdmin && viewMode === 'prioritized' ? 'bg-blue-50' : 'bg-gray-50'} rounded-lg p-4` }}
               >
                 <div className="flex items-start space-x-4">
                   <Avatar>

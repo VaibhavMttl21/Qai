@@ -66,7 +66,7 @@ export function ModulePage() {
           {modules.map((module) => (
             <motion.div 
               key={module.id}
-              className="bg-white rounded-xl shadow-lg overflow-hidden border border-indigo-100 flex flex-col"
+              {...{ className: "bg-white rounded-xl shadow-lg overflow-hidden border border-indigo-100 flex flex-col" }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
@@ -82,7 +82,7 @@ export function ModulePage() {
                   </div>
                   
                   <motion.div 
-                    className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center"
+                    {...{ className: "w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center" }}
                     animate={{ rotate: expandedModule === module.id ? 180 : 0 }}
                   >
                     <ChevronDown size={18} className="text-indigo-600" />
@@ -107,10 +107,10 @@ export function ModulePage() {
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="bg-indigo-50 px-5"
+                    style={{ backgroundColor: '#EEF2FF', padding: '1.25rem' }}
                   >
                     <motion.div 
-                      className="py-4 space-y-3"
+                      style={{ padding: '1rem', gap: '0.75rem', display: 'flex', flexDirection: 'column' }}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: 0.2 }}
@@ -118,8 +118,8 @@ export function ModulePage() {
                       {module.videos.sort((a, b) => a.order - b.order).map((video) => (
                         <motion.div
                           key={video.id}
-                          className="bg-white p-3 rounded-lg border border-indigo-100 cursor-pointer hover:border-indigo-300 transition-colors"
-                          onClick={() => handleVideoClick(video.id)}
+                          {...{ className: "bg-white p-3 rounded-lg border border-indigo-100 cursor-pointer hover:border-indigo-300 transition-colors" }}
+                          onTap={() => handleVideoClick(video.id)}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >

@@ -50,7 +50,7 @@ export function DashboardPage() {
       {/* Welcome & Progress Section */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <motion.h1
-          className="text-lg md:text-xl lg:text-2xl pl-6 pt-6 pb-4 font-bold text-gray-800 whitespace-pre-wrap break-words w-full max-w-full overflow-hidden "
+           {...{ className:"text-lg md:text-xl lg:text-2xl pl-6 pt-6 pb-4 font-bold text-gray-800 whitespace-pre-wrap break-words w-full max-w-full overflow-hidden "}}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
@@ -60,7 +60,7 @@ export function DashboardPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pl-6">
           <motion.div
-            className="relative p-[2px] rounded-lg group"
+             {...{className:"relative p-[2px] rounded-lg group"}}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -79,7 +79,7 @@ export function DashboardPage() {
 
           {!user?.isPaid && (
             <motion.div
-              className="p-6 rounded-lg bg-yellow-50 hover:shadow-lg transition duration-300"
+            {...{className:"p-6 rounded-lg bg-yellow-50 hover:shadow-lg transition duration-300"}}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -115,7 +115,7 @@ export function DashboardPage() {
 
       {/* AI News Section */}
       <motion.div
-        className="mt-10 pr-6 pl-6"
+         {...{className:"mt-10 pr-6 pl-6"}}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
@@ -138,7 +138,7 @@ export function DashboardPage() {
           {news.map((article, index) => (
             <motion.div
               key={index}
-              className=" p-4 rounded-lg shadow-sm transition-all duration-300 hover:scale-[1.02] bg-gradient-to-r from-purple-200 via-pink-50 to-indigo-100 "
+              {...{className:" p-4 rounded-lg shadow-sm transition-all duration-300 hover:scale-[1.02] bg-gradient-to-r from-purple-200 via-pink-50 to-indigo-100 "}}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, amount: 0.2 }}
@@ -157,7 +157,7 @@ export function DashboardPage() {
                   <p className="text-sm text-gray-600 mt-1">{article.description}</p>
                   <div className="mt-2 flex justify-between items-center">
                     <span className="text-xs text-gray-500 font-Satoshi">
-                      {new Date(article.publishedAt).toLocaleDateString()}
+                      {article.publishedAt ? new Date(article.publishedAt).toLocaleDateString() : 'Unknown Date'}
                     </span>
                     <a
                       href={article.url}
