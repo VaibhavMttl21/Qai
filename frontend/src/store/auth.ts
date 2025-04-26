@@ -26,6 +26,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: localStorage.getItem('token'),
   
+
   isSchoolUser: (user = null) => {
     const currentUser = user || get().user;
     return currentUser?.userType === 'SCHOOL';
