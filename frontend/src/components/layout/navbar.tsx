@@ -139,9 +139,9 @@ interface TextLinkProps {
   text: string;
 }
 
-const TextLink: FC<TextLinkProps> = ({ text }) => {
+const TextLink: FC<TextLinkProps> = ({ text , href}) => {
   return (
-    <a href="#" className="text-white/90 transition-colors hover:text-white">
+    <a href={href} className="text-white/90 transition-colors hover:text-white">
       {text}
     </a>
   );
@@ -220,9 +220,9 @@ const MobileMenu: FC<MobileMenuProps> = ({ menuOpen }) => {
     >
       <div ref={ref} className="flex items-center justify-between px-4 pb-4">
         <div className="flex items-center gap-4">
-          <TextLink text="Products" />
-          <TextLink text="History" />
-          <TextLink text="Contact" />
+          <TextLink text="intro" href="#intro" />
+          <TextLink text="Testimonials" href="#testimonials" />
+          <TextLink text="why us" href="#why" />
         </div>
         {isLoggedIn ? (
           <Link to="/dashboard">
