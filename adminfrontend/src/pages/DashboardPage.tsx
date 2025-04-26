@@ -23,7 +23,7 @@ export function DashboardPage() {
     { id: 'module', label: 'Module Creation' },
     { id: 'rename', label: 'Rename Resources' },
     { id: 'delete', label: 'Delete Resources' },
-    { id: 'admin', label: 'Create Admin' },
+    { id: 'admin', label: 'Create User' },
     { id: 'deleteAdmin', label: 'Delete Admin' },
   ] as const;
 

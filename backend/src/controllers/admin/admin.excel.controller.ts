@@ -9,6 +9,17 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
+// Validation functions
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(String(email).toLowerCase());
+};
+
+const isValidDate = (dateStr: string): boolean => {
+  const date = new Date(dateStr);
+  return !isNaN(date.getTime());
+};
+
 // Use memory storage instead of disk storage
 export const upload = multer({
   storage: multer.memoryStorage(),
@@ -68,56 +79,89 @@ export const uploadFile = async (req: AuthRequest, res: Response) => {
 
     console.log('Parsed Data:', parsedData);
     
-    // Save data to database
-    // const excelData = await prisma.excelData.create({
-    //   data: {
-    //     name: name || fileName,
-    //     data: parsedData,
-    //     userId: req.user!.id,
-    //   }
-    // });
-
-    // Extract specific fields and save to ExcelExtractedData table
-    let extractedDataPromises: Promise<any>[] = [];
-    if (Array.isArray(parsedData) && parsedData.length > 0) {
-      extractedDataPromises = parsedData.map(async (row: any) => {
-        // Check if the row has the required fields
-        if (row.NAME && row.DOB && row.MAIL) {
-          try {
-            const hashedPassword = await bcrypt.hash(String(row.DOB), 10);
-            // Create a record in User with school as it's type
-            const schooluser = await prisma.user.create({
-              data: {
-                name: row.NAME,
-                email: row.MAIL,
-                password: hashedPassword,
-                isPaid: true,
-                userType: 'SCHOOL', // Assuming 'STUDENT' is a valid user type
-              }
-            })
-          } catch (error) {
-            console.error('Error processing row:', row, error);
-            return null;
-          }
+    // Normalize keys to uppercase for all rows
+    const normalizedData = parsedData.map(row => {
+      const normalizedRow: any = {};
+      for (const key in row) {
+        if (row.hasOwnProperty(key)) {
+          normalizedRow[key.toUpperCase()] = row[key];
         }
-        return null;
+      }
+      return normalizedRow;
+    });
+
+    // Check if any required columns are entirely missing
+    if (normalizedData.length > 0) {
+      const firstRow = normalizedData[0];
+      const requiredColumns = ['NAME', 'DOB', 'MAIL'];
+      const missingColumns = requiredColumns.filter(col => 
+        !Object.keys(firstRow).includes(col)
+      );
+      
+      if (missingColumns.length > 0) {
+        return res.status(400).json({
+          message: `Required column(s) missing: ${missingColumns.join(', ')}`,
+          missingColumns
+        });
+      }
+    }
+
+    // Save data to database
+    let extractedDataPromises: Promise<any>[] = [];
+    let skippedRows: any[] = [];
+
+    if (Array.isArray(normalizedData) && normalizedData.length > 0) {
+      extractedDataPromises = normalizedData.map(async (row: any) => {
+        // Check if the row has the required fields
+        if (!row.NAME || !row.DOB || !row.MAIL) {
+          skippedRows.push({ row, reason: 'Missing required fields (NAME, DOB, or MAIL)' });
+          return null;
+        }
+
+        // Validate email format
+        if (!isValidEmail(row.MAIL)) {
+          skippedRows.push({ row, reason: 'Invalid email format' });
+          return null;
+        }
+
+        // Validate DOB format
+        if (!isValidDate(row.DOB)) {
+          skippedRows.push({ row, reason: 'Invalid date of birth format' });
+          return null;
+        }
+        
+        try {
+          const hashedPassword = await bcrypt.hash(String(row.DOB), 10);
+          // Create a record in User with school as its type
+          const schooluser = await prisma.user.create({
+            data: {
+              name: row.NAME,
+              email: row.MAIL,
+              password: hashedPassword,
+              isPaid: true,
+              userType: 'SCHOOL',
+            }
+          });
+          return schooluser;
+        } catch (error) {
+          console.error('Error processing row:', row, error);
+          skippedRows.push({ row, reason: 'Database error' });
+          return null;
+        }
       });
     }
 
     const insertedUsers = await Promise.all(extractedDataPromises);
 
-    res.status(201).json({ 
+    res.status(201).json({
       message: 'File processed successfully',
-      data: parsedData,
+      data: normalizedData,
       insertedCount: insertedUsers.filter(Boolean).length,
       users: insertedUsers.filter(Boolean),
+      skippedRows: skippedRows,
     });
   } catch (error) {
     console.error('File processing error:', error);
     res.status(500).json({ message: 'Error processing file' });
   }
 };
-
-
-
-

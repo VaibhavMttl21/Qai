@@ -32,7 +32,7 @@ router.get('/modules', auth, isAdminUser, getAllModules);
 router.put('/module/:id', auth, isAdminUser, updateModule);
 
 // Create admin endpoint
-router.post('/create-admin', auth, isAdminUser,createAdmin);
+router.post('/create', auth, isAdminUser,createAdmin);
 router.get('/admins', auth, isAdminUser, getAdmins); // Assuming you want to fetch all admins
 router.delete('/admins/:id', auth, isAdminUser, deleteAdmin); // Assuming you want to delete an admin by ID
 export default router;
