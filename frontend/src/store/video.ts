@@ -24,6 +24,7 @@ interface Module {
   id: string;
   name: string;
   description: string;
+  imageUrl?: string; // Added image property
   videos?: Video[];
 }
 
@@ -65,7 +66,7 @@ export const useVideoStore = create<VideoState>((set, get) => ({
   
   fetchModules: async () => {
     try {
-      const response = await api.get('/api/modules');
+      const response = await api.get('/api/videos/modules');
       set({ modules: response.data });
     } catch (error) {
       console.error('Failed to fetch modules:', error);

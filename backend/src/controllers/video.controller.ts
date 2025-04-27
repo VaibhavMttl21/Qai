@@ -105,21 +105,16 @@ export const getAllModules = async (req: AuthRequest, res: Response) => {
     const modules = await prisma.module.findMany({
       include: {
         videos: {
+          where: req.user?.isPaid ? { encoded: true } : { encoded: true, demo: true },
           orderBy: { order: 'asc' },
-          include: { pdfs: true }
+          select: {
+            id: true,
+            title: true,
+          }
         }
       },
-      orderBy: { createdAt: 'asc' }
+      orderBy: { order: 'asc' }
     });
-
-    // If user is not paid, limit videos in each module
-    if (!req.user?.isPaid) {
-      const limitedModules = modules.map(module => ({
-        ...module,
-        videos: module.videos.slice(0, 1)
-      }));
-      return res.json(limitedModules);
-    }
 
     res.json(modules);
   } catch (error) {
@@ -128,36 +123,4 @@ export const getAllModules = async (req: AuthRequest, res: Response) => {
   }
 };
 
-// Get all videos (for admin dropdown)
-// export const getAllVideos = async (req: AuthRequest, res: Response) => {
-//   try {
-//     const videos = await prisma.video.findMany({
-//       orderBy: { order: 'asc' }
-//     });
-    
-//     res.json(videos);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// };
-
-
-// // Get PDFs not associated with any video
-// export const getOrphanedPdfs = async (req: AuthRequest, res: Response) => {
-//   try {
-//     const pdfs = await prisma.pDF.findMany({
-//       where: {
-//         userId: req.user!.id,
-//         videoId: null,
-//       },
-//       orderBy: {
-//         createdAt: 'desc'
-//       }
-//     });
-    
-//     res.json(pdfs);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// };
 

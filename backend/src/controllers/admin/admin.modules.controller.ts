@@ -5,7 +5,6 @@ import multer from 'multer';
 import path from 'path';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { r2 } from '../../utils/r2';
-import fs from 'fs';
 
 const prisma = new PrismaClient();
 
@@ -61,18 +60,16 @@ export const createModule = async (req: AuthRequest, res: Response) => {
       // Upload to R2
       await r2.send(
         new PutObjectCommand({
-          Bucket: process.env.R2_BUCKET_NAME,
+          Bucket: process.env.R2_IMG_BUCKET,
           Key: fileName,
-          Body: fs.createReadStream(file.path),
+          Body: file.buffer,
           ContentType: file.mimetype,
         })
       );
       
       // Generate the URL for the image
-      imageUrl = `${process.env.R2_PUBLIC_URL}/${fileName}`;
-      
-      // Remove the temporary file
-      fs.unlinkSync(file.path);
+      imageUrl = `${process.env.R2_IMG_DOMAIN}/${fileName}`;
+      console.log('Image URL:', imageUrl);
     }
     
     const module = await prisma.module.create({

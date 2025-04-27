@@ -11,7 +11,6 @@ import { VerifyOTPPage } from '@/pages/auth/VerifyOTPPage';
 import { ResetPasswordPage } from '@/pages/auth/ResetPasswordPage';
 import { LandingPage } from './pages/LandingPage';
 import { DashboardPage } from '@/pages/DashboardPage';
-import { VideoPage } from '@/pages/VideoPage';
 import { CommunityPage } from '@/pages/CommunityPage';
 import { ProfilePage } from '@/pages/ProfilePage';
 import { PricingPage } from '@/pages/PricingPage';
@@ -91,14 +90,14 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/videos"
             element={
               <ProtectedRoute>
                 <VideoPage />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
             path="/community"
             element={
