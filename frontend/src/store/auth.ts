@@ -14,6 +14,7 @@ interface User {
 interface AuthState {
   user: User | null;
   token: string | null;
+  setUser: (user: User | null) => void; 
   isSchoolUser: (user?: User | null) => boolean;
   login: (email: string, password: string, dob?: string) => Promise<void>;
   register: (email: string, password: string, name: string) => Promise<void>;
@@ -25,6 +26,10 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: localStorage.getItem('token'),
+
+  setUser: (user) => {
+    set({ user });
+  },
   
 
   isSchoolUser: (user = null) => {
@@ -96,7 +101,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     // Connect to socket after successful Google sign-in
     connectSocket();
   },
-  
+
   logout: () => {
     localStorage.removeItem('token');
     set({ user: null, token: null });

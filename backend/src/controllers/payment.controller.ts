@@ -64,3 +64,31 @@ export const verifyPayment = async (req: VerifyPaymentRequest, res: Response) =>
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+export const updateUserPaymentStatus = async (req: Request, res: Response) => {
+  try {
+    // Extract userId from request body
+    const { userId } = req.body;
+    
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+    
+    console.log('Updating payment status for user:', userId);
+    
+    // Update the user's payment status
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { isPaid: true },
+    });
+    
+    // Return success response
+    res.status(200).json({ 
+      message: 'Payment status updated successfully',
+      isPaid: updatedUser.isPaid
+    });
+  } catch (error) {
+    console.error('Error updating user payment status:', error);
+    res.status(500).json({ message: 'Failed to update payment status' });
+  }
+};
