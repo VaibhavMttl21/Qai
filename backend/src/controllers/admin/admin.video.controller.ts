@@ -9,7 +9,6 @@ import { createReadStream } from 'fs';
 import { PutObjectCommand,DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { r2 } from '../../utils/r2';
 import { PubSub } from '@google-cloud/pubsub';
-import { boolean } from 'zod';
 
 const prisma = new PrismaClient();
 const pubsub = new PubSub();
@@ -34,7 +33,7 @@ export const videoUpload = multer({
       cb(new Error('Only video files are allowed'));
     }
   },
-  limits: { fileSize: 8 * 1024 * 1024 * 1024 }, // 8GB max
+  limits: { fileSize: 5 * 1024 * 1024 * 1024 }, // 5GB max
 });
 
 
@@ -75,9 +74,9 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
 
     // console.log('Video created in database:', video);
 
-    const topic = pubsub.topic(process.env.PUBSUB_TOPIC!);
+    const topic = pubsub.topic("video-encoding");
     await topic.publishMessage({
-      json: { videoId: id, rawKey: key,demo:demo },
+      json: { videoId: id, rawKey: key, demo:demo },
     });
 
     res.status(201).json({ 
@@ -172,9 +171,9 @@ export const updateVideo = async (req: AuthRequest, res: Response) => {
       }
     });
 
-    res.status(200).json(updatedVideo);
+    res.status(200).json({message: 'Video updated successfully',});
   } catch (error) {
-    console.error('Error updating video:', error);
+    console.error('Error updating video:\n', error);
     res.status(500).json({ message: 'Server error' });
   }
 };

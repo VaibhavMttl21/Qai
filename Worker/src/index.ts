@@ -8,7 +8,7 @@ import path from 'path';
 import tmp from 'tmp-promise';
 import { Readable } from 'stream';
 
-const pubsub = new PubSub({projectId: 'test-qai'});
+const pubsub = new PubSub();
 const prisma = new PrismaClient();
 
 const s3 = new S3Client({
