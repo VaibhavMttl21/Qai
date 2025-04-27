@@ -6,10 +6,11 @@ const prisma = new PrismaClient();
 
 export const getVideos = async (req: AuthRequest, res: Response) => {
   try {
+    let isAdmin = req.user?.userType=="ADMIN"
     if (!req.user?.isPaid) {
       const demo = await prisma.video.findMany({
         where:{
-          encoded: true,
+          encoded: !isAdmin,
           demo: true
         },
         orderBy: {
@@ -22,7 +23,7 @@ export const getVideos = async (req: AuthRequest, res: Response) => {
     const videos = await prisma.video.findMany({
       where:
       {
-        encoded: true,
+        encoded: !isAdmin,
       },
       orderBy: { order: 'asc' },
       include: {

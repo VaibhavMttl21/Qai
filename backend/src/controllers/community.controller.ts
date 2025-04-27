@@ -62,7 +62,6 @@ export const getPosts = async (req: Request, res: Response) => {
       replies: adminPost.replies.map(reply => ({
         id: reply.id,
         content: reply.content,
-        imageUrl: reply.imageUrl,
         user: reply.user,
         createdAt: reply.createdAt.toISOString(),
         // Only mark the reply as admin if the user who posted it is an admin
@@ -81,7 +80,6 @@ export const getPosts = async (req: Request, res: Response) => {
       replies: {
         id: string;
         content: string;
-        imageUrl: string | null;
         user: { id: string; name: string };
         createdAt: string;
         isAdmin: boolean;
@@ -176,7 +174,6 @@ export const createReply = async (req: AuthRequest, res: Response) => {
       const adminReply = await prisma.adminReply.create({
         data: {
           content,
-          imageUrl,
           userId: req.user!.id,
           adminPostId: postId,
         },
@@ -199,7 +196,6 @@ export const createReply = async (req: AuthRequest, res: Response) => {
     const reply = await prisma.reply.create({
       data: {
         content,
-        imageUrl,
         userId: req.user!.id,
         postId,
       },
@@ -261,7 +257,6 @@ export const createAdminPost = async (req: AuthRequest, res: Response) => {
       replies: adminPost.replies.map(reply => ({
         id: reply.id,
         content: reply.content,
-        imageUrl: reply.imageUrl,
         user: reply.user,
         createdAt: reply.createdAt.toISOString(),
         isAdmin: true
@@ -288,7 +283,6 @@ export const createAdminReply = async (req: AuthRequest, res: Response) => {
     const adminReply = await prisma.adminReply.create({
       data: {
         content,
-        imageUrl,
         userId: req.user!.id,
         adminPostId: postId,
       },
@@ -306,7 +300,6 @@ export const createAdminReply = async (req: AuthRequest, res: Response) => {
     const formattedReply = {
       id: adminReply.id,
       content: adminReply.content,
-      imageUrl: adminReply.imageUrl,
       user: adminReply.user,
       createdAt: adminReply.createdAt.toISOString(),
       isAdmin: true
@@ -593,7 +586,6 @@ export const updateAdminPost = async (req: AuthRequest, res: Response) => {
       replies: updatedAdminPost.replies.map(reply => ({
         id: reply.id,
         content: reply.content,
-        imageUrl: reply.imageUrl,
         user: reply.user,
         createdAt: reply.createdAt.toISOString(),
         isAdmin: true
@@ -649,7 +641,6 @@ export const updateAdminReply = async (req: AuthRequest, res: Response) => {
     const formattedReply = {
       id: updatedAdminReply.id,
       content: updatedAdminReply.content,
-      imageUrl: updatedAdminReply.imageUrl,
       user: updatedAdminReply.user,
       createdAt: updatedAdminReply.createdAt.toISOString(),
       isAdmin: true
@@ -833,7 +824,6 @@ export const getUserPosts = async (req: Request, res: Response) => {
       replies: adminPost.replies.map(reply => ({
         id: reply.id,
         content: reply.content,
-        imageUrl: reply.imageUrl,
         user: reply.user,
         createdAt: reply.createdAt.toISOString(),
         isAdmin: true

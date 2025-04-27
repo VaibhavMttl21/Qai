@@ -59,8 +59,7 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
       Body: stream,
       ContentType: file.mimetype,
     }));
-    const url = `${process.env.R2_PUBLIC_URL}/${key}`;
-    console.log('Video uploaded to R2:', key);
+    // console.log('Video uploaded to R2:', key);
     fs.unlinkSync(file.path);
 
     const video = await prisma.video.create({
@@ -69,7 +68,6 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
         title,
         demo: Boolean(demo),
         description,
-        url,
         order: Number(order),
         moduleId: moduleId,
       },

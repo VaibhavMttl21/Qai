@@ -25,7 +25,6 @@ export async function createVideo() {
     id: "28a53cb1-b021-4521-b9ed-fde9a60f2c0f",
     title: "Video 1",
     description: "Example description",
-    url: "https://videos.raghu.fun/28a53cb1-b021-4521-b9ed-fde9a60f2c0f.mp4",
     order: 1,
     encoded: true,
     hlsUrls: {
@@ -56,7 +55,6 @@ export async function createVideo() {
     id: "38e5e6f0-4306-4870-97d2-f595927966e6",
     title: "Video 2",
     description: "Another example description",
-    url: "https://videos.raghu.fun/38e5e6f0-4306-4870-97d2-f595927966e6.mp4",
     order: 2,
     encoded: true,
     hlsUrls: {

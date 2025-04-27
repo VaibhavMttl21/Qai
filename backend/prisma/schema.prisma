@@ -41,7 +41,6 @@ model Video {
   title     String
   description String
   demo      Boolean @default(false)
-  url       String
   order     Int      
   encoded   Boolean  @default(false)
   hlsUrls   Json?

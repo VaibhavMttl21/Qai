@@ -31,7 +31,6 @@ export interface Post {
 export interface Reply {
   id: string;
   content: string;
-  imageUrl?: string;
   userId: string;
   postId: string;
   createdAt: Date;
