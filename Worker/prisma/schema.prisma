@@ -69,21 +69,23 @@ model Reply {
 }
 
 model User {
-  id             String       @id
-  email          String       @unique
-  password       String
-  name           String
-  userType       UserType
-  isPaid         Boolean      @default(true)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime
-  firebaseUid    String?
-  profilePicture String?
-  AdminPost      AdminPost[]
-  AdminReply     AdminReply[]
-  Post           Post[]
-  Progress       Progress[]
-  Reply          Reply[]
+  id                String       @id
+  email             String       @unique
+  password          String
+  name              String
+  userType          UserType
+  isPaid            Boolean      @default(false)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime
+  firebaseUid       String?
+  profilePicture    String?
+  hasCustomPassword Boolean      @default(false)
+  AdminPost         AdminPost[]
+  AdminReply        AdminReply[]
+  Post              Post[]
+  Progress          Progress[]
+  Reply             Reply[]
+  Todo              Todo[]
 }
 
 model Video {
@@ -91,12 +93,62 @@ model Video {
   title       String
   description String
   url         String
-  order       Int        @unique
+  order       Int
   createdAt   DateTime   @default(now())
   updatedAt   DateTime
   encoded     Boolean    @default(false)
   hlsUrls     Json?
+  moduleId    String
+  demo        Boolean    @default(false)
+  PDF         PDF[]
   Progress    Progress[]
+  Module      Module     @relation(fields: [moduleId], references: [id])
+}
+
+model Module {
+  id          String   @id
+  name        String
+  description String?
+  order       Int      @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  Video       Video[]
+}
+
+model Otp {
+  email     String   @id
+  otp       String
+  expiresAt DateTime
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model PDF {
+  id          String   @id
+  title       String
+  description String?
+  url         String
+  videoId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  Video       Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+}
+
+model Payment {
+  id                  String   @id
+  razorpay_order_id   String
+  razorpay_payment_id String
+  razorpay_signature  String
+  createdAt           DateTime @default(now())
+}
+
+model Todo {
+  userId      String
+  id          String  @id
+  description String
+  completed   Boolean @default(false)
+  User        User    @relation(fields: [userId], references: [id])
 }
 
 enum UserType {

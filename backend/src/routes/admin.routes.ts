@@ -3,7 +3,7 @@ import { Router } from 'express';
 import { upload, uploadFile } from '../controllers/admin/admin.excel.controller';
 import { addVideo, deleteVideo, updateVideo, videoUpload } from '../controllers/admin/admin.video.controller';
 import { uploadPdf, pdfUpload, getAllPdfs, deletePdf, updatePdf } from '../controllers/admin/admin.pdfs.controller';
-import { createModule, deleteModule, getAllModules, updateModule } from '../controllers/admin/admin.modules.controller';
+import { createModule, deleteModule, getAllModules, updateModule, moduleImageUpload } from '../controllers/admin/admin.modules.controller';
 import { auth, isAdminUser } from '../middleware/auth';
 import { createAdmin, deleteAdmin, getAdmins } from '../controllers/admin/admin.auth.controller';
 // import { adminGuard } from '../middleware/admin';
@@ -27,7 +27,7 @@ router.put('/pdfs/:id', auth, isAdminUser, updatePdf);
 
 // Module endpoints
 router.delete('/module/:id', auth, isAdminUser, deleteModule);
-router.post('/modules', auth, isAdminUser, createModule);
+router.post('/modules', auth, isAdminUser, moduleImageUpload.single('image'), createModule);
 router.get('/modules', auth, isAdminUser, getAllModules);
 router.put('/module/:id', auth, isAdminUser, updateModule);
 

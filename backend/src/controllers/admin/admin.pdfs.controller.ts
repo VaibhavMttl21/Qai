@@ -71,7 +71,7 @@ export const uploadPdf = async (req: AuthRequest, res: Response) => {
       id,
       title,
       description,
-      url: `${process.env.R2_ENDPOINT!}/${key}`,
+      url: `${process.env.R2_PDF_DOMAIN!}/${key}`,
       videoId: videoId, 
     };
 

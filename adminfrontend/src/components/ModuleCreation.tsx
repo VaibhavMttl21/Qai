@@ -8,6 +8,7 @@ interface Module {
   name: string;
   description?: string | null;
   order?: number;
+  imageUrl?: string | null;
 }
 
 export function ModuleCreation() {
@@ -15,6 +16,7 @@ export function ModuleCreation() {
   const [newModuleName, setNewModuleName] = useState('');
   const [moduleDescription, setModuleDescription] = useState('');
   const [moduleOrder, setModuleOrder] = useState<number>(0);
+  const [moduleImage, setModuleImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -37,6 +39,13 @@ export function ModuleCreation() {
     }
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setModuleImage(selectedFile);
+    }
+  };
+
   const handleCreateModule = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -48,10 +57,20 @@ export function ModuleCreation() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.post<Module>('/api/admin/modules', {
-        name: newModuleName,
-        description: moduleDescription || null,
-        order: moduleOrder
+      
+      const formData = new FormData();
+      formData.append('name', newModuleName);
+      formData.append('description', moduleDescription || '');
+      formData.append('order', moduleOrder.toString());
+      
+      if (moduleImage) {
+        formData.append('image', moduleImage);
+      }
+      
+      const response = await api.post<Module>('/api/admin/modules', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
       
       // Add new module to the list
@@ -62,6 +81,12 @@ export function ModuleCreation() {
       setNewModuleName('');
       setModuleDescription('');
       setModuleOrder(0);
+      setModuleImage(null);
+      
+      // Reset file input
+      const fileInput = document.getElementById('module-image') as HTMLInputElement;
+      if (fileInput) fileInput.value = '';
+      
       setSuccess('Module created successfully');
       setLoading(false);
     } catch (error) {
@@ -117,6 +142,24 @@ export function ModuleCreation() {
           placeholder="0"
         />
 
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Module Image (optional)
+          </label>
+          <input
+            id="module-image"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          />
+          {moduleImage && (
+            <p className="mt-1 text-sm text-gray-500">
+              Selected image: {moduleImage.name}
+            </p>
+          )}
+        </div>
+
         <Button type="submit" isLoading={loading}>
           Create Module
         </Button>
@@ -135,6 +178,7 @@ export function ModuleCreation() {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -142,6 +186,17 @@ export function ModuleCreation() {
                   <tr key={module.id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{module.name}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{module.order || 0}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {module.imageUrl ? (
+                        <img 
+                          src={module.imageUrl} 
+                          alt={module.name} 
+                          className="h-10 w-10 object-cover rounded"
+                        />
+                      ) : (
+                        "No image"
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

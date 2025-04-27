@@ -1,9 +1,30 @@
-
 import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AuthRequest } from '../../types';
+import multer from 'multer';
+import path from 'path';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { r2 } from '../../utils/r2';
+import fs from 'fs';
 
 const prisma = new PrismaClient();
+
+// Configure multer for module image uploads
+export const moduleImageUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+
+    if (extname && mimetype) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'));
+    }
+  }
+});
 
 // Get all modules
 export const getAllModules = async (req: AuthRequest, res: Response) => {
@@ -29,11 +50,36 @@ export const createModule = async (req: AuthRequest, res: Response) => {
     if (!name) {
       return res.status(400).json({ message: 'Module name is required' });
     }
+
+    let imageUrl = null;
+    
+    // Handle file upload to R2 if file is present
+    if (req.file) {
+      const file = req.file;
+      const fileName = `modules/${Date.now()}-${file.originalname}`;
+      
+      // Upload to R2
+      await r2.send(
+        new PutObjectCommand({
+          Bucket: process.env.R2_BUCKET_NAME,
+          Key: fileName,
+          Body: fs.createReadStream(file.path),
+          ContentType: file.mimetype,
+        })
+      );
+      
+      // Generate the URL for the image
+      imageUrl = `${process.env.R2_PUBLIC_URL}/${fileName}`;
+      
+      // Remove the temporary file
+      fs.unlinkSync(file.path);
+    }
     
     const module = await prisma.module.create({
       data: {
         name,
         description: description || null,
+        imageUrl,
         order: order ? Number(order) : 0
       }
     });
@@ -90,7 +136,7 @@ export const updateModule = async (req: AuthRequest, res: Response) => {
         name,
         description,
         order
-      }
+}
     });
 
     res.status(200).json(updatedModule);
