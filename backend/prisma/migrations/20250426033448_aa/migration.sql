@@ -1,5 +1,0 @@
--- DropForeignKey
-ALTER TABLE "PDF" DROP CONSTRAINT "PDF_videoId_fkey";
-
--- AddForeignKey
-ALTER TABLE "PDF" ADD CONSTRAINT "PDF_videoId_fkey" FOREIGN KEY ("videoId") REFERENCES "Video"("id") ON DELETE CASCADE ON UPDATE CASCADE;

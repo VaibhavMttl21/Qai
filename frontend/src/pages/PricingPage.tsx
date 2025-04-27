@@ -2,33 +2,35 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/store/auth';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/toaster';
+// import { useToast } from '@/components/ui/toaster';
 import api from '@/lib/api';
 import "../styles/fonts.css";
+import { useNavigate } from 'react-router-dom';
 
 export function PricingPage() {
-  const { user, setUser } = useAuthStore(); // ✅ include setUser
-  const { toast } = useToast();
+  const { user, setUser } = useAuthStore();
+  // const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [amount] = useState(350); // Fixed amount
+  const navigate = useNavigate();
 
   const handlePayment = async () => {
     if (user?.isPaid) {
-      toast({
-        title: 'Already Subscribed',
-        description: 'You already have access to the premium content!',
-        variant: 'default',
-      });
+      // toast({
+      //   title: 'Already Subscribed',
+      //   description: 'You already have access to the premium content!',
+      //   variant: 'default',
+      // });
       return;
     }
     try {
       setIsLoading(true);
-      const response = await api.post('/api/payment/order', { amount });
+      const response = await api.post('/api/payment/create-order', { amount });
       const data = response.data;
       handlePaymentVerify(data.data);
     } catch (error) {
       console.log(error);
-      toast('Failed to initiate payment. Please try again.', 'error');
+      // toast('Failed to initiate payment. Please try again.', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -44,25 +46,32 @@ export function PricingPage() {
       order_id: data.id,
       handler: async (response) => {
         try {
-          const verificationResponse = await api.post('/api/payment/verify', {
+          const verificationResponse = await api.post('/api/payment/verify-payment', {
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature,
           });
 
           const verifyData = verificationResponse.data;
-
+          
           if (verifyData.message) {
-            toast('Payment successful!', 'success');
-            // ✅ Update isPaid after successful payment
-            setUser({
-              ...user,
-              isPaid: true,
-            });
+            if (user) {
+              const updateResponse = await api.post('/api/payment/update-payment', { userId: user.id });
+              
+              // Update local user state to reflect premium status
+              if (updateResponse.data && updateResponse.data.isPaid) {
+                setUser({ ...user, isPaid: true });
+                // Show success message
+                alert('Payment successful! You now have premium access.');
+                // Optionally navigate to profile or dashboard
+                navigate('/profile');
+              }
+            }
           }
         } catch (error) {
           console.log(error);
-          toast('Payment verification failed. Please contact support.', 'error');
+          // toast('Payment verification failed. Please contact support.', 'error');
+          alert('Payment verification failed. Please contact support.');
         }
       },
       theme: {
