@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AuthRequest } from '../types';
-
+import { getStorage } from 'firebase-admin/storage';
 const prisma = new PrismaClient();
 
 export const getPosts = async (req: Request, res: Response) => {
@@ -456,6 +456,44 @@ export const deletePost = async (req: AuthRequest, res: Response) => {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
+    // Delete image from Firebase if it exists
+   // Inside the deletePost function in community.controller.ts
+if (post.imageUrl) {
+  try {
+    // Extract file path from URL - handle both full URLs and path-only URLs
+    let filePath;
+    if (post.imageUrl.startsWith('http')) {
+      // For full URLs (https://firebasestorage.googleapis.com/v0/b/bucket/o/file?token)
+      const url = new URL(post.imageUrl);
+      // Extract the path after /o/
+      const pathMatch = url.pathname.match(/\/o\/(.+)$/);
+      if (pathMatch && pathMatch[1]) {
+        filePath = decodeURIComponent(pathMatch[1]);
+      } else {
+        throw new Error('Invalid Firebase Storage URL format');
+      }
+    } else {
+      // For path-only URLs (v0/b/bucket/o/file)
+      // Extract the path after /o/
+      const pathMatch = post.imageUrl.match(/\/o\/(.+)$|^o\/(.+)$/);
+      if (pathMatch) {
+        filePath = decodeURIComponent(pathMatch[1] || pathMatch[2]);
+      } else {
+        // If no /o/ path found, use the whole path as is
+        filePath = post.imageUrl;
+      }
+    }
+    
+    console.log(`Attempting to delete file: ${filePath}`);
+    const bucketName = process.env.FIREBASE_STORAGE_BUCKET;
+    await getStorage().bucket(bucketName).file(filePath).delete();
+    console.log(`Successfully deleted image from storage: ${filePath}`);
+  } catch (error) {
+    console.error('Error deleting image from storage:', error);
+    // Continue with post deletion even if image deletion fails
+  }
+}
+
     // Delete all replies first (database constraint)
     await prisma.reply.deleteMany({
       where: { postId: id }
@@ -647,10 +685,46 @@ export const deleteAdminPost = async (req: AuthRequest, res: Response) => {
       where: { id }
     });
 
+    
+
     if (!adminPost) {
       return res.status(404).json({ message: 'Admin post not found' });
     }
-
+    if (adminPost.imageUrl) {
+      try {
+        // Extract file path from URL - handle both full URLs and path-only URLs
+        let filePath;
+        if (adminPost.imageUrl.startsWith('http')) {
+          // For full URLs (https://firebasestorage.googleapis.com/v0/b/bucket/o/file?token)
+          const url = new URL(adminPost.imageUrl);
+          // Extract the path after /o/
+          const pathMatch = url.pathname.match(/\/o\/(.+)$/);
+          if (pathMatch && pathMatch[1]) {
+            filePath = decodeURIComponent(pathMatch[1]);
+          } else {
+            throw new Error('Invalid Firebase Storage URL format');
+          }
+        } else {
+          // For path-only URLs (v0/b/bucket/o/file)
+          // Extract the path after /o/
+          const pathMatch = adminPost.imageUrl.match(/\/o\/(.+)$|^o\/(.+)$/);
+          if (pathMatch) {
+            filePath = decodeURIComponent(pathMatch[1] || pathMatch[2]);
+          } else {
+            // If no /o/ path found, use the whole path as is
+            filePath = adminPost.imageUrl;
+          }
+        }
+        
+        console.log(`Attempting to delete file: ${filePath}`);
+        const bucketName = process.env.FIREBASE_STORAGE_BUCKET;
+        await getStorage().bucket(bucketName).file(filePath).delete();
+        console.log(`Successfully deleted image from storage: ${filePath}`);
+      } catch (error) {
+        console.error('Error deleting image from storage:', error);
+        // Continue with post deletion even if image deletion fails
+      }
+    }
     // Delete all admin replies first (database constraint)
     await prisma.adminReply.deleteMany({
       where: { adminPostId: id }
