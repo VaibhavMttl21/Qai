@@ -493,12 +493,6 @@ if (post.imageUrl) {
     // Continue with post deletion even if image deletion fails
   }
 }
-
-    // Delete all replies first (database constraint)
-    await prisma.reply.deleteMany({
-      where: { postId: id }
-    });
-
     // Delete the post
     await prisma.post.delete({
       where: { id }
@@ -725,10 +719,6 @@ export const deleteAdminPost = async (req: AuthRequest, res: Response) => {
         // Continue with post deletion even if image deletion fails
       }
     }
-    // Delete all admin replies first (database constraint)
-    await prisma.adminReply.deleteMany({
-      where: { adminPostId: id }
-    });
 
     // Delete the admin post
     await prisma.adminPost.delete({
