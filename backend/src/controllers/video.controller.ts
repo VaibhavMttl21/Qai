@@ -39,9 +39,8 @@ export const getVideos = async (req: AuthRequest, res: Response) => {
 
 export const updateProgress = async (req: AuthRequest, res: Response) => {
   try {
-    console.log("request in updateProgress", req.user);
+    // console.log("request in updateProgress", req.user);
     const { videoId } = req.params;
-    console.log("videoId", videoId);
     const { completed } = req.body;
     const progress = await prisma.progress.upsert({
       where: {

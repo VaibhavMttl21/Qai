@@ -91,12 +91,12 @@ async function encodeToHLS(inputPath: string, outputDir: string, resolution: str
 async function handleMessage(videoId: string, rawKey: string, demo: boolean) {
   const temp = await tmp.dir({ unsafeCleanup: true });
   const inputPath = path.join(temp.path, 'input.mp4');
-  console.log(`downloading video to ${inputPath}`);
+  // console.log(`downloading video to ${inputPath}`);
   // 1. Download raw video
   await downloadFromR2(rawKey, inputPath);
 
   // 2. Encode to 1080p, 720p, 480p
-  console.log('Encoding video...');
+  // console.log('Encoding video...');
   const resolutions = ['1920x1080', '1280x720', '854x480'];
   const qualities = ['1080p', '720p', '480p'];
   for (let i = 0; i < resolutions.length; i++) {
@@ -104,7 +104,7 @@ async function handleMessage(videoId: string, rawKey: string, demo: boolean) {
   }
 
   // 3. Upload each encoded folder to R2
-  console.log('Uploading to R2...');
+  // console.log('Uploading to R2...');
   const uploadPrefix = `${videoId}`;
   await uploadFolderToR2(temp.path, uploadPrefix, demo);
 
@@ -157,7 +157,7 @@ subscription.on('message', async (message) => {
       return;
     }
     
-    console.log(`🎥 Processing video ${videoId} (Attempt: ${retryCount + 1})`);
+    // console.log(`🎥 Processing video ${videoId} (Attempt: ${retryCount + 1})`);
     await handleMessage(videoId, rawKey, demo);
 
     message.ack();

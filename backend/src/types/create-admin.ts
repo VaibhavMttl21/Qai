@@ -19,7 +19,7 @@ export async function createAdmin() {
       }
     });
     
-    console.log('Admin user created successfully:', admin);
+    // console.log('Admin user created successfully:', admin);
   } catch (error) {
     console.error('Error creating admin user:', error);
   } finally {

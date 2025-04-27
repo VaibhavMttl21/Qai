@@ -49,11 +49,9 @@ export function VideoPlayer() {
     }
 
     const token = localStorage.getItem('token');
-    console.log('Token:', token);
 
     const rawUrl = currentVideo.hlsUrls[quality];
     const secureUrl = token ? `${rawUrl}?token=${token}` : rawUrl;
-    console.log('Secure URL:', secureUrl);
 
     let hls = null;
 

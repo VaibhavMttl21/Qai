@@ -39,7 +39,7 @@ import '../../styles/fonts.css';
 import NeuFollowButton3 from "./buttonpre";
 
 const handleAnimationComplete = () => {
-  console.log('Animation completed!');
+  // console.log('Animation completed!');
 };
 
 export function PreHeading() {

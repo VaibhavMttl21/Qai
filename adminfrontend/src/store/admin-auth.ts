@@ -30,7 +30,7 @@ export const useAdminAuthStore = create<AdminAuthState>((set, get) => ({
     try {
       set({ loading: true, error: null });
       const response = await api.post('/api/auth/login', { email, password });
-      console.log('Login response:', response);
+      // console.log('Login response:', response);
       interface LoginResponse {
         token: string;
       }
@@ -39,7 +39,7 @@ export const useAdminAuthStore = create<AdminAuthState>((set, get) => ({
       
       // Decode the token to verify this is an admin (ADMIN type)
       const decoded = jwtDecode<AdminUser>(token);
-      console.log('Decoded token:', decoded);
+      // console.log('Decoded token:', decoded);
       
       if (decoded.userType !== 'ADMIN') {
         set({ loading: false, error: 'Unauthorized: Admin access required' });

@@ -120,7 +120,7 @@ const fetchWithTimeout = async (url: string, options = {}, timeout = 10000) => {
 
 export const getNews = async (req: Request, res: Response) => {
   try {
-    console.log("Request received for news");
+    // console.log("Request received for news");
     const now = new Date();
     
     // Check for valid cache from today
@@ -135,7 +135,7 @@ export const getNews = async (req: Request, res: Response) => {
         cacheDate.getFullYear() === now.getFullYear();
         
       if (isSameDay) {
-        console.log("Using today's cached news data");
+        // console.log("Using today's cached news data");
         // Validate the cached data against our schema
         const validatedCache = newsResponseSchema.parse({ 
           articles: cache.articles, 
@@ -146,7 +146,7 @@ export const getNews = async (req: Request, res: Response) => {
     }
     
     // If we got here, we need to fetch fresh news
-    console.log("No valid cache found for today, fetching fresh news");
+    // console.log("No valid cache found for today, fetching fresh news");
     
     const apiKey = process.env.NEWS_API_KEY;
     if (!apiKey) {
@@ -190,8 +190,8 @@ export const getNews = async (req: Request, res: Response) => {
     // Add a random sorting parameter (publishedAt or relevance)
     const sortBy = Math.random() > 0.5 ? 'publishedAt' : 'relevance';
 
-    console.log(`Fetching fresh news data from API with query: ${query}`);
-    console.log(`Using sort: ${sortBy}, from date: ${fromDate}`);
+    // console.log(`Fetching fresh news data from API with query: ${query}`);
+    // console.log(`Using sort: ${sortBy}, from date: ${fromDate}`);
 
     const response = await fetchWithTimeout(
       `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&token=${apiKey}&max=10&lang=en&from=${fromDate}&sortby=${sortBy}`,
@@ -215,7 +215,7 @@ export const getNews = async (req: Request, res: Response) => {
 
     // Save the fresh news to cache with the current timestamp
     await saveNewsCache(mappedArticles, now);
-    console.log("Fetched fresh news, saved to disk cache");
+    // console.log("Fetched fresh news, saved to disk cache");
 
     // Validate the response data
     const validatedResponse = newsResponseSchema.parse({ articles: mappedArticles });
@@ -226,7 +226,7 @@ export const getNews = async (req: Request, res: Response) => {
     try {
       const cache = await readNewsCache();
       if (cache && cache.articles.length > 0) {
-        console.log("Returning old cache due to API error");
+        // console.log("Returning old cache due to API error");
         // Validate the cached data
         const validatedCache = newsResponseSchema.parse({
           articles: cache.articles,

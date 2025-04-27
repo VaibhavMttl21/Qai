@@ -121,9 +121,9 @@ export const getPosts = async (req: Request, res: Response) => {
 
 export const createPost = async (req: AuthRequest, res: Response) => {
   try {
-    console.log("request reached");
+    // console.log("request reached");
     const { content, imageUrl } = req.body;
-    console.log('Creating post:', content, imageUrl);
+    // console.log('Creating post:', content, imageUrl);
     const post = await prisma.post.create({
       data: {
         content,
@@ -151,7 +151,7 @@ export const createPost = async (req: AuthRequest, res: Response) => {
     });
 
     // Emit socket event for real-time updates
-    console.log('Emitting new post event:', post);
+    // console.log('Emitting new post event:', post);
     req.app.get('io').emit('newPost', post);
 
     res.status(201).json(post);
@@ -477,10 +477,10 @@ if (post.imageUrl) {
       }
     }
     
-    console.log(`Attempting to delete file: ${filePath}`);
+    // console.log(`Attempting to delete file: ${filePath}`);
     const bucketName = process.env.FIREBASE_STORAGE_BUCKET;
     await getStorage().bucket(bucketName).file(filePath).delete();
-    console.log(`Successfully deleted image from storage: ${filePath}`);
+    // console.log(`Successfully deleted image from storage: ${filePath}`);
   } catch (error) {
     console.error('Error deleting image from storage:', error);
     // Continue with post deletion even if image deletion fails
@@ -701,10 +701,10 @@ export const deleteAdminPost = async (req: AuthRequest, res: Response) => {
           }
         }
         
-        console.log(`Attempting to delete file: ${filePath}`);
+        // console.log(`Attempting to delete file: ${filePath}`);
         const bucketName = process.env.FIREBASE_STORAGE_BUCKET;
         await getStorage().bucket(bucketName).file(filePath).delete();
-        console.log(`Successfully deleted image from storage: ${filePath}`);
+        // console.log(`Successfully deleted image from storage: ${filePath}`);
       } catch (error) {
         console.error('Error deleting image from storage:', error);
         // Continue with post deletion even if image deletion fails

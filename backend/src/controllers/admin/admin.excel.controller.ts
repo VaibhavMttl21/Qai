@@ -77,7 +77,7 @@ export const uploadFile = async (req: AuthRequest, res: Response) => {
       parsedData = xlsx.utils.sheet_to_json(worksheet);
     }
 
-    console.log('Parsed Data:', parsedData);
+    // console.log('Parsed Data:', parsedData);
     
     // Normalize keys to uppercase for all rows
     const normalizedData = parsedData.map(row => {

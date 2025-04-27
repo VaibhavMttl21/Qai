@@ -29,7 +29,7 @@ export function PricingPage() {
       const data = response.data;
       handlePaymentVerify(data.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       // toast('Failed to initiate payment. Please try again.', 'error');
     } finally {
       setIsLoading(false);
@@ -69,7 +69,7 @@ export function PricingPage() {
             }
           }
         } catch (error) {
-          console.log(error);
+          console.error(error);
           // toast('Payment verification failed. Please contact support.', 'error');
           alert('Payment verification failed. Please contact support.');
         }

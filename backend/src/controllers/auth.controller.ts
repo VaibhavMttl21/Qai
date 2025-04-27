@@ -212,7 +212,7 @@ export const login = async (req: Request, res: Response) => {
       // Otherwise, validate with DOB (the original behavior)
       else {
         isValidCredential = await bcrypt.compare(String(dob), user.password);
-        console.log('Comparing DOB:', dob, 'with hashed password:', user.password);
+        // console.log('Comparing DOB:', dob, 'with hashed password:', user.password);
       }
     } else {
       // For regular users, validate with password
@@ -350,7 +350,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
 export const resetPassword = async (req: Request, res: Response) => {
   try {
     const { email, token, password } = req.body;
-    console.log('Reset password request:', { email, token, password });
+    // console.log('Reset password request:', { email, token, password });
     if (!email || !token || !password) {
       return res.status(400).json({ message: 'Email, token, and password are required' });
     }

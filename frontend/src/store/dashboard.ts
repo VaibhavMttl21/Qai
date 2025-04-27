@@ -104,7 +104,7 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       
       // Set timeout for next run
       const timerId = window.setTimeout(() => {
-        console.log('Running scheduled news fetch at 9 AM');
+        // console.log('Running scheduled news fetch at 9 AM');
         get().fetchNews();
         // Schedule the next run
         scheduleNextRun();

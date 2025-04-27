@@ -39,7 +39,6 @@ export const videoUpload = multer({
 
 export const addVideo = async (req: AuthRequest, res: Response) => {
   const { title, description, order, demo, moduleId } = req.body;
-  console.log('Received request to add video:', req.body);
   const file = req.file;
   
   if (!file) return res.status(400).json({ error: 'No file uploaded' });
@@ -51,7 +50,7 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
     const id = uuidv4();
     const key = `${id}.mp4`;
     const stream = createReadStream(file.path);
-    console.log('Uploading video to R2:', key);
+    // console.log('Uploading video to R2:', key);
     await r2.send(new PutObjectCommand({
       Bucket: process.env.R2_BUCKET!,
       Key: key,
@@ -126,7 +125,7 @@ export const deleteVideo = async (req: AuthRequest, res: Response) => {
         Bucket: process.env.R2_PDF_BUCKET!,
         Key: pdfKey,
       }));
-      console.log('PDF deleted from R2:', pdfKey);
+      // console.log('PDF deleted from R2:', pdfKey);
     }
 
     // Delete the video from the database pdf are also deleted due to cascade delete
@@ -134,7 +133,7 @@ export const deleteVideo = async (req: AuthRequest, res: Response) => {
       where: { id },
     });
 
-    console.log('Video deleted from database:', id);
+    // console.log('Video deleted from database:', id);
 
     res.status(200).json({ message: 'Video deleted successfully' });
   } catch (error) {

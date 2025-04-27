@@ -65,7 +65,7 @@ export const useCommunityStore = create<CommunityState>((set, get) => ({
   fetchUserPosts: async (userId) => {
     try {
       const response = await api.get(`/api/community/users/${userId}/posts`);
-      console.log("reponse",response)
+      // console.log("reponse",response)
       set({ userPosts: response.data });
     } catch (error) {
       console.error('Failed to fetch user posts:', error);
@@ -83,7 +83,7 @@ export const useCommunityStore = create<CommunityState>((set, get) => ({
           imageUrl
         });
       } else {
-        console.log('Creating post:', content, imageUrl);
+        // console.log('Creating post:', content, imageUrl);
         // Use regular endpoint for non-admin users
         await api.post('/api/community/posts', { content, imageUrl });
       }

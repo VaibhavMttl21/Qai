@@ -69,7 +69,6 @@ export const createModule = async (req: AuthRequest, res: Response) => {
       
       // Generate the URL for the image
       imageUrl = `${process.env.R2_IMG_DOMAIN}/${fileName}`;
-      console.log('Image URL:', imageUrl);
     }
     
     const module = await prisma.module.create({

@@ -26,7 +26,7 @@ export function ModulePage() {
   useEffect(() => {
     fetchModules();
   }, [fetchModules]);
-  console.log(modules);
+
   const toggleModule = (moduleId: string) => {
     setExpandedModule(expandedModule === moduleId ? null : moduleId);
   };

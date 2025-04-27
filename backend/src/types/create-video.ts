@@ -115,7 +115,7 @@ prisma.video.update({
     });
 
 
-    console.log('Admin user created successfully:', video);
+    // console.log('Admin user created successfully:', video);
   } catch (error) {
     console.error('Error creating admin user:', error);
   } finally {

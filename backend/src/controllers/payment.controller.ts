@@ -74,7 +74,7 @@ export const updateUserPaymentStatus = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'User ID is required' });
     }
     
-    console.log('Updating payment status for user:', userId);
+    // console.log('Updating payment status for user:', userId);
     
     // Update the user's payment status
     const updatedUser = await prisma.user.update({

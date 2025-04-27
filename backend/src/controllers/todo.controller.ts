@@ -18,7 +18,6 @@ export const AddTodo = async (req: AuthRequest, res: Response) => {
             return res.status(400).json({ message: 'Description is required' });
         }
         
-        console.log('description', description);
     
         const todo = await prisma.todo.create({
             data: {

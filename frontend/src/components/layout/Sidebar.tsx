@@ -63,7 +63,7 @@ export function Sidebar() {
   };
 
   const handleLogout = () => {
-    console.log('Logging out...');
+    // console.log('Logging out...');
     logout();
     navigate('/login'); // Navigate to signin page after logout
   };

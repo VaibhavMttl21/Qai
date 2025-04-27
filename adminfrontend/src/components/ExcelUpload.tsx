@@ -42,7 +42,7 @@ export function ExcelUpload() {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('Upload response:', response);
+      // console.log('Upload response:', response);
       setSuccess('File uploaded successfully!');
       setFile(null);
       setName('');
