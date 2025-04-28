@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "install-and-build": "npm install --legacy-peer-deps && npm run build:ignore-errors",
   "build:ignore-errors": "tsc --noEmit false && vite build"
 
   },
