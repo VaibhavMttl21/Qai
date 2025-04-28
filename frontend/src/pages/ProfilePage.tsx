@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/store/auth';
@@ -11,10 +10,9 @@ import { CustomKanban } from '@/components/profile/Todo';
 import "../styles/fonts.css";
 
 export function ProfilePage() {
-  const { user } = useAuthStore();
+  const { user, setUser } = useAuthStore();
   const { toast } = useToast();
-  const [name, setName] = useState(user?.name || '');
-  const [email] = useState(user?.email || '');
+  const [editName, setEditName] = useState(user?.name || '');
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -30,14 +28,23 @@ export function ProfilePage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name.trim()) {
+    if (!editName.trim()) {
       toast('Name cannot be empty', 'error');
       return;
     }
 
     setIsLoading(true);
     try {
-      await api.put('/api/user/profile', { name });
+      await api.put('/api/user/profile', { name: editName });
+      
+      // Update the user in the Zustand store
+      if (user) {
+        setUser({
+          ...user,
+          name: editName
+        });
+      }
+      
       toast('Profile updated successfully', 'success');
       setIsEditing(false);
     } catch (error) {
@@ -48,17 +55,12 @@ export function ProfilePage() {
     }
   };
 
-  
   return (
     <div className="min-h-screen w-full bg-white font-santoshi relative"
     style={{
       backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke-width='2' stroke='%23d4d4d4'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e")`,
     }}>
       {/* Checkerboard Pattern Background */}
-    
-
-     
-
       <div className="container mx-auto px-4 py-8 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -92,7 +94,7 @@ export function ProfilePage() {
               <div className="relative px-6 pb-6">
                 <div className="flex justify-center">
                   <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 border-4 border-white flex items-center justify-center text-white text-2xl font-bold -mt-10">
-                    {name.charAt(0).toUpperCase()}
+                    {user?.name.charAt(0).toUpperCase()}
                   </div>
                 </div>
 
@@ -104,13 +106,33 @@ export function ProfilePage() {
                     {isEditing ? (
                       <Input
                         id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
                         disabled={isLoading}
                         className="border-indigo-200 focus:ring-2 focus:ring-purple-500 focus:border-indigo-300"
                       />
                     ) : (
                       <div className="text-lg font-medium text-gray-900">{user?.name}</div>
+                    )}
+                    
+                    {isEditing && (
+                      <div className="mt-2 flex space-x-2">
+                        <Button 
+                          type="submit" 
+                          disabled={isLoading}
+                          className="bg-indigo-600 hover:bg-indigo-700"
+                        >
+                          {isLoading ? 'Saving...' : 'Save'}
+                        </Button>
+                        <Button 
+                          type="button" 
+                          variant="outline" 
+                          onClick={() => setIsEditing(false)}
+                          disabled={isLoading}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
                     )}
                   </div>
 
@@ -118,7 +140,7 @@ export function ProfilePage() {
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                       Email
                     </label>
-                    <div className="text-gray-700">{email}</div>
+                    <div className="text-gray-700">{user?.email}</div>
                   </div>
 
                   <div>
