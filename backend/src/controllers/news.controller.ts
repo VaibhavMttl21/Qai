@@ -102,6 +102,7 @@ async function readNewsCache() {
 
 // Helper function to fetch with timeout
 const fetchWithTimeout = async (url: string, options = {}, timeout = 10000) => {
+  console.log(`Fetching URL: ${url}`);
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
 
@@ -190,8 +191,8 @@ export const getNews = async (req: Request, res: Response) => {
     // Add a random sorting parameter (publishedAt or relevance)
     const sortBy = Math.random() > 0.5 ? 'publishedAt' : 'relevance';
 
-    // console.log(`Fetching fresh news data from API with query: ${query}`);
-    // console.log(`Using sort: ${sortBy}, from date: ${fromDate}`);
+    console.log(`Fetching fresh news data from API with query: ${query}`);
+    console.log(`Using sort: ${sortBy}, from date: ${fromDate}`);
 
     const response = await fetchWithTimeout(
       `https://gnews.io/api/v4/search?q=${encodeURIComponent(query)}&token=${apiKey}&max=10&lang=en&from=${fromDate}&sortby=${sortBy}`,
@@ -201,6 +202,7 @@ export const getNews = async (req: Request, res: Response) => {
 
     if (!response.ok) throw new Error(`Failed to fetch news: ${response.status}`);
     const data = await response.json();
+    console.log("Fetched news data from API:", data);
 
     // If we got more than 5 articles, randomly select 5
     let articlesToUse = data.articles;
@@ -246,7 +248,7 @@ export const getNews = async (req: Request, res: Response) => {
         isMock: true,
         error: error.message
       });
-      res.status(500).json(validatedMockData);
+      res.status(200).json(validatedMockData);
     } catch (validationError) {
       // If even our mock data is invalid, this is a serious issue
       console.error("Mock data validation failed:", validationError);
