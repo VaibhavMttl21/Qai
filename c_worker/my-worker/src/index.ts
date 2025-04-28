@@ -82,7 +82,7 @@ function extractToken(req: Request, url: URL): string | null {
 // ✅ Centralized CORS headers
 function corsHeaders() {
   return {
-    "Access-Control-Allow-Origin": "*", // change to your frontend domain if needed
+    "Access-Control-Allow-Origin": "https://qaieducation.in", // change to your frontend domain if needed
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Authorization, Content-Type",
     "Access-Control-Max-Age": "86400"
