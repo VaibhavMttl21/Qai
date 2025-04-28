@@ -18,15 +18,15 @@ export function ForgotPasswordPage() {
 
     
     try {
-        // Use the API client instead of fetch
-         await api.post('/api/auth/forgot-password', { email });
-        setSuccess(true);
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
+      await api.post('/api/auth/forgot-password', { email });
+      setSuccess(true);
       navigate('/verify-otp', { state: { email } });
+    } catch (error) {
+      console.error('Error sending password reset email:', error);  
+      setError('An error occurred');
+    } finally {
+      setLoading(false);
+    }
     };
 
   return (

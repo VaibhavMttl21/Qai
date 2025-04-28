@@ -50,6 +50,7 @@ export function ResetPasswordPage() {
       
       navigate('/login');
     } catch (error) {
+      console.error('Error resetting password:', error);
       toast('Failed to reset password. Please try again.', 'error');
     } finally {
       setIsLoading(false);

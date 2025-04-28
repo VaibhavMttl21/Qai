@@ -34,6 +34,7 @@ export function ForgotPasswordPage() {
       // Navigate to OTP verification page, passing email as state
       navigate('/verify-otp', { state: { email } });
     } catch (error) {
+      console.error("Error sending verification code:", error);
       toast("Error: Failed to send verification code. Please try again.");
     } finally {
       setIsLoading(false);

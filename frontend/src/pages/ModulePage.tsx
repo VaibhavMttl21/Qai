@@ -109,9 +109,9 @@ export function ModulePage() {
                         <motion.div
                           key={video.id}
                           className="bg-white p-3 rounded-lg border border-indigo-100 cursor-pointer hover:border-indigo-300 transition-colors"
+                          onClick={() => handleVideoClick(video.id)}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
-                          onClick={() => handleVideoClick(video.id)}
                         >
                           <div className="flex items-center">
                             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-indigo-400 flex items-center justify-center mr-3 text-white flex-shrink-0">

@@ -67,7 +67,7 @@ export function RegisterForm({ bgColor }: { bgColor: string }) {
         setStep('verify');
       } catch (error: unknown) {
         const errorMessage = error instanceof AxiosError 
-          ? error.response?.data?.message || error.response?.data?.error || 'Failed to send verification code'
+          ? error.response?.data?.message || error.response?.data?.error 
           : 'Failed to send verification code';
         setError(errorMessage);
       } finally {
@@ -94,7 +94,7 @@ export function RegisterForm({ bgColor }: { bgColor: string }) {
         navigate('/dashboard');
       } catch (error: unknown) {
         const errorMessage = error instanceof AxiosError 
-          ? error.response?.data?.message || error.response?.data?.error || 'Invalid verification code'
+          ? error.response?.data?.message || error.response?.data?.error
           : 'Invalid verification code';
         setError(errorMessage);
       } finally {
@@ -130,7 +130,7 @@ export function RegisterForm({ bgColor }: { bgColor: string }) {
       setError('A new verification code has been sent to your email');
     } catch (error: unknown) {
       const errorMessage = error instanceof AxiosError 
-        ? error.response?.data?.message || error.response?.data?.error || 'Failed to resend verification code'
+        ? error.response?.data?.message || error.response?.data?.error
         : 'Failed to resend verification code';
       setError(errorMessage);
     } finally {

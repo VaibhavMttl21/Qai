@@ -38,6 +38,7 @@ interface VideoState {
   videos: Video[];
   modules: Module[];
   currentVideo: Video | null;
+  loading: boolean; // Add loading state
   progress: Record<string, boolean>;
   fetchVideos: () => Promise<void>;
   fetchModules: () => Promise<void>;
@@ -51,6 +52,7 @@ export const useVideoStore = create<VideoState>((set, get) => ({
   modules: [],
   currentVideo: null,
   progress: {},
+  loading: false, // Initialize loading state
   
   fetchVideos: async () => {
     try {
@@ -66,10 +68,12 @@ export const useVideoStore = create<VideoState>((set, get) => ({
   
   fetchModules: async () => {
     try {
+      set({ loading: true }); // Set loading to true before fetching
       const response = await api.get('/api/videos/modules');
-      set({ modules: response.data });
+      set({ modules: response.data, loading: false }); // Set loading to false when done
     } catch (error) {
       console.error('Failed to fetch modules:', error);
+      set({ loading: false }); // Set loading to false on error
     }
   },
   

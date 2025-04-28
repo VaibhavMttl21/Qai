@@ -17,7 +17,7 @@ export function RegisterPage() {
       setBgColorIndex((prev) => (prev + 1) % bgColors.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  },);
 
   const encodedSVG = encodeURIComponent(
     `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='#989898 ' stroke-width='1.5'><path d='M0 0H32V32'/></svg>`
