@@ -30,6 +30,9 @@ export function PreHeading() {
                     md:w-[55%] sm:w-[60%] 
                     xs:w-[80%] z-10">
         <motion.img
+          src="/blob.png"
+          alt="Left side illustration"
+          className="w-full h-auto object-contain opacity-70"
           initial={false}
           animate={{ y: [0, -30, 0] }}
           transition={{
@@ -37,13 +40,7 @@ export function PreHeading() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-        >
-          <img
-            src="/blob.png"
-            alt="Left side illustration"
-            className="w-full h-auto object-contain opacity-70"
-          />
-        </motion.img>
+        />
       </div>
       
       {/* Text Content */}
