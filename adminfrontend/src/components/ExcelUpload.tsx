@@ -37,7 +37,7 @@ export function ExcelUpload() {
     formData.append('name', name || file.name);
     
     try {
-      const response = await api.post('/api/admin/upload', formData, {
+       await api.post('/api/admin/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

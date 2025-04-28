@@ -19,7 +19,7 @@ export function ForgotPasswordPage() {
     
     try {
         // Use the API client instead of fetch
-        const response = await api.post('/api/auth/forgot-password', { email });
+         await api.post('/api/auth/forgot-password', { email });
         setSuccess(true);
       } catch (err: any) {
         setError(err.response?.data?.message || 'An error occurred');
