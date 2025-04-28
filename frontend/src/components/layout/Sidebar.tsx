@@ -68,6 +68,10 @@ export function Sidebar() {
     navigate('/login'); // Navigate to signin page after logout
   };
 
+  const MotionDiv = motion.div as React.ComponentType<
+        React.HTMLAttributes<HTMLDivElement> & { ref?: React.Ref<HTMLDivElement> }
+      >;
+
   return (
     <motion.nav
       ref={animationRef}
@@ -175,7 +179,7 @@ export function Sidebar() {
       </div>
 
       {/* Hamburger Button with Animation */}
-      <motion.button
+      <MotionDiv
         onClick={() => setOpen((prev) => !prev)}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
@@ -202,7 +206,7 @@ export function Sidebar() {
             </motion.span>
           )}
         </div>
-      </motion.button>
+      </MotionDiv>
     </motion.nav>
   );
 }

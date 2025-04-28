@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   SiDribbble,
@@ -16,6 +16,7 @@ const StackedCardTestimonials = () => {
     <section className="relative bg-white py-24 px-4 lg:px-8 grid items-center grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-4 overflow-hidden">
       {/* 🌪 Top-Left Rotating */}
       <motion.img
+        as="img"
         src="/two.png"
         alt="Rotating Decorative"
         className="absolute top-8 left-4 w-20 lg:w-80 opacity-40 pointer-events-none z-0"
@@ -66,7 +67,7 @@ const StackedCardTestimonials = () => {
 };
 
 // Pagination dots
-const SelectBtns = ({ numTracks, setSelected, selected }) => {
+const SelectBtns = ({ numTracks, setSelected, selected }: { numTracks: number; setSelected: (n: number) => void; selected: number }) => {
   return (
     <div className="flex gap-1 mt-8">
       {Array.from(Array(numTracks).keys()).map((n) => {
@@ -78,7 +79,7 @@ const SelectBtns = ({ numTracks, setSelected, selected }) => {
           >
             {selected === n ? (
               <motion.span
-                className="absolute top-0 left-0 bottom-0 bg-slate-950"
+                {...{className:"absolute top-0 left-0 bottom-0 bg-slate-950"}}
                 initial={{ width: "0%" }}
                 animate={{ width: "100%" }}
                 transition={{ duration: 5 }}
@@ -102,18 +103,33 @@ const SelectBtns = ({ numTracks, setSelected, selected }) => {
 };
 
 // Card Stack
-const Cards = ({ testimonials, selected, setSelected }) => {
+// Define the type for a single testimonial
+type Testimonial = {
+  Icon: React.ComponentType<{ className?: string }>;
+  description: string;
+  name: string;
+};
+
+// Update the Cards component to use the Testimonial type
+const Cards = ({
+  testimonials,
+  selected,
+  setSelected,
+}: {
+  testimonials: Testimonial[];
+  selected: number;
+  setSelected: (position: number) => void;
+}) => {
   return (
     <div className="p-4 relative h-[450px] lg:h-[500px] shadow-xl z-10">
       {testimonials.map((t, i) => {
         return (
           <Card
-            {...t}
-            key={i}
-            position={i}
-            selected={selected}
-            setSelected={setSelected}
-          />
+          title={""} {...t}
+          key={i}
+          position={i}
+          selected={selected}
+          setSelected={setSelected}          />
         );
       })}
     </div>
@@ -129,6 +145,14 @@ const Card = ({
   position,
   selected,
   setSelected,
+}: {
+  Icon: React.ComponentType<{ className?: string }>;
+  description: string;
+  name: string;
+  title: string;
+  position: number;
+  selected: number;
+  setSelected: (position: number) => void;
 }) => {
   const scale = position <= selected ? 1 : 1 + 0.015 * (position - selected);
   const offset = position <= selected ? 0 : 95 + (position - selected) * 3;

@@ -10,7 +10,7 @@ import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 
-export function LoginForm({ bgColor }: { bgColor: string }) {
+export function LoginForm({}: { bgColor: string }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginType, setLoginType] = useState('regular'); // 'regular' or 'school'
@@ -19,7 +19,6 @@ export function LoginForm({ bgColor }: { bgColor: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const login = useAuthStore((state) => state.login);
-  const setToken = useAuthStore((state) => state.setToken);
   const navigate = useNavigate();
   const { googleSignIn } = useAuthStore((state) => state);
 

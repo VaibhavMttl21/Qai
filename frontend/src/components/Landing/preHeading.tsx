@@ -1,42 +1,21 @@
-// import { motion } from "framer-motion";
-
-
-// export function PreHeading() {
-//   return (
-//     <div className="relative w-screen h-screen bg-[#e3e3e3] bg-cover bg-center z-40">
-
-// {/* url('/topbg.png') */}
-//       {/* Left Floating Image */}
-//       <div className="absolute left-0 top-1/2 transform -translate-y-1/2 h-auto w-1/2 max-w-[700px] max-h-[900px] md:w-[55%] sm:w-[60%] xs:w-[90%]">
-//         <motion.img
-//           src="/blob.png"
-//           alt="Left side illustration"
-//           className="w-full h-auto object-contain opacity-70"
-//           animate={{ y: [0, -30, 0] }}
-//           transition={{
-//             duration: 6,
-//             repeat: Infinity,
-//             ease: "easeInOut",
-//           }}
-//         />
-//       </div>
-
-//       {/* Right Spline Viewer */}
-//       <div className="absolute right-0 top-0 h-full w-1/2 max-w-[1000px] max-h-[800px] md:w-[45%] sm:w-[60%] xs:w-[90%]">
-//         <spline-viewer
-//           url="https://prod.spline.design/m-8d-MxC0lhpf3BE/scene.splinecode"
-//           hideSplineLogo="true"
-//         />
-//       </div>
-//     </div>
-//   );
-// }
 import { motion } from "framer-motion";
 import BlurText from "./text";
 // import Button from "./buttonpre";
 import { Link } from "react-router-dom";
 import '../../styles/fonts.css';
 import NeuFollowButton3 from "./buttonpre";
+
+// Declare custom element for Spline Viewer
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'spline-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        url?: string;
+        hideSplineLogo?: string;
+      };
+    }
+  }
+}
 
 const handleAnimationComplete = () => {
   // console.log('Animation completed!');
@@ -51,16 +30,20 @@ export function PreHeading() {
                     md:w-[55%] sm:w-[60%] 
                     xs:w-[80%] z-10">
         <motion.img
-          src="/blob.png"
-          alt="Left side illustration"
-          className="w-full h-auto object-contain opacity-70"
+          initial={false}
           animate={{ y: [0, -30, 0] }}
           transition={{
             duration: 6,
             repeat: Infinity,
             ease: "easeInOut",
           }}
-        />
+        >
+          <img
+            src="/blob.png"
+            alt="Left side illustration"
+            className="w-full h-auto object-contain opacity-70"
+          />
+        </motion.img>
       </div>
       
       {/* Text Content */}
@@ -81,15 +64,20 @@ export function PreHeading() {
                     font-satoshi font-bold text-black/80"
         />
         <motion.p
-          className="text-sm sm:text-sm md:text-base lg:text-lg 
-                    text-black opacity-0 
-                    mt-2 sm:mt-4 text-left 
-                    ml-2 sm:ml-6 mb-4 
-                    font-satoshi font-regular
-                    pr-2 sm:pr-0"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 2 }}
+          style={{
+            fontSize: "0.875rem",
+            lineHeight: "1.25rem",
+            color: "rgba(0, 0, 0, 0.8)",
+            marginTop: "0.5rem",
+            marginLeft: "0.5rem",
+            marginBottom: "1rem",
+            fontFamily: "Satoshi, sans-serif",
+            fontWeight: "400",
+            paddingRight: "0.5rem",
+          }}
         >
           Step into the future with QAI — a powerful AI course designed for Indian school students. Learn to study smarter, understand Artificial Intelligence, and build skills that matter.
           <br />

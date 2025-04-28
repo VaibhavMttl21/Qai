@@ -77,7 +77,7 @@ export const DrawCircleText = () => {
         whileInView={{ y: 0, opacity: 1, filter: "blur(0px)" }}
         viewport={{ once: false, amount: 0.6 }}
         transition={{ duration: 1.2, ease: "easeOut" }}
-        className="relative z-20 max-w-3xl px-4 text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-snug font-satoshi font-regular"
+        {...{className:"relative z-20 max-w-3xl px-4 text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-snug font-satoshi font-regular"}}
       >
         To get ready for the{" "}
         <span className="relative inline-block">

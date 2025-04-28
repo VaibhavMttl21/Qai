@@ -14,7 +14,7 @@ const SPRING_OPTIONS = {
 };
 
 const NeuFollowButton = () => {
-  const ref = useRef<HTMLButtonElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -24,7 +24,7 @@ const NeuFollowButton = () => {
 
   const transform = useMotionTemplate`translateX(${xSpring}px) translateY(${ySpring}px)`;
 
-  const handleMove = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (!ref.current) return;
 
     const { height, width } = ref.current.getBoundingClientRect();
@@ -45,22 +45,27 @@ const NeuFollowButton = () => {
     y.set(0);
   };
 
+  // Define a properly typed motion component
+  const MotionDiv = motion.div as React.ComponentType<
+    React.HTMLAttributes<HTMLDivElement> & { ref?: React.Ref<HTMLDivElement> }
+  >;
+
   return (
     <section className="pl-6 pr-6 py-6">
       <div className="mx-auto h-20 w-full max-w-145 bg-[#e3e3e3]">
-        <motion.button
+        <MotionDiv
           ref={ref}
           style={{
-            transform,
+            transform: transform as unknown as React.CSSProperties['transform'],
           }}
           onMouseMove={handleMove}
           onMouseLeave={handleReset}
-          onMouseDown={handleReset}
-          className="group flex h-full w-full items-center justify-between border-2 text-white border-black bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-8 text-xl font-semibold"
+          onClick={handleReset}
+          className="group flex h-full w-full items-center justify-between border-2 text-white border-black bg-gradient-to-br from-purple-400 from-40% to-indigo-400 px-8 text-xl font-semibold cursor-pointer"
         >
           <Copy>COMMUNITY!</Copy>
           <Arrow />
-        </motion.button>
+        </MotionDiv>
       </div>
     </section>
   );

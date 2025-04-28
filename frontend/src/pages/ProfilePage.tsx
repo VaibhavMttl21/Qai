@@ -139,36 +139,6 @@ export function ProfilePage() {
                       )}
                     </div>
                   </div>
-
-                  {/* <div className="flex justify-center gap-4 mt-6">
-                    {isEditing ? (
-                      <>
-                        <Button type="submit" disabled={isLoading} className="bg-indigo-600 hover:bg-indigo-700 transition text-white">
-                          {isLoading ? 'Saving...' : 'Save Changes'}
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => {
-                            setIsEditing(false);
-                            setName(user?.name || '');
-                          }}
-                          disabled={isLoading}
-                          className="border-indigo-300 text-indigo-700 hover:bg-indigo-50"
-                        >
-                          Cancel
-                        </Button>
-                      </>
-                    ) : (
-                      <Button
-                        type="button"
-                        onClick={() => setIsEditing(true)}
-                        className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition text-white"
-                      >
-                        Edit Profile
-                      </Button>
-                    )}
-                  </div> */}
                 </form>
               </div>
             </div>

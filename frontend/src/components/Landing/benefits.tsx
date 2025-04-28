@@ -110,7 +110,7 @@ const BenefitsSection: React.FC = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="space-y-3 text-base flex-grow"
+              {...{className:"space-y-3 text-base flex-grow"}}
             >
               {(activeTab === "student" ? studentBenefits : schoolBenefits).map(
                 (point, idx) => (
@@ -133,7 +133,7 @@ const BenefitsSection: React.FC = () => {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 1.5 }}
-                className="w-full h-64 md:h-80"
+                {...{className:"w-full h-64 md:h-80"}}
               >
                 <Pie data={pieData} options={pieOptions} />
               </motion.div>

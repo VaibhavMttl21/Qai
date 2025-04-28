@@ -14,7 +14,11 @@ import {
 } from '@/components/ui/dialog';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-export function CreatePostDialog() {
+interface CreatePostDialogProps {
+  children?: React.ReactNode;
+}
+
+export function CreatePostDialog({ children }: CreatePostDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -99,7 +103,7 @@ export function CreatePostDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>Create Post</Button>
+        {children || <Button>Create Post</Button>}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] bg-[#e3e3e3] text-black rounded-xl backdrop-blur-md shadow-lg border border-black/10">
         <DialogHeader>

@@ -137,6 +137,7 @@ const GlassLink: FC<GlassLinkProps> = ({ text,href }) => {
 
 interface TextLinkProps {
   text: string;
+  href: string;
 }
 
 const TextLink: FC<TextLinkProps> = ({ text , href}) => {

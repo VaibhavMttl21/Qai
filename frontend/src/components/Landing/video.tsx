@@ -1,4 +1,3 @@
-import React, { useRef } from "react";
 import CollapseCardFeatures from "./collapseCard";
 
 export const Video = () => {

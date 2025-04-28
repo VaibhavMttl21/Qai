@@ -27,7 +27,7 @@ export function ForgotPasswordPage() {
     setIsLoading(true);
     
     try {
-      const response = await api.post('/api/auth/forgot-password', { email});
+       await api.post('/api/auth/forgot-password', { email});
       
       toast("OTP Sent: A verification code has been sent to your email");
       

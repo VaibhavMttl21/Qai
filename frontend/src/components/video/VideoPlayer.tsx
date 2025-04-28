@@ -240,9 +240,9 @@ export function VideoPlayer() {
                 <h3 className="text-lg font-semibold mb-3 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Resources</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {currentVideo.pdfs.map((pdf) => (
-                    <motion.a
+                    <motion.a as="a"
                       key={pdf.id}
-                      href={pdf.url}
+                      href={pdf.url as string}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center p-3 border border-indigo-100 rounded-lg hover:bg-indigo-50 transition-colors"

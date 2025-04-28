@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { useSprings, animated, SpringValue } from '@react-spring/web';
 
-const AnimatedSpan = animated.span as React.FC<React.HTMLAttributes<HTMLSpanElement>>;
+const AnimatedSpan = animated('span');
 
 interface BlurTextProps {
   text?: string;

@@ -7,6 +7,13 @@ import api from '@/lib/api';
 import "../styles/fonts.css";
 import { useNavigate } from 'react-router-dom';
 
+// Declare Razorpay on the window object
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
+
 export function PricingPage() {
   const { user, setUser } = useAuthStore();
   // const { toast } = useToast();
@@ -36,7 +43,7 @@ export function PricingPage() {
     }
   };
 
-  const handlePaymentVerify = async (data) => {
+  const handlePaymentVerify = async (data: { amount: any; currency: any; id: any; }) => {
     const options = {
       key: import.meta.env.VITE_RAZORPAY_KEY_ID,
       amount: data.amount,
@@ -44,7 +51,7 @@ export function PricingPage() {
       name: 'Qai',
       description: 'Test Mode',
       order_id: data.id,
-      handler: async (response) => {
+      handler: async (response: { razorpay_order_id: any; razorpay_payment_id: any; razorpay_signature: any; }) => {
         try {
           const verificationResponse = await api.post('/api/payment/verify-payment', {
             razorpay_order_id: response.razorpay_order_id,
@@ -96,7 +103,7 @@ export function PricingPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-12"
+        {...{classNam:"text-center mb-12"}}
       >
         <h1 className="text-3xl font-bold mb-4">Choose Your Plan</h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
@@ -111,7 +118,7 @@ export function PricingPage() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-lg shadow-md p-6 border border-indigo-200 flex flex-col justify-between"
+          {...{className :"bg-white rounded-lg shadow-md p-6 border border-indigo-200 flex flex-col justify-between"}}
         >
           <div className="text-center mb-6">
             <h2 className="text-xl font-bold text-indigo-700 font-Satoshi">Free Plan</h2>
@@ -141,7 +148,7 @@ export function PricingPage() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-lg shadow-sm p-6 border-2 border-blue-500 relative"
+          {...{className :"bg-white rounded-lg shadow-sm p-6 border-2 border-blue-500 relative"}}
         >
           <div className="absolute top-0 right-0 font-Satoshi bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-3 py-1 text-sm font-semibold rounded-bl-lg transform translate-y-[-50%]">
             ★ Popular
@@ -184,7 +191,7 @@ export function PricingPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="mt-12 text-center"
+        {...{className:"mt-12 text-center"}}
       >
         <h3 className="text-lg font-bold mb-2 text-indigo-600 font-Satoshi">Terms and Condition</h3>
         <p className="text-gray-600 font-Satoshi font-regular">

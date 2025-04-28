@@ -358,10 +358,14 @@ const Card = ({ title, id, column, handleDragStart, setActiveTouchCard }: CardPr
     setLongPressTriggered(false);
   };
 
+  const MotionDiv = motion.div as React.ComponentType<
+        React.HTMLAttributes<HTMLDivElement> & { ref?: React.Ref<HTMLDivElement>; layout?: boolean }
+      >;
+
   return (
     <>
       <DropIndicator beforeId={id} column={column} />
-      <motion.div
+      <MotionDiv
         layout
         layoutId={id}
         draggable="true"
@@ -374,7 +378,7 @@ const Card = ({ title, id, column, handleDragStart, setActiveTouchCard }: CardPr
         }`}
       >
         <p className="text-sm text-neutral-100">{title}</p>
-      </motion.div>
+      </MotionDiv>
     </>
   );
 };

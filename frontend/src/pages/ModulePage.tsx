@@ -4,14 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Play } from 'lucide-react';
 import { useVideoStore } from '@/store/video';
 
-interface Video {
-  id: string;
-  title: string;
-  description: string;
-  order: number;
-}
-
-
 export function ModulePage() {
   const [expandedModule, setExpandedModule] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -42,6 +34,7 @@ export function ModulePage() {
       </div>
     );
   }
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-white py-12 px-4 sm:px-6">

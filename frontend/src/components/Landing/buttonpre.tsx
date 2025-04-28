@@ -14,7 +14,7 @@ const SPRING_OPTIONS = {
 };
 
 const NeuFollowButton3 = () => {
-  const ref = useRef<HTMLButtonElement | null>(null);
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -24,7 +24,7 @@ const NeuFollowButton3 = () => {
 
   const transform = useMotionTemplate`translateX(${xSpring}px) translateY(${ySpring}px)`;
 
-  const handleMove = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (!ref.current) return;
 
     const { height, width } = ref.current.getBoundingClientRect();
@@ -45,13 +45,17 @@ const NeuFollowButton3 = () => {
     y.set(0);
   };
 
+   const MotionDiv = motion.div as React.ComponentType<
+      React.HTMLAttributes<HTMLDivElement> & { ref?: React.Ref<HTMLDivElement> }
+    >;
+
   return (
     <section className="pl-6 pr-6 py-6 justify-left">
       <div className="mx-auto h-20 w-full max-w-80 bg-neutral-900">
-        <motion.button
+        <MotionDiv
           ref={ref}
           style={{
-            transform,
+            transform: transform as unknown as React.CSSProperties['transform'],
           }}
           onMouseMove={handleMove}
           onMouseLeave={handleReset}
@@ -60,7 +64,7 @@ const NeuFollowButton3 = () => {
         >
           <Copy>Register Now!</Copy>
           <Arrow />
-        </motion.button>
+        </MotionDiv>
       </div>
     </section>
   );
