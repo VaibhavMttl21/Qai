@@ -41,6 +41,7 @@ export function ResetPasswordPage() {
       
       navigate('/login');
     } catch (error) {
+      console.error("Error resetting password:", error);
     } finally {
       setIsLoading(false);
     }

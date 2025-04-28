@@ -4,12 +4,13 @@ import { useAuthStore } from '@/store/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { initializeApp } from 'firebase/app';
+import { initializeApp, FirebaseError } from 'firebase/app';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import api from '../../lib/api'; // Updated import path
-import { jwtDecode } from 'jwt-decode'; // Updated import statement
+import api from '../../lib/api';
+import { jwtDecode } from 'jwt-decode';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { AxiosError } from 'axios';
 
 interface User {
   id: string;
@@ -64,10 +65,10 @@ export function RegisterForm({ bgColor }: { bgColor: string }) {
 
         await api.post('/api/auth/generate-otp', formData);
         setStep('verify');
-      } catch (error: any) {
-        const errorMessage = error.response?.data?.message || 
-                            error.response?.data?.error || 
-                            'Failed to send verification code';
+      } catch (error: unknown) {
+        const errorMessage = error instanceof AxiosError 
+          ? error.response?.data?.message || error.response?.data?.error || 'Failed to send verification code'
+          : 'Failed to send verification code';
         setError(errorMessage);
       } finally {
         setIsLoading(false);
@@ -91,10 +92,10 @@ export function RegisterForm({ bgColor }: { bgColor: string }) {
         const decoded = jwtDecode<User>(token);
         useAuthStore.setState({ user: decoded, token });
         navigate('/dashboard');
-      } catch (error: any) {
-        const errorMessage = error.response?.data?.message || 
-                            error.response?.data?.error || 
-                            'Invalid verification code';
+      } catch (error: unknown) {
+        const errorMessage = error instanceof AxiosError 
+          ? error.response?.data?.message || error.response?.data?.error || 'Invalid verification code'
+          : 'Invalid verification code';
         setError(errorMessage);
       } finally {
         setIsLoading(false);
@@ -110,8 +111,11 @@ export function RegisterForm({ bgColor }: { bgColor: string }) {
       const idToken = await result.user.getIdToken();
       await googleSignIn(idToken);
       navigate('/dashboard');
-    } catch (error: any) {
-      const errorMessage = error.message || 'Google sign-in failed';
+    } catch (error: unknown) {
+      let errorMessage = 'Google sign-in failed';
+      if (error instanceof FirebaseError) {
+        errorMessage = error.message;
+      }
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -124,10 +128,10 @@ export function RegisterForm({ bgColor }: { bgColor: string }) {
     try {
       await api.post('/api/auth/generate-otp', formData);
       setError('A new verification code has been sent to your email');
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          'Failed to resend verification code';
+    } catch (error: unknown) {
+      const errorMessage = error instanceof AxiosError 
+        ? error.response?.data?.message || error.response?.data?.error || 'Failed to resend verification code'
+        : 'Failed to resend verification code';
       setError(errorMessage);
     } finally {
       setIsLoading(false);

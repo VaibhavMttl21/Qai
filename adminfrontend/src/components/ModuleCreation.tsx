@@ -34,6 +34,7 @@ export function ModuleCreation() {
       setModules(response.data);
       setLoadingModules(false);
     } catch (error) {
+      console.error('Error fetching modules:', error);
       setError('Failed to fetch modules');
       setLoadingModules(false);
     }

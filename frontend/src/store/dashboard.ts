@@ -3,13 +3,14 @@ import api from '../lib/api';
 // Remove node-cron import
 
 interface NewsArticle {
-  image: any;
   id: string;
   title: string;
   description: string;
   url: string;
-  imageUrl?: string;
-  source?: string;
+  image?: string;  // Optional URL string matching backend schema
+  source?: {
+    name: string;
+  };
   publishedAt?: string;
 }
 
@@ -62,9 +63,9 @@ export const useDashboardStore = create<DashboardState>((set, get) => ({
       // Save to localStorage for backup
       localStorage.setItem('aiNews', JSON.stringify(data.articles || []));
       localStorage.setItem('aiNewsFetchedAt', now.toISOString());
-    } catch (err : any) {
+    } catch (err: unknown) {
       console.error('News fetch error:', err);
-      set({ error: err.message });
+      set({ error: err instanceof Error ? err.message : 'An unknown error occurred' });
       
       // Try to use cached data as fallback
       const cachedNews = localStorage.getItem('aiNews');

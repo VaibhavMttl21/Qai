@@ -35,7 +35,6 @@ interface HLSUrls {
 }
 
 interface VideoState {
-  [x: string]: any;
   videos: Video[];
   modules: Module[];
   currentVideo: Video | null;

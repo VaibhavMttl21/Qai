@@ -23,6 +23,12 @@ interface AuthState {
   initAuth: () => void;
 }
 
+interface LoginPayload {
+  email: string;
+  password: string;
+  dob?: string; // Optional for school users
+}
+
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: localStorage.getItem('token'),
@@ -57,7 +63,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   
   login: async (email, password, dob) => {
     // Create the payload for login
-    const payload: any = { email, password };
+    const payload: LoginPayload = { email, password };
     
     // If DOB is provided for school users, include it
     if (dob) {

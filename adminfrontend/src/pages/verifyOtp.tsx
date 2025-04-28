@@ -54,6 +54,7 @@ export function VerifyOTPPage() {
       alert("Verification successful");
       navigate('/reset-password', { state: { email, token: response.data.token } });
     } catch (error) {
+      console.error("Error verifying OTP:", error);
       alert("Invalid verification code. Please try again.");
     } finally {
       setIsLoading(false);
@@ -69,6 +70,7 @@ export function VerifyOTPPage() {
       setCountdown(60);
       setCanResend(false);
     } catch (error) {
+      console.error("Error resending OTP:", error);
     } finally {
       setIsLoading(false);
     }
