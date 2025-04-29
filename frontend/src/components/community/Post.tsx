@@ -386,7 +386,7 @@ export function Post({ post, viewMode = 'prioritized', disableActions }: PostPro
       )}
       
       {/* Confirmation Dialog for Delete */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+      {/* <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
@@ -402,7 +402,30 @@ export function Post({ post, viewMode = 'prioritized', disableActions }: PostPro
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog>
+      </AlertDialog> */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+      <div className="bg-gradient-to-r from-purple-400 to-indigo-400 p-[1px] rounded-lg">
+        <AlertDialogContent className="bg-white rounded-lg">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the 
+              {itemToDelete?.type === 'post' ? ' post' : ' reply'} and remove it from the server.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="text-purple-600 hover:text-indigo-600">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white hover:opacity-90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </div>
+    </AlertDialog>
+
     </div>
   );
 }

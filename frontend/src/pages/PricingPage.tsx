@@ -99,17 +99,21 @@ export function PricingPage() {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto pl-6 pt-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         {...{classNam:"text-center mb-12"}}
       >
-        <h1 className="text-3xl font-bold mb-4">Choose Your Plan</h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Unlock the full potential of our platform with a premium subscription.
-          Get access to all videos and join the community.
-        </p>
+        <div className='text-center'>
+  <h1 className="text-3xl font-bold mb-4 font-Satoshi text-purple-500">Choose Your Plan</h1>
+  <p className="text-gray-600 max-w-2xl mx-auto pb-4">
+    Unlock the full potential of our platform with a premium subscription.
+    Get access to all videos and join the community.
+  </p>
+</div>
+
+        
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

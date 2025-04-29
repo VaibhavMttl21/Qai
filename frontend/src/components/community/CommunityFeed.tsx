@@ -94,12 +94,17 @@ export function CommunityFeed() {
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             {/* Theme Toggle Switch */}
             <div className="flex items-center space-x-2">
-              <Switch
-                id="theme-mode"
-                checked={isDarkMode}
-                onCheckedChange={(checked) => setIsDarkMode(checked)}
-                className="data-[state=checked]:bg-purple-600 data-[state=unchecked]:bg-[#e3e3e3]"
-              />
+                      <Switch
+            id="theme-mode"
+            checked={isDarkMode}
+            onCheckedChange={(checked) => setIsDarkMode(checked)}
+            className="relative data-[state=checked]:bg-purple-600 data-[state=unchecked]:bg-[#837e7e] 
+             before:content-[''] before:absolute before:top-0.5 before:left-0.5 
+             before:h-5 before:w-5 before:rounded-full before:bg-white 
+             before:transition-transform before:duration-300 
+             data-[state=checked]:before:translate-x-5"
+/>
+
               <Label
                 htmlFor="theme-mode"
                 className={`text-sm font-medium flex items-center ${themeStyles.text}`}
@@ -126,7 +131,11 @@ export function CommunityFeed() {
                 onCheckedChange={(checked) =>
                   setViewMode(checked ? 'prioritized' : 'chronological')
                 }
-                className="data-[state=checked]:bg-purple-600 data-[state=unchecked]:bg-[#e3e3e3]"
+                className="relative data-[state=checked]:bg-purple-600 data-[state=unchecked]:bg-[#837e7e] 
+                before:content-[''] before:absolute before:top-0.5 before:left-0.5 
+                before:h-5 before:w-5 before:rounded-full before:bg-white 
+                before:transition-transform before:duration-300 
+                data-[state=checked]:before:translate-x-5"
               />
               <Label
                 htmlFor="view-mode"

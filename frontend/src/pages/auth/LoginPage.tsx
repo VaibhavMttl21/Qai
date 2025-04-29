@@ -17,10 +17,10 @@ export function LoginPage() {
       setBgColorIndex((prev) => (prev + 1) % bgColors.length);
     }, 3000);
     return () => clearInterval(interval);
-  },);
+  }, []);
 
   const encodedSVG = encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='#989898 ' stroke-width='1.5'><path d='M0 0H32V32'/></svg>`
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='#989898' stroke-width='1.5'><path d='M0 0H32V32'/></svg>`
   );
 
   return (
@@ -40,13 +40,13 @@ export function LoginPage() {
         }}
       />
 
-      {/* Background image on mobile */}
-      <div className="absolute inset-0 lg:hidden flex items-center justify-center opacity-40 z-0">
+      {/* Background image on mobile and tablet */}
+      <div className="absolute inset-0 lg:hidden w-full h-full overflow-hidden z-0">
         <motion.img
           key={currentImageIndex}
           src={carouselImages[currentImageIndex]}
           alt="Background Slide"
-          className="w-[500px] h-[800px] object-cover rounded-xl transition-all duration-900"
+          className="w-full h-full object-cover transition-all duration-900"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
@@ -57,35 +57,24 @@ export function LoginPage() {
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
-        {...{className:"w-full max-w-5xl mx-auto shadow-2xl rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 items-stretch relative z-20"}}
+        className="w-full max-w-5xl mx-auto shadow-2xl rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 items-stretch relative z-20"
       >
         {/* Left Side */}
-        <div className="bg-white/90 backdrop-blur-md rounded-l-2xl p-6 sm:p-8 md:p-10 flex flex-col justify-center">
-          <div className="flex items-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="bg-white/90 backdrop-blur-md p-6 sm:p-8 md:p-10 flex flex-col justify-center items-center text-center">
+          <div className="flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <div className="text-center">
+              <div>
                 <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
                   Sign in to your account
                 </h2>
-                {/* <p className="mt-6 mb-5 text-sm text-gray-600">
-                  Or{' '}
-                  <Link to="/register" className="font-medium text-purple-400 hover:text-purple-500">
-                    create a new account
-                  </Link>
-                </p> */}
                 <p className="mt-4 mb-5 text-sm text-gray-600">
                   Don't have an account?{' '}
                   <Link to="/register" className="font-medium text-purple-400 hover:text-purple-500">
                     Sign up
                   </Link>
-                </p>
-                <p className="mt-1 text-sm text-gray-600">
-                  {/* <Link to="/forgot-password" className="font-medium text-purple-400 hover:text-purple-500">
-                    Forgot your password?
-                  </Link> */}
                 </p>
               </div>
               {/* Pass bgColor to LoginForm as a prop */}
@@ -94,7 +83,7 @@ export function LoginPage() {
           </div>
         </div>
 
-        {/* Right: Carousel Image */}
+        {/* Right Side: Carousel image for laptop/desktop */}
         <div className="hidden lg:flex items-center justify-center bg-white/10 rounded-r-2xl w-full h-[600px]">
           <motion.img
             key={currentImageIndex}
