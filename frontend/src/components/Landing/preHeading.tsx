@@ -87,7 +87,7 @@ export function PreHeading() {
       </div>
       
       {/* Right Spline Viewer */}
-      <div className="absolute 
+      {/* <div className="absolute 
                     right-0 bottom-0 sm:top-0 
                     h-1/2 sm:h-full 
                     w-full sm:w-1/2 
@@ -98,7 +98,7 @@ export function PreHeading() {
           url="https://prod.spline.design/7E53giVz8ZZrrWXb/scene.splinecode"
           hideSplineLogo="true"
         />
-      </div>
+      </div> */}
     </div>
   );
 }

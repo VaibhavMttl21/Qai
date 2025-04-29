@@ -5,7 +5,7 @@ import StackedCardTestimonials from "@/components/Landing/testimonials";
 import { DrawCircleText } from "@/components/Landing/vision";
 import { Video } from "@/components/Landing/video";
 import Footer from "@/components/Landing/footer";
-// import BenefitsSection from "@/components/Landing/benefits";
+import BenefitsSection from "@/components/Landing/benefits";
 import { StickyCards } from "@/components/Landing/newAbout";
 
 export function LandingPage() {
@@ -23,7 +23,7 @@ export function LandingPage() {
         <StickyCards />
       </section>
 
-      {/* <BenefitsSection /> */}
+      <BenefitsSection />
       <Video />
 
       <section id="testimonials" className="scroll-smooth">
