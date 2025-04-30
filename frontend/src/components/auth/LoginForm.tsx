@@ -38,7 +38,7 @@ export function LoginForm({}: { bgColor: string }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setIsLoading(true);
+    setIsGoogleLoading(true);
     
     try {
       if (loginType === 'school') {
@@ -55,11 +55,10 @@ export function LoginForm({}: { bgColor: string }) {
 
           await login(email, password, formattedDob.toString());
         } else {
-          // If only password is provided, use that
+          // If it's not in DOB format, treat it as a regular password
           await login(email, password);
         }
       } else {
-        // Regular login with password
         await login(email, password);
       }
       navigate('/dashboard');
@@ -70,25 +69,25 @@ export function LoginForm({}: { bgColor: string }) {
                           'Invalid credentials. Please check your email and password.';
       setError(errorMessage);
     } finally {
-      setIsLoading(false);
+      setIsGoogleLoading(false);
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    setError(null);
-    setIsGoogleLoading(true);  // Use the Google-specific loading state
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const idToken = await result.user.getIdToken();
-      await googleSignIn(idToken);
-      navigate('/dashboard');
-    } catch (error: any) {
-      const errorMessage = error.message || 'Google sign-in failed';
-      setError(errorMessage);
-    } finally {
-      setIsGoogleLoading(false);  // Reset Google-specific loading state
-    }
-  };
+    const handleGoogleSignIn = async () => {
+      setError(null);
+      setIsLoading(true);
+      try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const idToken = await result.user.getIdToken();
+        await googleSignIn(idToken);
+        navigate('/dashboard');
+      } catch (error: any) {
+        const errorMessage = error.message || 'Google sign-in failed';
+        setError(errorMessage);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -120,9 +119,9 @@ export function LoginForm({}: { bgColor: string }) {
 
       {loginType === 'school' ? (
         <div>
-          <Label htmlFor="dob" className="block text-sm font-medium mb-1">
+          {/* <Label htmlFor="dob" className="block text-sm font-medium mb-1">
             Password
-          </Label>
+          </Label> */}
           <Input
             id="password"
             type="password"
@@ -143,9 +142,9 @@ export function LoginForm({}: { bgColor: string }) {
         </div>
       ) : (
         <div>
-          <Label htmlFor="password" className="block text-sm font-medium mb-1">
+          {/* <Label htmlFor="password" className="block text-sm font-medium mb-1">
             Password
-          </Label>
+          </Label> */}
           <Input
             id="password"
             type="password"

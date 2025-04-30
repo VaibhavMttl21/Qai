@@ -132,15 +132,14 @@ export function Sidebar() {
             <AvatarFallback>{user?.name?.[0]}</AvatarFallback>
           </Avatar>
           
-          <Button 
-            variant="icon" 
-            size="default" 
-            onClick={handleLogout} 
-            className="mt-1 p-0 h-6 w-6 rounded-full bg-purple-400 hover:bg-purple-600"
+          <Button
+            variant="ghost"
+            size="icon" // Changed from "default" to "icon"
+            onClick={handleLogout}
+            className="mt-1 p-0 h-8 w-8 rounded-full bg-purple-400 hover:bg-purple-600" // Adjusted size slightly for better fit, ensure p-0 if needed
             title="Logout"
           >
-            <LogOut size={18} className="text-white" />
-            
+            <LogOut size={18} style={{ color: 'white' }} />
           </Button>
         </div>
       )}

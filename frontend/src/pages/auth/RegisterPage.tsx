@@ -23,7 +23,6 @@ export function RegisterPage() {
     `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='#989898' stroke-width='1.5'><path d='M0 0H32V32'/></svg>`
   );
 
-
   const MotionImg = motion.img as React.ComponentType<
   React.ImgHTMLAttributes<HTMLImageElement> & MotionProps
 >;
@@ -33,6 +32,7 @@ React.HTMLAttributes<HTMLDivElement> & MotionProps & {
   ref?: React.Ref<HTMLDivElement>; 
 }
 >;
+
   return (
     <div
       className="min-h-screen flex items-center justify-center transition-colors duration-1000 px-4 relative"

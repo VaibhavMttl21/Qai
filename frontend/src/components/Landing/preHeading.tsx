@@ -4,18 +4,8 @@ import BlurText from "./text";
 import { Link } from "react-router-dom";
 import '../../styles/fonts.css';
 import NeuFollowButton3 from "./buttonpre";
-import Spline from '@splinetool/react-spline';
-// Declare custom element for Spline Viewer
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'spline-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        url?: string;
-        hideSplineLogo?: string;
-      };
-    }
-  }
-}
+import Spline from '@splinetool/react-spline'; // Keep this import
+
 
 const handleAnimationComplete = () => {
   // console.log('Animation completed!');
@@ -29,9 +19,9 @@ export function PreHeading() {
   return (
     <div className="relative w-screen h-screen bg-[#e3e3e3] bg-cover bg-center z-40 overflow-hidden">
       {/* Left Floating Image */}
-      <div className="absolute left-0 top-1/2 transform -translate-y-1/2 h-auto 
-                    w-1/2 max-w-[700px] max-h-[900px] 
-                    md:w-[55%] sm:w-[60%] 
+      <div className="absolute left-0 top-1/2 transform -translate-y-1/2 h-auto
+                    w-1/2 max-w-[700px] max-h-[900px]
+                    md:w-[55%] sm:w-[60%]
                     xs:w-[80%] z-10">
         <MotionImg
           src="/blob.png"
@@ -46,12 +36,12 @@ export function PreHeading() {
           }}
         />
       </div>
-      
+
       {/* Text Content */}
-      <div className="absolute 
+      <div className="absolute
                     top-26 sm:top-1/3 sm:transform sm:-translate-y-1/4
                     w-full sm:w-auto
-                    max-w-[95%] sm:max-w-[80%] md:max-w-[50%] 
+                    max-w-[95%] sm:max-w-[80%] md:max-w-[50%]
                     px-4 sm:px-6 md:px-12 z-20">
         <BlurText
           text="Smarter Learning, Future Thinking!"
@@ -59,9 +49,9 @@ export function PreHeading() {
           animateBy="words"
           direction="top"
           onAnimationComplete={handleAnimationComplete}
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl 
-                    mt-6 sm:mt-12 mb-4 sm:mb-6 
-                    ml-2 sm:ml-6 
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl
+                    mt-6 sm:mt-12 mb-4 sm:mb-6
+                    ml-2 sm:ml-6
                     font-satoshi font-bold text-black/80"
         />
         <motion.p
@@ -89,7 +79,7 @@ export function PreHeading() {
           </Link>
         </motion.p>
       </div>
-      
+
       {/* Right Spline Viewer */}
       {/* Visible only on medium and larger screens */}
 <div className="hidden md:block absolute 

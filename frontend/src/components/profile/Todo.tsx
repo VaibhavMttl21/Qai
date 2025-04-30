@@ -8,7 +8,7 @@ import  {
   TouchEvent,
 } from "react";
 import { FiPlus, FiTrash } from "react-icons/fi";
-import { motion } from "framer-motion";
+import { motion , MotionProps } from "framer-motion";
 import { FaFire } from "react-icons/fa";
 import api from "@/lib/api";
 
@@ -359,8 +359,8 @@ const Card = ({ title, id, column, handleDragStart, setActiveTouchCard }: CardPr
   };
 
   const MotionDiv = motion.div as React.ComponentType<
-        React.HTMLAttributes<HTMLDivElement> & { ref?: React.Ref<HTMLDivElement>; layout?: boolean }
-      >;
+  React.HTMLAttributes<HTMLDivElement> & MotionProps & { ref?: React.Ref<HTMLDivElement> }
+>;
 
     
   return (
@@ -474,13 +474,14 @@ type AddCardProps = {
   setCards: Dispatch<SetStateAction<CardType[]>>;
 };
 
+const MotionForm = motion.form as React.ComponentType<
+  React.FormHTMLAttributes<HTMLFormElement> & MotionProps & { ref?: React.Ref<HTMLFormElement> }
+>;
 const MotionButton = motion.button as React.ComponentType<
-React.ButtonHTMLAttributes<HTMLButtonElement> & { ref?: React.Ref<HTMLButtonElement>; layout?: boolean }
+  React.ButtonHTMLAttributes<HTMLButtonElement> & MotionProps & { ref?: React.Ref<HTMLButtonElement> }
 >;
 
-const MotionForm = motion.form as React.ComponentType<
-  React.FormHTMLAttributes<HTMLFormElement> & { ref?: React.Ref<HTMLFormElement>; layout?: boolean }
->;
+
 const AddCard = ({  setCards }: AddCardProps) => {
   const [text, setText] = useState("");
   const [adding, setAdding] = useState(false);
@@ -546,7 +547,6 @@ const AddCard = ({  setCards }: AddCardProps) => {
     </MotionForm>
   ) : (
     <MotionButton
-      layout
       onClick={() => setAdding(true)}
       className="flex w-full items-center justify-center gap-1.5 rounded-md bg-purple-100 hover:bg-purple-200 p-2 mt-3 text-sm text-purple-700 transition-colors"
     >

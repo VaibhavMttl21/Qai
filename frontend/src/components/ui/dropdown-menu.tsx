@@ -82,7 +82,10 @@ export const DropdownMenuContent = ({
       className={cn(
         "absolute z-10 mt-2 min-w-[8rem] overflow-hidden rounded-md border border-gray-200 bg-white p-1 shadow-md animate-in fade-in-80",
         align === "end" ? "right-0" : "left-0",
-        side === "top" ? "bottom-full" : side === "bottom" ? "top-full" : "",
+        side === "top" && `bottom-full translate-y-[-${sideOffset}px]`,
+        side === "bottom" && `top-full translate-y-[${sideOffset}px]`,
+        side === "left" && `right-full translate-x-[-${sideOffset}px]`,
+        side === "right" && `left-full translate-x-[${sideOffset}px]`,
         className
       )}
     >
