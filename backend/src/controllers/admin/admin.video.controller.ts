@@ -76,7 +76,7 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
 
     const topic = pubsub.topic("video-encoding");
     await topic.publishMessage({
-      json: { videoId: id, rawKey: key, demo:demo },
+      json: { videoId: id, rawKey: key, demo:booldemo },
     });
 
     res.status(201).json({ 
