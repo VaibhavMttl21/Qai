@@ -404,7 +404,7 @@ export function Post({ post, viewMode = 'prioritized', disableActions }: PostPro
         </AlertDialogContent>
       </AlertDialog> */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-      <div className="bg-gradient-to-r from-purple-400 to-indigo-400 p-[1px] rounded-lg">
+      <div >
         <AlertDialogContent className="bg-white rounded-lg">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
