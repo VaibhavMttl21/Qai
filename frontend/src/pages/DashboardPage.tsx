@@ -100,7 +100,7 @@ export function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
           <h2 className="text-xl font-bold font-Satoshi mb-4 pl-6 text-neutral-700">Continue Learning</h2>
-          <Link to="/videos">
+          <Link to="/modules">
             <NeuFollowButton2 />
           </Link>
         </motion.div>

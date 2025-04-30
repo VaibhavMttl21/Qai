@@ -15,20 +15,19 @@ model AdminPost {
   priority   Int          @default(10)
   createdAt  DateTime     @default(now())
   updatedAt  DateTime
-  User       User         @relation(fields: [userId], references: [id])
+  User       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   AdminReply AdminReply[]
 }
 
 model AdminReply {
   id          String    @id
   content     String
-  imageUrl    String?
   userId      String
   adminPostId String
   priority    Int       @default(10)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime
-  AdminPost   AdminPost @relation(fields: [adminPostId], references: [id])
+  AdminPost   AdminPost @relation(fields: [adminPostId], references: [id], onDelete: Cascade)
   User        User      @relation(fields: [userId], references: [id])
 }
 
@@ -59,12 +58,11 @@ model Progress {
 model Reply {
   id        String   @id
   content   String
-  imageUrl  String?
   userId    String
   postId    String
   createdAt DateTime @default(now())
   updatedAt DateTime
-  Post      Post     @relation(fields: [postId], references: [id])
+  Post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   User      User     @relation(fields: [userId], references: [id])
 }
 
@@ -75,11 +73,11 @@ model User {
   name              String
   userType          UserType
   isPaid            Boolean      @default(false)
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime
   firebaseUid       String?
   profilePicture    String?
   hasCustomPassword Boolean      @default(false)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime
   AdminPost         AdminPost[]
   AdminReply        AdminReply[]
   Post              Post[]
@@ -92,17 +90,18 @@ model Video {
   id          String     @id
   title       String
   description String
-  url         String
+  demo        Boolean    @default(false)
   order       Int
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime
   encoded     Boolean    @default(false)
   hlsUrls     Json?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime
   moduleId    String
-  demo        Boolean    @default(false)
   PDF         PDF[]
   Progress    Progress[]
   Module      Module     @relation(fields: [moduleId], references: [id])
+
+  @@unique([moduleId, order])
 }
 
 model Module {
@@ -112,6 +111,7 @@ model Module {
   order       Int      @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime
+  imageUrl    String?
   Video       Video[]
 }
 

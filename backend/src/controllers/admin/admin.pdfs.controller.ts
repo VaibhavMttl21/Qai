@@ -30,7 +30,7 @@ export const pdfUpload = multer({
       cb(new Error('Only PDF files are allowed'));
     }
   },
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB max
 });
 
 export const uploadPdf = async (req: AuthRequest, res: Response) => {

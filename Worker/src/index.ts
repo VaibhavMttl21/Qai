@@ -7,6 +7,9 @@ import fs from 'fs-extra';
 import path from 'path';
 import tmp from 'tmp-promise';
 import { Readable } from 'stream';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const pubsub = new PubSub();
 const prisma = new PrismaClient();
@@ -22,7 +25,7 @@ const s3 = new S3Client({
 
 const SOURCE_BUCKET = process.env.R2_SOURCE_BUCKET!;
 const TARGET_BUCKET = process.env.R2_TARGET_BUCKET!;
-const DEMO_TAEGET_BUCKET = process.env.R2_DEMO_TARGET_BUCKET!;
+const DEMO_TARGET_BUCKET = process.env.R2_DEMO_TARGET_BUCKET!;
 
 async function downloadFromR2(key: string, outPath: string) {
   const command = new GetObjectCommand({ Bucket: SOURCE_BUCKET, Key: key });
@@ -42,7 +45,7 @@ async function uploadFolderToR2(folderPath: string, prefix: string, demo: boolea
   for (const file of files) {
     const fullPath = path.join(folderPath, file);
     const stat = await fs.stat(fullPath);
-    const BUCKET = demo ? DEMO_TAEGET_BUCKET: TARGET_BUCKET;
+    const BUCKET = demo ? DEMO_TARGET_BUCKET: TARGET_BUCKET;
     if (stat.isDirectory()) {
       await uploadFolderToR2(fullPath, `${prefix}/${file}`,demo);
     } else {
@@ -183,7 +186,7 @@ subscription.on('message', async (message) => {
     // Get retry count from attributes or set to 0
     const retryCount = parseInt(message.attributes.retryCount || '0', 10);
     
-    if (retryCount > 3) {
+    if (retryCount >= 3) {
       // Send to dead letter topic after 3 retries
       // await pubsub.topic('failed-video-encodings').publish(
       //   Buffer.from(JSON.stringify({

@@ -39,13 +39,14 @@ export const videoUpload = multer({
 
 export const addVideo = async (req: AuthRequest, res: Response) => {
   const { title, description, order, demo, moduleId } = req.body;
+
   const file = req.file;
   
   if (!file) return res.status(400).json({ error: 'No file uploaded' });
   if (!title) return res.status(400).json({ message: 'Title and URL are required' });
   if (!moduleId) return res.status(400).json({ message: 'Module ID is required' });
   if(!demo) return res.status(400).json({ message: 'Demo catagory is required' });
-  
+  const booldemo = demo === 'true' ? true : false;
   try {
     const id = uuidv4();
     const key = `${id}.mp4`;
@@ -64,7 +65,7 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
       data: {
         id,
         title,
-        demo: Boolean(demo),
+        demo: booldemo,
         description,
         order: Number(order),
         moduleId: moduleId,
