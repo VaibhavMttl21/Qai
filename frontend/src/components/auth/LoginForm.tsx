@@ -38,7 +38,7 @@ export function LoginForm({}: { bgColor: string }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setIsGoogleLoading(true);
+    setIsLoading(true);
     
     try {
       if (loginType === 'school') {
@@ -69,13 +69,13 @@ export function LoginForm({}: { bgColor: string }) {
                           'Invalid credentials. Please check your email and password.';
       setError(errorMessage);
     } finally {
-      setIsGoogleLoading(false);
+      setIsLoading(false);
     }
   };
 
     const handleGoogleSignIn = async () => {
       setError(null);
-      setIsLoading(true);
+      setIsGoogleLoading(true);
       try {
         const result = await signInWithPopup(auth, googleProvider);
         const idToken = await result.user.getIdToken();
@@ -85,7 +85,7 @@ export function LoginForm({}: { bgColor: string }) {
         const errorMessage = error.message || 'Google sign-in failed';
         setError(errorMessage);
       } finally {
-        setIsLoading(false);
+        setIsGoogleLoading(false);
       }
     };
 
