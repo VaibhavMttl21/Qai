@@ -4,33 +4,20 @@ import { AuthRequest } from '../types';
 
 const prisma = new PrismaClient();
 
-export const getVideos = async (req: AuthRequest, res: Response) => {
+export const getEncodedVideos = async (req: AuthRequest, res: Response) => {
   try {
-    let isAdmin = req.user?.userType=="ADMIN"
-    if (!req.user?.isPaid) {
-      const demo = await prisma.video.findMany({
-        where:{
-          encoded: !isAdmin,
-          demo: true
-        },
-        orderBy: {
-          order: 'asc'
-        }
-      });
-      return res.json(demo);
-    }
-    
+    // Only return videos that are encoded (HLS URLs guaranteed by worker)
     const videos = await prisma.video.findMany({
-      where:
-      {
-        encoded: !isAdmin,
+      where: {
+        ...(req.user?.isPaid
+          ? { encoded: true }
+          : { encoded: true, demo: true })
       },
       orderBy: { order: 'asc' },
       include: {
-        pdfs: true, // Include associated PDFs
+        pdfs: true,
       }
     });
-    
     res.json(videos);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -105,7 +92,11 @@ export const getAllModules = async (req: AuthRequest, res: Response) => {
     const modules = await prisma.module.findMany({
       include: {
         videos: {
-          where: req.user?.isPaid ? { encoded: true } : { encoded: true, demo: true },
+          where: {
+            ...(req.user?.isPaid
+              ? { encoded: true }
+              : { encoded: true, demo: true })
+          },
           orderBy: { order: 'asc' },
           select: {
             id: true,

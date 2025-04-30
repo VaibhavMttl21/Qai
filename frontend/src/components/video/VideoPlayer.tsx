@@ -8,10 +8,12 @@ import { motion , MotionProps } from 'framer-motion';
 import { ChevronLeft, ChevronRight, FileText, CheckCircle, XCircle, PlayCircle } from 'lucide-react';
 import Hls from 'hls.js';
 
+type VideoQuality = 'high' | 'mid' | 'low';
+
 export function VideoPlayer() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<ReturnType<typeof videojs> | null>(null);
-  const [quality, setQuality] = useState<'480p' | '720p' | '1080p'>('720p');
+  const [quality, setQuality] = useState<VideoQuality>('mid');
   const { videoId } = useParams<{ videoId: string }>();
   const navigate = useNavigate();
 
@@ -35,7 +37,7 @@ export function VideoPlayer() {
       const video = videos.find(v => v.id === videoId);
       if (video) {
         setCurrentVideo(video);
-      }
+              }
     }
   }, [videos, videoId, setCurrentVideo]);
 
@@ -50,6 +52,7 @@ export function VideoPlayer() {
 
     const token = localStorage.getItem('token');
 
+    // Since we're guaranteed to have all quality levels, we can access directly
     const rawUrl = currentVideo.hlsUrls[quality];
     const secureUrl = token ? `${rawUrl}?token=${token}` : rawUrl;
 
@@ -78,7 +81,7 @@ export function VideoPlayer() {
         console.error('HLS.js error:', data);
       });
     } else if (videoRef.current.canPlayType('application/vnd.apple.mpegurl')) {
-      // For browsers that support native HLS
+
       videoRef.current.src = secureUrl;
       videoRef.current.play();
     }
@@ -174,12 +177,12 @@ export function VideoPlayer() {
                 <label className="mr-2 font-medium text-sm text-gray-700">Quality:</label>
                 <select
                   value={quality}
-                  onChange={(e) => setQuality(e.target.value as '480p' | '720p' | '1080p')}
+                  onChange={(e) => setQuality(e.target.value as VideoQuality)}
                   className="border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-purple-400"
                 >
-                  {Object.keys(currentVideo.hlsUrls).map((res) => (
-                    <option key={res} value={res}>
-                      {res}
+                  {currentVideo.hlsUrls && Object.keys(currentVideo.hlsUrls).map((qualityKey) => (
+                    <option key={qualityKey} value={qualityKey}>
+                      {qualityKey}
                     </option>
                   ))}
                 </select>

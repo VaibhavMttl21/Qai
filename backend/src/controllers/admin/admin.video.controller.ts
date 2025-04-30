@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import e, { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AuthRequest } from '../../types';
 import multer from 'multer';
@@ -176,3 +176,14 @@ export const updateVideo = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+export const getAllVideos = async (req: AuthRequest, res: Response) => {
+  try {
+    const videos = await prisma.video.findMany({
+      orderBy: { order: 'asc' },
+    });
+    res.json(videos);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+}

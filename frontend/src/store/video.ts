@@ -13,8 +13,7 @@ interface Video {
   id: string;
   title: string;
   description: string;
-  url: string;
-  hlsUrls: HLSUrls;
+  hlsUrls: HlsUrls;
   order: number;
   moduleId: string;
   pdfs?: PDF[];
@@ -28,10 +27,10 @@ interface Module {
   videos?: Video[];
 }
 
-interface HLSUrls {
-   '1080p': string;
-   '720p': string;
-   '480p': string;
+export interface HlsUrls {
+   high: string;
+   mid: string;
+   low : string;
 }
 
 interface VideoState {

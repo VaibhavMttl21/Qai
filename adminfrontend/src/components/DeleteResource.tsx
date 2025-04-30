@@ -69,7 +69,7 @@ export function DeleteResources() {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get<Video[]>('/api/videos/');
+      const response = await api.get<Video[]>('/api/admin/videos/');
       setVideos(response.data);
     } catch (err) {
       console.error(err);

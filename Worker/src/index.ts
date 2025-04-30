@@ -58,9 +58,25 @@ async function uploadFolderToR2(folderPath: string, prefix: string, demo: boolea
   }
 }
 
-async function encodeToHLS(inputPath: string, outputDir: string, resolution: string) {
+// Helper function to get video dimensions
+async function getVideoDimensions(inputPath: string): Promise<{ width: number; height: number }> {
+  return new Promise((resolve, reject) => {
+    ffmpeg.ffprobe(inputPath, (err, metadata) => {
+      if (err) return reject(err);
+      
+      const stream = metadata.streams.find(s => s.codec_type === 'video');
+      if (!stream || !stream.width || !stream.height) {
+        return reject(new Error('Unable to determine video dimensions'));
+      }
+      
+      resolve({ width: stream.width, height: stream.height });
+    });
+  });
+}
+
+async function encodeToHLS(inputPath: string, outputDir: string, resolution: string, qualityLabel: string) {
   const [width, height] = resolution.split('x');
-  const outPath = path.join(outputDir, `${height}p`);
+  const outPath = path.join(outputDir, qualityLabel);
   await fs.ensureDir(outPath);
 
   return new Promise<void>((resolve, reject) => {
@@ -91,28 +107,58 @@ async function encodeToHLS(inputPath: string, outputDir: string, resolution: str
 async function handleMessage(videoId: string, rawKey: string, demo: boolean) {
   const temp = await tmp.dir({ unsafeCleanup: true });
   const inputPath = path.join(temp.path, 'input.mp4');
-  // console.log(`downloading video to ${inputPath}`);
+  
   // 1. Download raw video
   await downloadFromR2(rawKey, inputPath);
+  
+  // 2. Detect video dimensions
+  const dimensions = await getVideoDimensions(inputPath);
+  
+  
+  let resolutions: string[];
+  let targetLabels: string[];
+  
+  if (dimensions.height >= 2160) {
+    resolutions = ['3840x2160', '1920x1080', '1280x720'];
+    targetLabels = ['high', 'mid', 'low'];
+  } else if (dimensions.height >= 1080) {
+    resolutions = ['1920x1080', '1280x720', '854x480'];
+    targetLabels = ['high', 'mid', 'low'];
+  } else if (dimensions.height >= 720) {
+    resolutions = ['1280x720', '854x480'];
+    targetLabels = ['mid', 'low']; 
+  } else {
+    
+    resolutions = ['854x480'];
+    targetLabels = ['low'];
+  }
 
-  // 2. Encode to 1080p, 720p, 480p
-  // console.log('Encoding video...');
-  const resolutions = ['1920x1080', '1280x720', '854x480'];
-  const qualities = ['1080p', '720p', '480p'];
+  const encodedPaths: Record<string, string> = {};
+  
   for (let i = 0; i < resolutions.length; i++) {
-    await encodeToHLS(inputPath, temp.path, resolutions[i]);
+    await encodeToHLS(inputPath, temp.path, resolutions[i], targetLabels[i]);
+    encodedPaths[targetLabels[i]] = resolutions[i];
   }
 
   // 3. Upload each encoded folder to R2
-  // console.log('Uploading to R2...');
   const uploadPrefix = `${videoId}`;
   await uploadFolderToR2(temp.path, uploadPrefix, demo);
 
   // 4. Update DB with HLS URLs
   const CDN_DOMAIN = demo ? process.env.R2_DEMO_CDN_DOMAIN! : process.env.R2_CDN_DOMAIN!;
   const hlsUrls: Record<string, string> = {};
-  for (const quality of qualities) {
-    hlsUrls[quality] = `${CDN_DOMAIN}/${uploadPrefix}/${quality}/index.m3u8`;
+  
+  for (const label of Object.keys(encodedPaths)) {
+    hlsUrls[label] = `${CDN_DOMAIN}/${uploadPrefix}/${label}/index.m3u8`;
+  }
+  
+  // For 720p videos, make 'high' point to 'mid' URL
+  if (dimensions.height >= 720 && dimensions.height < 1080) {
+    hlsUrls['high'] = hlsUrls['mid'];
+  } 
+  // For 480p videos, make both 'high' and 'mid' point to 'low' URL
+  else if (dimensions.height < 720) {
+    hlsUrls['high'] = hlsUrls['mid'] = hlsUrls['low'];
   }
 
   await prisma.video.update({
