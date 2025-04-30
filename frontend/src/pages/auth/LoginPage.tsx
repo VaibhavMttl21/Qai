@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion , MotionProps} from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { LoginForm } from '@/components/auth/LoginForm';
 
@@ -23,6 +23,16 @@ export function LoginPage() {
     `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='#989898' stroke-width='1.5'><path d='M0 0H32V32'/></svg>`
   );
 
+  const MotionImg = motion.img as React.ComponentType<
+  React.ImgHTMLAttributes<HTMLImageElement> & MotionProps
+>;
+
+const MotionDiv = motion.div as React.ComponentType<
+React.HTMLAttributes<HTMLDivElement> & MotionProps & { 
+  ref?: React.Ref<HTMLDivElement>; 
+}
+>;
+
   return (
     <div
       className="min-h-screen flex items-center justify-center transition-colors duration-1000 px-4 relative"
@@ -42,7 +52,7 @@ export function LoginPage() {
 
       {/* Background image on mobile and tablet */}
       <div className="absolute inset-0 lg:hidden w-full h-full overflow-hidden z-0">
-        <motion.img
+        <MotionImg
           key={currentImageIndex}
           src={carouselImages[currentImageIndex]}
           alt="Background Slide"
@@ -53,7 +63,7 @@ export function LoginPage() {
         />
       </div>
 
-      <motion.div
+      <MotionDiv
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
@@ -85,7 +95,7 @@ export function LoginPage() {
 
         {/* Right Side: Carousel image for laptop/desktop */}
         <div className="hidden lg:flex items-center justify-center bg-white/10 rounded-r-2xl w-full h-[600px]">
-          <motion.img
+          <MotionImg
             key={currentImageIndex}
             src={carouselImages[currentImageIndex]}
             alt="Carousel Slide"
@@ -95,7 +105,7 @@ export function LoginPage() {
             transition={{ duration: 1 }}
           />
         </div>
-      </motion.div>
+      </MotionDiv>
     </div>
   );
 }

@@ -1,10 +1,10 @@
-import { motion } from "framer-motion";
+import { motion, MotionProps } from "framer-motion";
 import BlurText from "./text";
 // import Button from "./buttonpre";
 import { Link } from "react-router-dom";
 import '../../styles/fonts.css';
 import NeuFollowButton3 from "./buttonpre";
-
+import Spline from '@splinetool/react-spline';
 // Declare custom element for Spline Viewer
 declare global {
   namespace JSX {
@@ -21,6 +21,10 @@ const handleAnimationComplete = () => {
   // console.log('Animation completed!');
 };
 
+const MotionImg = motion.img as React.ComponentType<
+  React.ImgHTMLAttributes<HTMLImageElement> & MotionProps
+>;
+
 export function PreHeading() {
   return (
     <div className="relative w-screen h-screen bg-[#e3e3e3] bg-cover bg-center z-40 overflow-hidden">
@@ -29,7 +33,7 @@ export function PreHeading() {
                     w-1/2 max-w-[700px] max-h-[900px] 
                     md:w-[55%] sm:w-[60%] 
                     xs:w-[80%] z-10">
-        <motion.img
+        <MotionImg
           src="/blob.png"
           alt="Left side illustration"
           className="w-full h-auto object-contain opacity-70"
@@ -95,9 +99,8 @@ export function PreHeading() {
                 max-w-[1000px] max-h-[800px]
                 md:w-[45%] sm:w-[60%] 
                 z-0">
-  <spline-viewer
-    url="https://prod.spline.design/7E53giVz8ZZrrWXb/scene.splinecode"
-    hideSplineLogo="true"
+  <Spline
+    scene="https://prod.spline.design/7E53giVz8ZZrrWXb/scene.splinecode"
   />
 </div>
 

@@ -1,7 +1,12 @@
-import { motion } from "framer-motion";
+import { motion, MotionProps } from "framer-motion";
 import '../../styles/fonts.css';
 
 export const DrawCircleText = () => {
+
+
+  const MotionImg = motion.img as React.ComponentType<
+  React.ImgHTMLAttributes<HTMLImageElement> & MotionProps
+>;
   return (
     <div className="relative flex justify-center items-center px-4 py-24 lg:py-60 text-black overflow-hidden">
       {/* Base solid background color */}
@@ -20,7 +25,7 @@ export const DrawCircleText = () => {
       />
 
       {/* Floating PNG behind text (Top-Right) */}
-      <motion.img
+      <MotionImg
         src="/greendonut.png"
         alt="Floating decoration"
         className="absolute top-0 right-0 w-32 md:w-[28rem] opacity-80 pointer-events-none z-20"
@@ -33,7 +38,7 @@ export const DrawCircleText = () => {
       />
 
       {/* Top-Left PNG with left-right motion */}
-      <motion.img
+      <MotionImg
         src="/cone.png"
         alt="Top Left Motion"
         className="absolute top-30 left-50 w-40 md:w-60 opacity-80 z-20"
@@ -46,7 +51,7 @@ export const DrawCircleText = () => {
       />
 
       {/* Middle PNG with rotation */}
-      <motion.img
+      <MotionImg
         src="/orangecone.png"
         alt="Middle Rotating"
         className="absolute top-95 left-200 w-40 md:w-60 opacity-100 pointer-events-none z-20"
@@ -59,7 +64,7 @@ export const DrawCircleText = () => {
       />
 
       {/* Bottom-Left PNG with up-down motion */}
-      <motion.img
+      <MotionImg
         src="/purplesphere.png"
         alt="Bottom Left Motion"
         className="absolute bottom-4 left-20 w-40 md:w-64 opacity-80 z-20"

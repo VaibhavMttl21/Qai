@@ -4,7 +4,7 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import { useVideoStore } from '@/store/video';
 import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
+import { motion , MotionProps } from 'framer-motion';
 import { ChevronLeft, ChevronRight, FileText, CheckCircle, XCircle, PlayCircle } from 'lucide-react';
 import Hls from 'hls.js';
 
@@ -145,6 +145,18 @@ export function VideoPlayer() {
     );
   }
 
+  const MotionDiv = motion.div as React.ComponentType<
+  React.HTMLAttributes<HTMLDivElement> & MotionProps & { 
+    ref?: React.Ref<HTMLDivElement>; 
+  }
+  >;
+
+  const MotionAnchor = motion.a as React.ComponentType<
+  React.AnchorHTMLAttributes<HTMLAnchorElement> & MotionProps & {
+    ref?: React.Ref<HTMLAnchorElement>; 
+  }
+  >;
+
   return (
     <div className="container-fluid mx-auto py-4 h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-white px-4 sm:px-6">
       <div className="flex flex-col lg:flex-row h-full gap-4 font-satoshi">
@@ -240,7 +252,7 @@ export function VideoPlayer() {
                 <h3 className="text-lg font-semibold mb-3 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Resources</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {currentVideo.pdfs.map((pdf) => (
-                    <motion.a as="a"
+                    <MotionAnchor
                       key={pdf.id}
                       href={pdf.url as string}
                       target="_blank"
@@ -257,7 +269,7 @@ export function VideoPlayer() {
                           <p className="text-xs text-gray-600 truncate">{pdf.description}</p>
                         )}
                       </div>
-                    </motion.a>
+                    </MotionAnchor>
                   ))} 
                 </div>
               </div>
@@ -302,7 +314,7 @@ export function VideoPlayer() {
             <h2 className="font-bold text-xl mb-4 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">All Videos</h2>
             <div className="space-y-2 overflow-y-auto pr-2" style={{ maxHeight: "calc(100% - 2rem)" }}>
               {videos.map((video) => (
-                <motion.div
+                <MotionDiv
                   key={video.id}
                   onClick={() => handleVideoSelect(video)}
                   whileHover={{ scale: 1.02 }}
@@ -341,7 +353,7 @@ export function VideoPlayer() {
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </MotionDiv>
               ))}
             </div>
           </motion.div>

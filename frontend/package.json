@@ -9,8 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "install-and-build": "npm install --legacy-peer-deps && npm run build:ignore-errors",
-  "build:ignore-errors": "tsc --noEmit false && vite build"
-
+    "build:ignore-errors": "tsc --noEmit false && vite build"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.6",
@@ -24,6 +23,8 @@
     "@radix-ui/react-tabs": "^1.1.4",
     "@radix-ui/react-toast": "^1.1.5",
     "@react-spring/web": "^9.7.5",
+    "@splinetool/react-spline": "^4.0.0",
+    "@splinetool/runtime": "^1.9.89",
     "@stripe/stripe-js": "^2.2.0",
     "@studio-freight/lenis": "^1.0.42",
     "@tailwindcss/vite": "^4.1.3",

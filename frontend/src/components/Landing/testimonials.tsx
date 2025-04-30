@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion , MotionProps } from "framer-motion";
 import {
   SiDribbble,
   SiMovistar,
@@ -12,11 +12,16 @@ import {
 const StackedCardTestimonials = () => {
   const [selected, setSelected] = useState(0);
 
+  const MotionImg = motion.img as React.ComponentType<
+  React.ImgHTMLAttributes<HTMLImageElement> & MotionProps
+>;
+
+ 
+
   return (
     <section className="relative bg-white py-24 px-4 lg:px-8 grid items-center grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-4 overflow-hidden">
       {/* 🌪 Top-Left Rotating */}
-      <motion.img
-        as="img"
+      <MotionImg
         src="/two.png"
         alt="Rotating Decorative"
         className="absolute top-8 left-4 w-20 lg:w-80 opacity-40 pointer-events-none z-0"
@@ -29,7 +34,7 @@ const StackedCardTestimonials = () => {
       />
 
       {/* 🪄 Bottom-Right Floating */}
-      <motion.img
+      <MotionImg
         src="/one.png"
         alt="Floating Decorative"
         className="absolute bottom-4 right-4 w-20 lg:w-40 opacity-70 pointer-events-none z-0"
@@ -159,8 +164,14 @@ const Card = ({
   const background = position % 2 ? "black" : "white";
   const color = position % 2 ? "white" : "black";
 
+  const MotionDiv = motion.div as React.ComponentType<
+  React.HTMLAttributes<HTMLDivElement> & MotionProps & { 
+    ref?: React.Ref<HTMLDivElement>; 
+  }
+>;
+
   return (
-    <motion.div
+    <MotionDiv
       initial={false}
       style={{
         zIndex: position,
@@ -190,7 +201,7 @@ const Card = ({
         <span className="block font-semibold text-lg">{name}</span>
         <span className="block text-sm">{title}</span>
       </div>
-    </motion.div>
+    </MotionDiv>
   );
 };
 

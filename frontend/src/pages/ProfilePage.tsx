@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, MotionProps } from 'framer-motion';
 import { useAuthStore } from '@/store/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,6 +55,12 @@ export function ProfilePage() {
     }
   };
 
+  const MotionDiv = motion.div as React.ComponentType<
+  React.HTMLAttributes<HTMLDivElement> & MotionProps & { 
+    ref?: React.Ref<HTMLDivElement>; 
+  }
+>;
+
   return (
     <div className="min-h-screen w-full bg-white font-santoshi relative"
     style={{
@@ -75,7 +81,7 @@ export function ProfilePage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column: Profile Info Card */}
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             onMouseMove={handleMouseMove}
@@ -189,7 +195,7 @@ export function ProfilePage() {
                 </Button>
               </motion.div>
             )}
-          </motion.div>
+          </MotionDiv>
 
           {/* Right Column: Content */}
           <div className="lg:col-span-2 space-y-8">

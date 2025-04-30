@@ -14,7 +14,6 @@ export function LoginForm({}: { bgColor: string }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loginType, setLoginType] = useState('regular'); // 'regular' or 'school'
-  const [dob, setDob] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -44,11 +43,11 @@ export function LoginForm({}: { bgColor: string }) {
     try {
       if (loginType === 'school') {
         // For school students, we'll check if they're using DOB or password
-        if (dob) {
-          // If DOB is provided, format it and send as before
-          const day = parseInt(dob.slice(0, 2), 10);
-          const month = parseInt(dob.slice(2, 4), 10);
-          const year = parseInt(dob.slice(4), 10);
+        if (password && password.length === 8 && /^\d{8}$/.test(password)) {
+          // If password looks like a DOB (8 digits), parse and format it
+          const day = parseInt(password.slice(0, 2), 10);
+          const month = parseInt(password.slice(2, 4), 10);
+          const year = parseInt(password.slice(4), 10);
           const date = new Date(year, month - 1, day);
           const excelEpoch = new Date(1899, 11, 30);
           const diffInMs = date.getTime() - excelEpoch.getTime();
@@ -75,21 +74,21 @@ export function LoginForm({}: { bgColor: string }) {
     }
   };
 
-    const handleGoogleSignIn = async () => {
-      setError(null);
-      setIsLoading(true);
-      try {
-        const result = await signInWithPopup(auth, googleProvider);
-        const idToken = await result.user.getIdToken();
-        await googleSignIn(idToken);
-        navigate('/dashboard');
-      } catch (error: any) {
-        const errorMessage = error.message || 'Google sign-in failed';
-        setError(errorMessage);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    setIsGoogleLoading(true);  // Use the Google-specific loading state
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+      await googleSignIn(idToken);
+      navigate('/dashboard');
+    } catch (error: any) {
+      const errorMessage = error.message || 'Google sign-in failed';
+      setError(errorMessage);
+    } finally {
+      setIsGoogleLoading(false);  // Reset Google-specific loading state
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

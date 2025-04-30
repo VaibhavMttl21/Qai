@@ -113,7 +113,7 @@ export function Sidebar() {
             </DropdownMenuTrigger>
             <DropdownMenuContent 
               align="end"
-              side="right"
+              side="bottom"
               sideOffset={5}
               className="w-8"
             >
@@ -133,8 +133,8 @@ export function Sidebar() {
           </Avatar>
           
           <Button 
-            variant="ghost" 
-            size="md" 
+            variant="icon" 
+            size="default" 
             onClick={handleLogout} 
             className="mt-1 p-0 h-6 w-6 rounded-full bg-purple-400 hover:bg-purple-600"
             title="Logout"

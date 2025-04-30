@@ -35,6 +35,13 @@ export function ModulePage() {
     );
   }
 
+  const MotionDiv = motion.div as React.ComponentType<
+  React.HTMLAttributes<HTMLDivElement> & { 
+    ref?: React.Ref<HTMLDivElement>; 
+    whileHover?: object; 
+    whileTap?: object; 
+  }
+>;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-white py-12 px-4 sm:px-6">
@@ -106,9 +113,9 @@ export function ModulePage() {
                       transition={{ delay: 0.2 }}
                     >
                       {(module.videos ?? []).sort((a, b) => a.order - b.order).map((video) => (
-                        <motion.div
+                        <MotionDiv
                           key={video.id}
-                          className="bg-white p-3 rounded-lg border border-indigo-100 cursor-pointer hover:border-indigo-300 transition-colors"
+                          {...{className:"bg-white p-3 rounded-lg border border-indigo-100 cursor-pointer hover:border-indigo-300 transition-colors"}}
                           onClick={() => handleVideoClick(video.id)}
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
@@ -119,7 +126,7 @@ export function ModulePage() {
                             </div>
                             <span className="font-medium text-gray-800 text-sm">{video.title}</span>
                           </div>
-                        </motion.div>
+                        </MotionDiv>
                       ))}
                     </motion.div>
                   </motion.div>

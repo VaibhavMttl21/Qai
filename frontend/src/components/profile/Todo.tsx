@@ -362,12 +362,12 @@ const Card = ({ title, id, column, handleDragStart, setActiveTouchCard }: CardPr
         React.HTMLAttributes<HTMLDivElement> & { ref?: React.Ref<HTMLDivElement>; layout?: boolean }
       >;
 
+    
   return (
     <>
       <DropIndicator beforeId={id} column={column} />
       <MotionDiv
         layout
-        layoutId={id}
         draggable="true"
         onDragStart={(e) => handleDragStart(e, { title, id, column })}
         onTouchStart={handleTouchStart}
@@ -474,6 +474,13 @@ type AddCardProps = {
   setCards: Dispatch<SetStateAction<CardType[]>>;
 };
 
+const MotionButton = motion.button as React.ComponentType<
+React.ButtonHTMLAttributes<HTMLButtonElement> & { ref?: React.Ref<HTMLButtonElement>; layout?: boolean }
+>;
+
+const MotionForm = motion.form as React.ComponentType<
+  React.FormHTMLAttributes<HTMLFormElement> & { ref?: React.Ref<HTMLFormElement>; layout?: boolean }
+>;
 const AddCard = ({  setCards }: AddCardProps) => {
   const [text, setText] = useState("");
   const [adding, setAdding] = useState(false);
@@ -511,7 +518,7 @@ const AddCard = ({  setCards }: AddCardProps) => {
   };
 
   return adding ? (
-    <motion.form layout onSubmit={handleSubmit}>
+    <MotionForm layout onSubmit={handleSubmit}>
       <textarea
         onChange={(e) => setText(e.target.value)}
         autoFocus
@@ -536,16 +543,16 @@ const AddCard = ({  setCards }: AddCardProps) => {
           {!isSubmitting && <FiPlus />}
         </button>
       </div>
-    </motion.form>
+    </MotionForm>
   ) : (
-    <motion.button
+    <MotionButton
       layout
       onClick={() => setAdding(true)}
       className="flex w-full items-center justify-center gap-1.5 rounded-md bg-purple-100 hover:bg-purple-200 p-2 mt-3 text-sm text-purple-700 transition-colors"
     >
       <FiPlus className="text-lg" />
       <span className="font-medium">Add task</span>
-    </motion.button>
+    </MotionButton>
   );
 };
 

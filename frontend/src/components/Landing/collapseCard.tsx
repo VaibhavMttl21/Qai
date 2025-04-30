@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion , MotionProps } from "framer-motion";
 import { useState, useEffect } from "react";
 import {
   FiArrowUp,
@@ -40,6 +40,8 @@ const CollapseCardFeatures = () => {
   useEffect(() => {
     setPosition(1);
   }, []);
+
+
 
   return (
     <section className="overflow-x-hidden px-2 py-8 md:px-0 md:py-12 w-full">
@@ -170,8 +172,14 @@ const FeatureCard = ({ title, description, Icon, isFocused, position, isMobile }
     ? "w-[280px] max-w-[90vw] sm:w-[320px]"
     : "w-[320px] md:w-[340px] lg:w-[380px]";
 
+    const MotionDiv = motion.div as React.ComponentType<
+    React.HTMLAttributes<HTMLDivElement> & MotionProps & { 
+      ref?: React.Ref<HTMLDivElement>; 
+    }
+  >;
+
   return (
-    <motion.div
+    <MotionDiv
       initial={false}
       animate={{
         x: xPosition,
@@ -194,7 +202,7 @@ const FeatureCard = ({ title, description, Icon, isFocused, position, isMobile }
       </div>
       <h3 className="mb-3 md:mb-4 text-2xl md:text-3xl font-bold text-white">{title}</h3>
       <p className="text-sm md:text-base text-white">{description}</p>
-    </motion.div>
+    </MotionDiv>
   );
 };
 
