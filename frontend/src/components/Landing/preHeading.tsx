@@ -87,18 +87,36 @@ export function PreHeading() {
       </div>
       
       {/* Right Spline Viewer */}
-      {/* <div className="absolute 
-                    right-0 bottom-0 sm:top-0 
-                    h-1/2 sm:h-full 
-                    w-full sm:w-1/2 
-                    max-w-[1000px] max-h-[800px]
-                    md:w-[45%] sm:w-[60%] 
-                    z-0">
-        <spline-viewer
-          url="https://prod.spline.design/7E53giVz8ZZrrWXb/scene.splinecode"
-          hideSplineLogo="true"
-        />
-      </div> */}
+      {/* Visible only on medium and larger screens */}
+<div className="hidden md:block absolute 
+                right-0 bottom-0 sm:top-0 
+                h-1/2 sm:h-full 
+                w-full sm:w-1/2 
+                max-w-[1000px] max-h-[800px]
+                md:w-[45%] sm:w-[60%] 
+                z-0">
+  <spline-viewer
+    url="https://prod.spline.design/7E53giVz8ZZrrWXb/scene.splinecode"
+    hideSplineLogo="true"
+  />
+</div>
+
+{/* Visible only on small screens */}
+<div className="block md:hidden absolute 
+                right-0 bottom-0 sm:top-0 
+                h-1/2 sm:h-full 
+                w-full sm:w-1/2 
+                max-w-[1000px] max-h-[800px]
+                md:w-[45%] sm:w-[60%] 
+                z-0">
+  <img
+    src="/robotsmall.png"
+    alt="3D Preview"
+    className="h-full w-full object-contain"
+  />
+</div>
+
+
     </div>
   );
 }

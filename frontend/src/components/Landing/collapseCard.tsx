@@ -187,13 +187,13 @@ const FeatureCard = ({ title, description, Icon, isFocused, position, isMobile }
           ? "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
           : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
       }}
-      className={`${cardWidthClass} mx-auto flex flex-col justify-between min-h-[300px] p-6 md:p-8 rounded-xl transform transition-all bg-white`}
+      className={`${cardWidthClass} mx-auto flex flex-col justify-between min-h-[300px] p-6 md:p-8 rounded-xl transform transition-all bg-gradient-to-br from-purple-400 from-40% to-indigo-300`}
     >
-      <div className="absolute right-2 top-2 text-5xl md:text-7xl text-[#e0b0ff] opacity-20">
+      <div className="absolute right-2 top-2 text-5xl md:text-7xl text-white opacity-20">
         <Icon />
       </div>
-      <h3 className="mb-3 md:mb-4 text-2xl md:text-3xl font-bold text-[#333]">{title}</h3>
-      <p className="text-sm md:text-base text-[#555]">{description}</p>
+      <h3 className="mb-3 md:mb-4 text-2xl md:text-3xl font-bold text-white">{title}</h3>
+      <p className="text-sm md:text-base text-white">{description}</p>
     </motion.div>
   );
 };
