@@ -94,7 +94,7 @@
 // };
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import {  useInView } from "framer-motion";
 
 export const CountUpStats = () => {
   return (
@@ -142,7 +142,7 @@ export const CountUpStats = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes rotate {
           0% {
             transform: rotate(0deg);
@@ -164,17 +164,17 @@ interface StatProps {
 }
 
 const Stat = ({ num, decimals = 0, suffix, subheading }: StatProps) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref);
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useInView(ref as React.RefObject<Element>);
   const [displayValue, setDisplayValue] = useState("0");
 
   useEffect(() => {
     if (!isInView) return;
 
-    let startTime;
-    let animationFrameId;
+    let startTime: number;
+    let animationFrameId: number;
     
-    const animateCount = (timestamp) => {
+    const animateCount = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
       const progress = timestamp - startTime;
       const duration = 2500; // 2.5 seconds in ms
