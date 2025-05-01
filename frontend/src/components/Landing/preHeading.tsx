@@ -97,7 +97,7 @@ export function PreHeading() {
 {/* Visible only on small screens */}
 <div className="block md:hidden absolute 
                 right-0 bottom-0 sm:top-0 
-                h-1/2 sm:h-full 
+                h-1/3 sm:h-full 
                 w-full sm:w-1/2 
                 max-w-[1000px] max-h-[800px]
                 md:w-[45%] sm:w-[60%] 

@@ -47,7 +47,7 @@ const CollapseCardFeatures = () => {
     <section className="overflow-x-hidden px-2 py-8 md:px-0 md:py-12 w-full">
       <div className="mx-auto w-full max-w-7xl">
         <div className="mb-6 md:mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold leading-[1.2] md:text-5xl">
+          <h2 className="text-3xl font-bold leading-[1.2] md:text-5xl">
             Course. <span className="text-[#e0b0ff]">overview.</span>
           </h2>
         </div>
