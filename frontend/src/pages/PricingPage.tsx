@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/store/auth';
 import { Button } from '@/components/ui/button';
-// import { useToast } from '@/components/ui/toaster';
 import api from '@/lib/api';
 import "../styles/fonts.css";
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Declare Razorpay on the window object
 declare global {
@@ -16,18 +17,13 @@ declare global {
 
 export function PricingPage() {
   const { user, setUser } = useAuthStore();
-  // const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [amount] = useState(350); // Fixed amount
   const navigate = useNavigate();
 
   const handlePayment = async () => {
     if (user?.isPaid) {
-      // toast({
-      //   title: 'Already Subscribed',
-      //   description: 'You already have access to the premium content!',
-      //   variant: 'default',
-      // });
+      toast.info('You already have access to the premium content!');
       return;
     }
     try {
@@ -37,7 +33,7 @@ export function PricingPage() {
       handlePaymentVerify(data.data);
     } catch (error) {
       console.error(error);
-      // toast('Failed to initiate payment. Please try again.', 'error');
+      toast.error('Failed to initiate payment. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -49,7 +45,7 @@ export function PricingPage() {
       amount: data.amount,
       currency: data.currency,
       name: 'Qai',
-      description: 'Test Mode',
+      description: 'Premium Plan',
       order_id: data.id,
       handler: async (response: { razorpay_order_id: any; razorpay_payment_id: any; razorpay_signature: any; }) => {
         try {
@@ -68,17 +64,14 @@ export function PricingPage() {
               // Update local user state to reflect premium status
               if (updateResponse.data && updateResponse.data.isPaid) {
                 setUser({ ...user, isPaid: true });
-                // Show success message
-                alert('Payment successful! You now have premium access.');
-                // Optionally navigate to profile or dashboard
+                toast.success('Payment successful! You now have premium access.');
                 navigate('/profile');
               }
             }
           }
         } catch (error) {
           console.error(error);
-          // toast('Payment verification failed. Please contact support.', 'error');
-          alert('Payment verification failed. Please contact support.');
+          toast.error('Payment verification failed. Please contact support.');
         }
       },
       theme: {
@@ -100,20 +93,19 @@ export function PricingPage() {
 
   return (
     <div className="max-w-5xl mx-auto pl-6 pt-6">
+      <ToastContainer />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         {...{classNam:"text-center mb-12"}}
       >
         <div className='text-center'>
-  <h1 className="text-3xl font-bold mb-4 font-Satoshi text-purple-500">Choose Your Plan</h1>
-  <p className="text-gray-600 max-w-2xl mx-auto pb-4">
-    Unlock the full potential of our platform with a premium subscription.
-    Get access to all videos and join the community.
-  </p>
-</div>
-
-        
+          <h1 className="text-3xl font-bold mb-4 font-Satoshi text-purple-500">Choose Your Plan</h1>
+          <p className="text-gray-600 max-w-2xl mx-auto pb-4">
+            Unlock the full potential of our platform with a premium subscription.
+            Get access to all videos and join the community.
+          </p>
+        </div>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
