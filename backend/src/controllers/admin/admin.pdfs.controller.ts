@@ -126,6 +126,11 @@ export const deletePdf = async (req: AuthRequest, res: Response) => {
         Key: key,
       }));
     }
+
+      await prisma.pDF.delete({
+      where: { id }
+    });
+
     
     res.status(200).json({ message: 'PDF deleted successfully' });
   }catch (error) {
