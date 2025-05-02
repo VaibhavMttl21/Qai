@@ -9,7 +9,7 @@ export async function createAdmin(req: AuthRequest, res: Response) {
   try {
     const { email, password, name , userType } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    if(userType !== 'ADMIN' || userType !== 'SCHOOL') { 
+    if(userType !== 'ADMIN' && userType !== 'SCHOOL') { 
       return res.status(400).json({ message: 'Invalid user type' });
     }
     // Create the admin user
