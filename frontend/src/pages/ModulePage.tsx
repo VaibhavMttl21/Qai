@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Play } from 'lucide-react';
+import { motion , MotionProps} from 'framer-motion';
+import { ChevronRight} from 'lucide-react';
 import { useVideoStore } from '@/store/video';
 
 export function ModulePage() {
-  const [expandedModule, setExpandedModule] = useState<string | null>(null);
   const navigate = useNavigate();
   
   // Get data and actions from store
@@ -19,12 +18,8 @@ export function ModulePage() {
     fetchModules();
   }, [fetchModules]);
 
-  const toggleModule = (moduleId: string) => {
-    setExpandedModule(expandedModule === moduleId ? null : moduleId);
-  };
-
-  const handleVideoClick = (videoId: string) => {
-    navigate(`/video/${videoId}`);
+  const handleModuleClick = (moduleId: string) => {
+    navigate(`/modules/${moduleId}`);
   };
 
   if (loading) {
@@ -36,12 +31,10 @@ export function ModulePage() {
   }
 
   const MotionDiv = motion.div as React.ComponentType<
-  React.HTMLAttributes<HTMLDivElement> & { 
+  React.HTMLAttributes<HTMLDivElement> & MotionProps & { 
     ref?: React.Ref<HTMLDivElement>; 
-    whileHover?: object; 
-    whileTap?: object; 
   }
->;
+  >;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-white py-12 px-4 sm:px-6">
@@ -52,26 +45,24 @@ export function ModulePage() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {modules.map((module) => (
-            <motion.div 
+            <MotionDiv
               key={module.id}
               {...{className : "bg-white rounded-xl shadow-lg overflow-hidden border border-indigo-100 flex flex-col"}}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              onClick={() => handleModuleClick(module.id)}
+              style={{ cursor: 'pointer' }}
             >
-              <div 
-                className="p-5 cursor-pointer"
-                onClick={() => toggleModule(module.id)}
-              >
+              <div className="p-5">
                 <div className="flex justify-between items-center mb-3">
                   <h2 className="text-xl font-bold text-gray-800">{module.name}</h2>
                   
                   <motion.div 
                     {...{className :"w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center"}}
-                    animate={{ rotate: expandedModule === module.id ? 180 : 0 }}
                   >
-                    <ChevronDown size={18} className="text-indigo-600" />
+                    <ChevronRight size={18} className="text-indigo-600" />
                   </motion.div>
                 </div>
                 
@@ -86,53 +77,17 @@ export function ModulePage() {
                   </div>
                 )}
                 
+                {/* Module description */}
+                <p className="text-gray-600 text-sm mt-3 mb-4">{module.description || "Learn more about this exciting module."}</p>
+                
                 <div className="mt-4 flex justify-between items-center">
                   <span className="text-xs font-medium text-indigo-500">
                     {(module.videos ?? []).length} {(module.videos ?? []).length === 1 ? 'video' : 'videos'}
                   </span>
-                  <span className="text-xs text-gray-400">Click to {expandedModule === module.id ? 'hide' : 'show'} videos</span>
+                  <span className="text-xs text-gray-400">Click to view videos</span>
                 </div>
               </div>
-              
-              <AnimatePresence>
-                {expandedModule === module.id && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    style={{ backgroundColor: '#EEF2FF', padding: '1.25rem' }}
-                  >
-                    {/* Description moved to dropdown */}
-                    <p className="text-gray-600 text-sm mb-4 px-4">{module.description || "Learn more about this exciting module."}</p>
-                    
-                    <motion.div 
-                      style={{ padding: '1rem', gap: '0.75rem', display: 'flex', flexDirection: 'column' }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      {(module.videos ?? []).sort((a, b) => a.order - b.order).map((video) => (
-                        <MotionDiv
-                          key={video.id}
-                          {...{className:"bg-white p-3 rounded-lg border border-indigo-100 cursor-pointer hover:border-indigo-300 transition-colors"}}
-                          onClick={() => handleVideoClick(video.id)}
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <div className="flex items-center">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-indigo-400 flex items-center justify-center mr-3 text-white flex-shrink-0">
-                              <Play size={14} className="ml-0.5" />
-                            </div>
-                            <span className="font-medium text-gray-800 text-sm">{video.title}</span>
-                          </div>
-                        </MotionDiv>
-                      ))}
-                    </motion.div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+            </MotionDiv>
           ))}
         </div>
         

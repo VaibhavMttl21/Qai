@@ -7,7 +7,7 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node  --no-network-family-autoselection dist/index.js",
-    "db": "docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password postgres; npx prisma migrate dev"
+    "db": "sudo docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password postgres; npx prisma migrate dev"
   },
   "keywords": [],
   "author": "",

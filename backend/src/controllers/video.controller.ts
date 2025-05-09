@@ -101,6 +101,7 @@ export const getAllModules = async (req: AuthRequest, res: Response) => {
           select: {
             id: true,
             title: true,
+            thumbnail: true,
           }
         }
       },

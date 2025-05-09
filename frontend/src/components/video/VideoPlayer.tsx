@@ -149,24 +149,24 @@ export function VideoPlayer() {
   }
 
   const MotionDiv = motion.div as React.ComponentType<
-  React.HTMLAttributes<HTMLDivElement> & MotionProps & { 
-    ref?: React.Ref<HTMLDivElement>; 
+  React.HTMLAttributes<HTMLDivElement> & MotionProps & {
+    ref?: React.Ref<HTMLDivElement>;
   }
   >;
 
   const MotionAnchor = motion.a as React.ComponentType<
   React.AnchorHTMLAttributes<HTMLAnchorElement> & MotionProps & {
-    ref?: React.Ref<HTMLAnchorElement>; 
+    ref?: React.Ref<HTMLAnchorElement>;
   }
   >;
 
   return (
     <div className="container-fluid mx-auto py-4 h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-white px-4 sm:px-6">
       <div className="flex flex-col lg:flex-row h-full gap-4 font-satoshi">
-        {/* Video Player - Now on the left side and larger */}
+        {/* Video Player and Resources Section */}
         <div className="lg:w-3/5 flex flex-col h-full">
-          <motion.div 
-            {...{className:"bg-white p-4 rounded-xl shadow-lg flex flex-col h-full border border-indigo-100"}}
+          <motion.div
+            {...{className:"bg-white p-4 rounded-xl shadow-lg flex flex-col border border-indigo-100"}}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
@@ -194,8 +194,8 @@ export function VideoPlayer() {
                 variant={progress[currentVideo.id] ? "outline" : "default"}
                 onClick={toggleCompletion}
                 className={`flex items-center gap-1 ${
-                  progress[currentVideo.id] 
-                    ? "border-purple-400 text-purple-600 hover:bg-purple-50" 
+                  progress[currentVideo.id]
+                    ? "border-purple-400 text-purple-600 hover:bg-purple-50"
                     : "bg-gradient-to-br from-purple-400 from-40% to-indigo-400 text-white hover:from-purple-500 hover:to-indigo-500"
                 }`}
               >
@@ -213,43 +213,41 @@ export function VideoPlayer() {
               </Button>
             </div>
 
-            {/* Video Player - Larger with flexible height */}
-            <div className="relative w-full flex-grow rounded-lg overflow-hidden" style={{ minHeight: "70vh" }}>
+            {/* Video Player Container with conditional height */}
+            <div className={`relative w-full rounded-lg overflow-hidden ${!currentVideo.pdfs?.length ? 'aspect-[16/10]' : 'aspect-video'}`}>
               <video
                 ref={videoRef}
-                className="video-js vjs-default-skin w-full h-full"
+                className="video-js vjs-default-skin w-full h-full absolute top-0 left-0"
                 controls
                 loop={false}
               />
             </div>
 
-            {/* Navigation Buttons */}
-            <div className="mt-4">
-              <div className="flex justify-between items-center">
-                <div className="flex space-x-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={navigateToPrevVideo}
-                    disabled={videos.findIndex(v => v.id === currentVideo.id) === 0}
-                    className="border-purple-300 text-purple-600 hover:bg-purple-50 disabled:opacity-50"
-                  >
-                    <ChevronLeft className="mr-1 h-4 w-4" /> Previous
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={navigateToNextVideo}
-                    disabled={videos.findIndex(v => v.id === currentVideo.id) === videos.length - 1}
-                    className="border-purple-300 text-purple-600 hover:bg-purple-50 disabled:opacity-50"
-                  >
-                    Next <ChevronRight className="ml-1 h-4 w-4" />
-                  </Button>
-                </div>
+            {/* Navigation Buttons - Placed above the resources */}
+            <div className="mt-4 flex justify-between items-center">
+              <div className="flex space-x-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={navigateToPrevVideo}
+                  disabled={videos.findIndex(v => v.id === currentVideo.id) === 0}
+                  className="border-purple-300 text-purple-600 hover:bg-purple-50 disabled:opacity-50"
+                >
+                  <ChevronLeft className="mr-1 h-4 w-4" /> Previous
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={navigateToNextVideo}
+                  disabled={videos.findIndex(v => v.id === currentVideo.id) === videos.length - 1}
+                  className="border-purple-300 text-purple-600 hover:bg-purple-50 disabled:opacity-50"
+                >
+                  Next <ChevronRight className="ml-1 h-4 w-4" />
+                </Button>
               </div>
             </div>
 
-            {/* PDF Resources Section */}
+            {/* PDF Resources Section - Placed below the navigation buttons */}
             {currentVideo.pdfs && currentVideo.pdfs.length > 0 && (
               <div className="mt-4 border-t border-indigo-100 pt-4">
                 <h3 className="text-lg font-semibold mb-3 bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">Resources</h3>
@@ -273,7 +271,7 @@ export function VideoPlayer() {
                         )}
                       </div>
                     </MotionAnchor>
-                  ))} 
+                  ))}
                 </div>
               </div>
             )}
@@ -283,7 +281,7 @@ export function VideoPlayer() {
         {/* Right Panel - Description and Video List */}
         <div className="lg:w-2/5 flex flex-col h-full">
           {/* Video Description */}
-          <motion.div 
+          <motion.div
             {...{className:"bg-white p-4 rounded-xl shadow-lg mb-4 border border-indigo-100"}}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -308,7 +306,7 @@ export function VideoPlayer() {
           </motion.div>
 
           {/* Video List - Moved from left sidebar to right panel */}
-          <motion.div 
+          <motion.div
             {...{className:"bg-white p-4 rounded-xl shadow-lg flex-grow overflow-hidden border border-indigo-100"}}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -345,8 +343,8 @@ export function VideoPlayer() {
                           }`}
                         />
                         <span className={
-                          currentVideo.id === video.id 
-                            ? 'text-white' 
+                          currentVideo.id === video.id
+                            ? 'text-white'
                             : progress[video.id]
                               ? 'text-green-700'
                               : 'text-gray-500'

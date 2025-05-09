@@ -188,7 +188,7 @@ export const deleteVideo = async (req: AuthRequest, res: Response) => {
 // update video
 export const updateVideo = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
-  const { title, description, order } = req.body;
+  const { title, description} = req.body;
   const thumbnailFile = req.file;
 
   if (!id) return res.status(400).json({ message: 'Video ID is required' });
@@ -207,7 +207,6 @@ export const updateVideo = async (req: AuthRequest, res: Response) => {
     const updateData: any = {
       title,
       description,
-      order: Number(order),
     };
 
     // Handle thumbnail update if a thumbnail file is provided

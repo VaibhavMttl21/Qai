@@ -16,6 +16,7 @@ import { ProfilePage } from '@/pages/ProfilePage';
 import { PricingPage } from '@/pages/PricingPage';
 import { ModulePage } from './pages/ModulePage';
 import { VideoDetailsPage } from './pages/VideoDetailsPage';
+import { ModuleVideosPage } from './pages/ModuleVideosPage';
 import { useAuthStore } from '@/store/auth';
 import { connectSocket } from '@/lib/socket';
 
@@ -132,6 +133,8 @@ function App() {
               <VideoDetailsPage />
             </ProtectedRoute>
             } />
+          <Route path="/modules" element={<ModulePage />} />
+          <Route path="/modules/:moduleId" element={<ModuleVideosPage />} />
         </Route>
 
         {/* Catch-all Route: Redirect to Landing Page */}

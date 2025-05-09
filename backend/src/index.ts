@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
   });
 });
 
-//  createAdmin()
+ createAdmin()
 // createVideo()
 const PORT = process.env.PORT || 3000;
 httpServer.listen(PORT, () => {

@@ -17,6 +17,7 @@ interface Video {
   order: number;
   moduleId: string;
   pdfs?: PDF[];
+  demo: boolean;
 }
 
 interface Module {
@@ -39,6 +40,7 @@ interface VideoState {
   currentVideo: Video | null;
   loading: boolean; // Add loading state
   progress: Record<string, boolean>;
+  moduleVideos: Record<string, Video[]>; // Add moduleVideos property
   fetchVideos: () => Promise<void>;
   fetchModules: () => Promise<void>;
   setCurrentVideo: (video: Video) => void;
@@ -51,6 +53,7 @@ export const useVideoStore = create<VideoState>((set, get) => ({
   modules: [],
   currentVideo: null,
   progress: {},
+  moduleVideos: {}, // Initialize moduleVideos
   loading: false, // Initialize loading state
   
   fetchVideos: async () => {
@@ -104,4 +107,5 @@ export const useVideoStore = create<VideoState>((set, get) => ({
       console.error('Failed to update progress:', error);
     }
   }
+
 }));

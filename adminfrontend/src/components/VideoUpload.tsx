@@ -13,6 +13,7 @@ export function VideoUpload() {
   const [description, setDescription] = useState('');
   const [order, setOrder] = useState<number>(0);
   const [file, setFile] = useState<File | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -66,6 +67,10 @@ export function VideoUpload() {
       formData.append('file', file);
       formData.append('moduleId', selectedModuleId);
       formData.append('demo', isDemo.toString());
+      
+      if (imageFile) {
+        formData.append('thumbnail', imageFile);
+      }
 
       await api.post('/api/admin/videos', formData, {
         headers: {
@@ -78,6 +83,7 @@ export function VideoUpload() {
       setDescription('');
       setOrder(0);
       setFile(null);
+      setImageFile(null);
       setIsDemo(false);
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to add video');
@@ -187,6 +193,24 @@ export function VideoUpload() {
           {file && (
             <p className="mt-1 text-sm text-gray-500">
               Selected file: {file.name}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Upload Thumbnail Image (optional)
+          </label>
+          <input
+            id="image-file"
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          />
+          {imageFile && (
+            <p className="mt-1 text-sm text-gray-500">
+              Selected image: {imageFile.name}
             </p>
           )}
         </div>
