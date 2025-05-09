@@ -43,6 +43,7 @@ model Video {
   demo      Boolean @default(false)
   order     Int      
   encoded   Boolean  @default(false)
+  thumbnail String?
   hlsUrls   Json?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { upload, uploadFile } from '../controllers/admin/admin.excel.controller';
-import { addVideo, deleteVideo, getAllVideos, updateVideo, videoUpload } from '../controllers/admin/admin.video.controller';
+import { addVideo, deleteVideo, getAllVideos, multipleUpload, updateVideo, videoUpload } from '../controllers/admin/admin.video.controller';
 import { uploadPdf, pdfUpload, getAllPdfs, deletePdf, updatePdf } from '../controllers/admin/admin.pdfs.controller';
 import { createModule, deleteModule, getAllModules, updateModule, moduleImageUpload } from '../controllers/admin/admin.modules.controller';
 import { auth, isAdminUser } from '../middleware/auth';
@@ -14,11 +14,10 @@ const router = Router();
 router.post('/upload', auth, isAdminUser, upload.single('file'), uploadFile);
 
 // Add video endpoint
-router.get('/videos', auth, isAdminUser,getAllVideos); 
-router.post('/videos', auth, isAdminUser, videoUpload.single('file'), addVideo);
+router.get('/videos', auth, isAdminUser, getAllVideos); 
+router.post('/videos', auth, isAdminUser, multipleUpload, addVideo);
 router.delete('/videos/:id', auth, isAdminUser, deleteVideo);
-router.get('/videos', auth, isAdminUser, updateVideo);
-router.put('/videos/:id', auth, isAdminUser, updateVideo); // Added rename endpoint for videos
+router.put('/videos/:id', auth, isAdminUser, videoUpload.single('thumbnail'), updateVideo); // Updated to handle thumbnail uploads
 
 // Add PDF endpoint
 router.post('/pdfs', auth, isAdminUser, pdfUpload.single('file'), uploadPdf);

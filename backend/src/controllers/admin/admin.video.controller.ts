@@ -6,7 +6,7 @@ import path from 'path';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
 import { createReadStream } from 'fs';
-import { PutObjectCommand,DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { r2 } from '../../utils/r2';
 import { PubSub } from '@google-cloud/pubsub';
 
@@ -26,42 +26,85 @@ const storage = multer.diskStorage({
 export const videoUpload = multer({
   storage,
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('video/')) {
-      cb(null, true);
+    if (file.fieldname === 'thumbnail') {
+      // Accept images for thumbnail
+      if (file.mimetype.startsWith('image/')) {
+        cb(null, true);
+      } else {
+        cb(null, false);
+        cb(new Error('Only image files are allowed for thumbnails'));
+      }
     } else {
-      cb(null, false);
-      cb(new Error('Only video files are allowed'));
+      // For video uploads
+      if (file.mimetype.startsWith('video/')) {
+        cb(null, true);
+      } else {
+        cb(null, false);
+        cb(new Error('Only video files are allowed'));
+      }
     }
   },
-  limits: { fileSize: 5 * 1024 * 1024 * 1024 }, // 5GB max
+  limits: { 
+    fileSize: 5 * 1024 * 1024 * 1024 // 5GB limit as max for any file
+  },
 });
 
+// For handling multiple file uploads (video and thumbnail)
+export const multipleUpload = videoUpload.fields([
+  { name: 'video', maxCount: 1 },
+  { name: 'thumbnail', maxCount: 1 }
+]);
 
 export const addVideo = async (req: AuthRequest, res: Response) => {
   const { title, description, order, demo, moduleId } = req.body;
-
-  const file = req.file;
+  const files = req.files as { [fieldname: string]: Express.Multer.File[] };
   
-  if (!file) return res.status(400).json({ error: 'No file uploaded' });
-  if (!title) return res.status(400).json({ message: 'Title and URL are required' });
+  // Check if video file was uploaded
+  const videoFile = files?.video?.[0];
+  if (!videoFile) return res.status(400).json({ error: 'No video file uploaded' });
+  if (!title) return res.status(400).json({ message: 'Title is required' });
   if (!moduleId) return res.status(400).json({ message: 'Module ID is required' });
-  if(!demo) return res.status(400).json({ message: 'Demo catagory is required' });
+  if(!demo) return res.status(400).json({ message: 'Demo category is required' });
+  
   const booldemo = demo === 'true' ? true : false;
+  
   try {
     const id = uuidv4();
-    const key = `${id}.mp4`;
-    const stream = createReadStream(file.path);
-    // console.log('Uploading video to R2:', key);
+    const videoKey = `${id}.mp4`;
+    const videoStream = createReadStream(videoFile.path);
+    
+    // Upload video to R2
     await r2.send(new PutObjectCommand({
       Bucket: process.env.R2_BUCKET!,
-      Key: key,
-      Body: stream,
-      ContentType: file.mimetype,
+      Key: videoKey,
+      Body: videoStream,
+      ContentType: videoFile.mimetype,
     }));
-    // console.log('Video uploaded to R2:', key);
-    fs.unlinkSync(file.path);
+    
+    fs.unlinkSync(videoFile.path);
+    
+    // Handle thumbnail if provided
+    let thumbnailUrl = null;
+    const thumbnailFile = files?.thumbnail?.[0];
+    if (thumbnailFile) {
+      const thumbnailKey = `thumbnails/${id}${path.extname(thumbnailFile.originalname)}`;
+      const thumbnailStream = createReadStream(thumbnailFile.path);
+      
+      // Upload thumbnail to R2
+      await r2.send(new PutObjectCommand({
+        Bucket: process.env.R2_IMG_BUCKET!,
+        Key: thumbnailKey,
+        Body: thumbnailStream,
+        ContentType: thumbnailFile.mimetype,
+      }));
+      
+      fs.unlinkSync(thumbnailFile.path);
+      
+      // Set the CDN URL for the thumbnail
+      thumbnailUrl = `${process.env.R2_IMG_DOMAIN!}/${thumbnailKey}`;
+    }
 
-    const video = await prisma.video.create({
+    await prisma.video.create({
       data: {
         id,
         title,
@@ -69,14 +112,13 @@ export const addVideo = async (req: AuthRequest, res: Response) => {
         description,
         order: Number(order),
         moduleId: moduleId,
+        thumbnail: thumbnailUrl,
       },
     });
 
-    // console.log('Video created in database:', video);
-
     const topic = pubsub.topic("video-encoding");
     await topic.publishMessage({
-      json: { videoId: id, rawKey: key, demo:booldemo },
+      json: { videoId: id, rawKey: videoKey, demo: booldemo },
     });
 
     res.status(201).json({ 
@@ -147,6 +189,7 @@ export const deleteVideo = async (req: AuthRequest, res: Response) => {
 export const updateVideo = async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
   const { title, description, order } = req.body;
+  const thumbnailFile = req.file;
 
   if (!id) return res.status(400).json({ message: 'Video ID is required' });
   if (!title) return res.status(400).json({ message: 'Title is required' });
@@ -161,17 +204,55 @@ export const updateVideo = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ message: 'Video not found' });
     }
 
-    // Update video record in database
+    const updateData: any = {
+      title,
+      description,
+      order: Number(order),
+    };
+
+    // Handle thumbnail update if a thumbnail file is provided
+    if (thumbnailFile) {
+      // Delete old thumbnail if exists
+      if (video.thumbnail) {
+        const oldThumbnailKey = video.thumbnail.split('/').pop();
+        try {
+          await r2.send(new DeleteObjectCommand({
+            Bucket: process.env.R2_IMG_BUCKET!,
+            Key: `thumbnails/${oldThumbnailKey}`,
+          }));
+        } catch (error) {
+          console.error('Error deleting old thumbnail:', error);
+          // Continue with upload even if deletion fails
+        }
+      }
+      
+      // Upload new thumbnail
+      const thumbnailKey = `thumbnails/${id}${path.extname(thumbnailFile.originalname)}`;
+      const thumbnailStream = createReadStream(thumbnailFile.path);
+      
+      await r2.send(new PutObjectCommand({
+        Bucket: process.env.R2_IMG_BUCKET!,
+        Key: thumbnailKey,
+        Body: thumbnailStream,
+        ContentType: thumbnailFile.mimetype,
+      }));
+      
+      fs.unlinkSync(thumbnailFile.path);
+      
+      // Add thumbnail URL to update data
+      updateData.thumbnail = `${process.env.R2_IMG_DOMAIN!}/${thumbnailKey}`; 
+    }
+
+    // Update video record in database with all changes
     const updatedVideo = await prisma.video.update({
       where: { id },
-      data: {
-        title,
-        description,
-        order: Number(order),
-      }
+      data: updateData
     });
 
-    res.status(200).json({message: 'Video updated successfully',});
+    res.status(200).json({
+      message: 'Video updated successfully',
+      thumbnailUrl: updatedVideo.thumbnail
+    });
   } catch (error) {
     console.error('Error updating video:\n', error);
     res.status(500).json({ message: 'Server error' });
