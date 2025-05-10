@@ -26,8 +26,7 @@ function App() {
 
   useEffect(() => {
     initAuth();
-
-    // If the user has a token, connect to the socket
+    
     if (token) {
       connectSocket();
     }
@@ -91,14 +90,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* <Route
-            path="/videos"
-            element={
-              <ProtectedRoute>
-                <VideoPage />
-              </ProtectedRoute>
-            }
-          /> */}
           <Route
             path="/community"
             element={
