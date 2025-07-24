@@ -64,7 +64,7 @@ export function VideoUpload() {
       formData.append('title', title);
       formData.append('description', description);
       formData.append('order', order.toString());
-      formData.append('file', file);
+      formData.append('video', file);
       formData.append('moduleId', selectedModuleId);
       formData.append('demo', isDemo.toString());
       
